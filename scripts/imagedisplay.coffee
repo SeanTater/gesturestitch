@@ -11,6 +11,12 @@ class Image
 
         @element.appendTo(@wrapper)
         @wrapper.appendTo(@parent.box)
+    
+    select: ->
+        @wrapper.css("border-color": "red", background: "#f99")
+    
+    deselect: ->
+        @wrapper.css("border-color": "black", background: "#fff")
 
 class ImageDisplay
     constructor: ->
