@@ -5,11 +5,11 @@ class Image
         # Only uses URLs now but it should be extensible to other ways of construction
         @url = args.url
         @element = $("<img>").attr(src: args.url, class: "Image")
-
+        
         @parent = args.parent
-        @element.appendTo(@parent.box)
-    
-
+        @wrapper = @element.wrap("<div class='Image_wrapper' />")
+        
+        @wrapper.appendTo(@parent.box)
 
 class ImageDisplay
     constructor: ->
