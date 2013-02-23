@@ -1,12 +1,12 @@
 
 class ImageDisplay
-    constructor = ->
+    constructor: ->
         @box = $("desktop")
     
-    getImageList = ->
+    getImageList: ->
         $.getJSON("images/list", {}, this.processImageList)
     
-    processImageList = (imlist)->
+    processImageList: (imlist)->
         @image_list = []
         for image_url in imlist
             image = $("<img>").attr({src: image_url})
