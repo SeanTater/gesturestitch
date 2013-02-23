@@ -4,11 +4,12 @@ class Image
         # Create a new Image
         # Only uses URLs now but it should be extensible to other ways of construction
         @url = args.url
-        @element = $("<img>").attr(src: args.url, class: "Image")
-        
         @parent = args.parent
-        @wrapper = @element.wrap("<div class='Image_wrapper' />")
-        
+
+        @element = $("<img>").attr(src: args.url, class: "Image")
+        @wrapper = $("<div class='Image_wrapper' />")
+
+        @element.appendTo(@wrapper)
         @wrapper.appendTo(@parent.box)
 
 class ImageDisplay
