@@ -1,12 +1,12 @@
 
 class ImageDisplay
     constructor: ->
-        @box = $("desktop")
+        @box = $("#desktop")
     
     getImageList: ->
         # Normally this would be by XHR but local can't use XHR
         # $.getJSON("images/list", {}, this.processImageList)
-        processImageList([
+        this.processImageList([
             'images/jumping.jpg',
             'images/jumping_dad.jpg',
             'images/jumping_kid.jpg',
@@ -15,8 +15,8 @@ class ImageDisplay
     processImageList: (imlist)->
         @image_list = []
         for image_url in imlist
-            image = $("<img>").attr({src: image_url})
-            @box.append(image)
+            console.log("loading #{image_url}")
+            $("<img>").attr({src: image_url}).appendTo(@box)
 
 im_disp = new ImageDisplay()
 im_disp.getImageList()
