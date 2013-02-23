@@ -3,13 +3,11 @@ class Image
     constructor: (args)->
         # Create a new Image
         # Only uses URLs now but it should be extensible to other ways of construction
-        console.log("loading #{args.url}")
         @url = args.url
         @element = $("<img>").attr(src: args.url, class: "Image")
 
         @parent = args.parent
         @element.appendTo(@parent.box)
-
     
 
 
