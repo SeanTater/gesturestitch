@@ -12,4 +12,4 @@ class ImageDisplay
             image = $("<img>").attr({src: image_url})
             @box.append(image)
 
-ImageDisplay()
+ImageDisplay().getImageList()
