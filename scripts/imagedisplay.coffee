@@ -4,7 +4,13 @@ class ImageDisplay
         @box = $("desktop")
     
     getImageList: ->
-        $.getJSON("images/list", {}, this.processImageList)
+        # Normally this would be by XHR but local can't use XHR
+        # $.getJSON("images/list", {}, this.processImageList)
+        processImageList([
+            'images/jumping.jpg',
+            'images/jumping_dad.jpg',
+            'images/jumping_kid.jpg',
+            'images/tigers.jpg'])
     
     processImageList: (imlist)->
         @image_list = []
