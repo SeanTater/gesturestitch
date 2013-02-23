@@ -1,4 +1,18 @@
 
+class Image
+    constructor: (args)->
+        # Create a new Image
+        # Only uses URLs now but it should be extensible to other ways of construction
+        console.log("loading #{args.url}")
+        @url = args.url
+        @element = $("<img>").attr(src: args.url, class: "Image")
+
+        @parent = args.parent
+        @element.appendTo(@parent.box)
+
+    
+
+
 class ImageDisplay
     constructor: ->
         @box = $("#desktop")
@@ -14,9 +28,10 @@ class ImageDisplay
     
     processImageList: (imlist)->
         @image_list = []
-        for image_url in imlist
-            console.log("loading #{image_url}")
-            $("<img>").attr({src: image_url}).appendTo(@box)
+        for url in imlist
+            image = new Image(url: url, parent: this)
 
-im_disp = new ImageDisplay()
-im_disp.getImageList()
+$(->
+    im_disp = new ImageDisplay()
+    im_disp.getImageList()
+)
