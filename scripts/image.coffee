@@ -16,9 +16,9 @@ class gs.Image
         @wrapper.appendTo(@parent.box)
 
         # Tell the world
-        @all.push(this)
+        gs.Image.all.push(this)
 
-    all: []
+    @all: []
 
     canvas: ->
         # Return a new canvas with this image
