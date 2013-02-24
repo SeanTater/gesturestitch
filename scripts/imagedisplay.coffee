@@ -12,6 +12,10 @@ gs.ImageDisplay = {
             'images/jumping_dad.jpg',
             'images/jumping_kid.jpg',
             'images/tigers.jpg'])
+        
+        # This comes from jquery-ui
+        # TODO: Implement the LeapMotion-based equivalent
+        @box.sortable()
     
     processImageList: (imlist)->
         # Load each of the images (by url) from a list
