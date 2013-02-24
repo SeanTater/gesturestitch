@@ -8,3 +8,6 @@
 }
 .Image {
 }
+#stitch-progress {
+    display: none;
+}
