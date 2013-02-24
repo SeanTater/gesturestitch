@@ -25,6 +25,7 @@ class ImageDisplay_class
     
     exampleCanvas: ->
         can = gs.Image.all[0].canvas()
+        console.log(can.features())
         # Uses gs.ImageDisplay instead of this because it is used by setTimeout
         im = new gs.Image(canvas: can,  parent: gs.ImageDisplay)  
 
