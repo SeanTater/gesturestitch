@@ -7,9 +7,9 @@ class gs.Image
             # Create an Image from a url
             @url = args.url
             @element = $("<img />").attr(src: args.url, class: "Image")
-        else if args.element
-            # Or from an existing element (probably a canvas)
-            @element = args.element
+        else if args.canvas
+            # Or from an existing Canvas
+            @element = args.canvas.element
             @element.attr(class: "Image")
 
         # Its conceivable you might not want it in ImageDisplay (but maybe this isn't worth it?)
@@ -30,7 +30,7 @@ class gs.Image
     canvas: ->
         # Return a new canvas with this image
         # This can be cached if necessary
-        new gs.Canvas(@element)
+        new gs.Canvas(@element[0])
     
     ## Interface
     select: ->

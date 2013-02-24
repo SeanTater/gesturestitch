@@ -25,7 +25,7 @@ class ImageDisplay_class
     
     exampleCanvas: ->
         can = gs.Image.all[0].canvas()
-        im = gs.Image(element: can,  parent: this)  
+        im = gs.Image(canvas: can,  parent: this)  
 
 
 $(->
