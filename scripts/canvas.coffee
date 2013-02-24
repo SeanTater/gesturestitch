@@ -14,7 +14,7 @@ class gs.Canvas
         # Make pixel access more convenient
         @image_data = @context.getImageData(0, 0, @width, @height)
         @pixels = @image_data.data
-    
+
     save: ->
         # Save the pixels to the canvas
         # TODO: find out if @image_data.data = @pixels is necessary

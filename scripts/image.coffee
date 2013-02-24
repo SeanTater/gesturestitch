@@ -14,7 +14,12 @@ class gs.Image
         # Nest image, place in document
         @element.appendTo(@wrapper)
         @wrapper.appendTo(@parent.box)
-    
+
+        # Tell the world
+        @all.push(this)
+
+    all: []
+
     canvas: ->
         # Return a new canvas with this image
         # This can be cached if necessary
