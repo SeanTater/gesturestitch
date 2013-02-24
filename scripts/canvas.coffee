@@ -13,7 +13,6 @@ class gs.Canvas
         @context.drawImage(uimage, 0, 0)
 
         # Make pixel access more convenient
-        console.log("getImageData(0, 0, #{@width}, #{@height})")
         @image_data = @context.getImageData(0, 0, @width, @height)
         @pixels = @image_data.data
 
