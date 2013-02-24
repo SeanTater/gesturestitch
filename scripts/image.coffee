@@ -30,7 +30,7 @@ class gs.Image
     canvas: ->
         # Return a new canvas with this image
         # This can be cached if necessary
-        new gs.Canvas(@element[0])
+        new gs.Canvas(@element)
     
     ## Interface
     select: ->
