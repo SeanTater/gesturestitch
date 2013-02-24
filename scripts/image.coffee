@@ -9,6 +9,7 @@ class gs.Image
             @element = $("<img />").attr(src: args.url, class: "Image")
         else if args.canvas
             # Or from an existing Canvas
+            @url = null
             @element = args.canvas.element
             @element.attr(class: "Image")
 
