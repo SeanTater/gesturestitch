@@ -7,7 +7,7 @@ Gesture-Initiated Image Stitcher
 Overview
 --------
 - Runs in a web browser
-- Only works correctly on Chrome when run on a server, works as only static files
+- Must be on a server (not local) in order to run correctly on Chrome (cross site origin rules)
 - Requires LeapMotion API + controller
 - Attempts to stitch together two images when requested by user via gestures
 
