@@ -1,7 +1,7 @@
 window.gs = {} if not gs?
 
-gs.ImageDisplay = {
-    load: ->
+class ImageDisplay_class
+    constructor: ->
         # Initialize and load a grid (or other layout) of images
         @box = $("#desktop")
     
@@ -22,9 +22,14 @@ gs.ImageDisplay = {
         @image_list = []
         for url in imlist
             image = new gs.Image(url: url, parent: this)
-}
+    
+    exampleCanvas: ->
+        can = gs.Image.all[0].canvas()
+        im = gs.Image(element: can,  parent: this)  
+
 
 $(->
     # Load the images when the page finishes
-    gs.ImageDisplay.load()
+    gs.ImageDisplay = new ImageDisplay_class()
+    setTimeout(gs.ImageDisplay.exampleCanvas, 1000)
 )

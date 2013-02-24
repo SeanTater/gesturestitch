@@ -3,12 +3,19 @@ window.gs = {} if not gs?
 class gs.Image
     constructor: (args)->
         # Create a new Image
-        # Only uses URLs now but it should be extensible to other ways of construction
-        @url = args.url
+        if args.url
+            # Create an Image from a url
+            @url = args.url
+            @element = $("<img />").attr(src: args.url, class: "Image")
+        else if args.element
+            # Or from an existing element (probably a canvas)
+            @element = args.element
+            @element.attr(class: "Image")
+
+        # Its conceivable you might not want it in ImageDisplay (but maybe this isn't worth it?)
         @parent = args.parent
 
-        # Create image, wrapper
-        @element = $("<img />").attr(src: args.url, class: "Image")
+        # Create image        
         @wrapper = $("<div class='Image_wrapper' />")
 
         # Nest image, place in document

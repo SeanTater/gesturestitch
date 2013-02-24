@@ -3,7 +3,8 @@ window.gs = {} if not gs?
 class gs.Canvas
     constructor: (uimage)->
         # Read/write-able two dimensional surface for manipulating pixel data
-        @uelement = $("<canvas>")[0]
+        @element = $("<canvas>")
+        @uelement = @element[0]
         @width = @uelement.width = uimage.width
         @height = @uelement.height = uimage.height
 
@@ -12,6 +13,7 @@ class gs.Canvas
         @context.drawImage(uimage, 0, 0)
 
         # Make pixel access more convenient
+        console.log("getImageData(0, 0, #{@width}, #{@height})")
         @image_data = @context.getImageData(0, 0, @width, @height)
         @pixels = @image_data.data
 
