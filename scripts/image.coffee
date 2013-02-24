@@ -18,7 +18,8 @@ class Image
         # Return a new canvas with this image
         # This can be cached if necessary
         new Canvas(@element[0])
-         
+    
+    ## Interface
     select: ->
         # Show the user that this image has been selected
         @wrapper.css("border-color": "red", background: "#f99")
