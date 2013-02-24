@@ -1,5 +1,6 @@
+window.gs = {} if not gs?
 
-class Image
+class gs.Image
     constructor: (args)->
         # Create a new Image
         # Only uses URLs now but it should be extensible to other ways of construction
@@ -17,7 +18,7 @@ class Image
     canvas: ->
         # Return a new canvas with this image
         # This can be cached if necessary
-        new Canvas(@element[0])
+        new gs.Canvas(@element[0])
     
     ## Interface
     select: ->

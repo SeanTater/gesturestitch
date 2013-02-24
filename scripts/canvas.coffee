@@ -1,5 +1,6 @@
+window.gs = {} if not gs?
 
-class Canvas
+class gs.Canvas
     constructor: (uimage)->
         # Read/write-able two dimensional surface for manipulating pixel data
         @uelement = $("<canvas>")[0]
@@ -35,4 +36,5 @@ class Canvas
         # perform detection
         # returns the number of detected corners
         count = jsfeat.fast_corners.detect(color_image, corners, 3) # border = 3
-
+        
+        {corners:corners, count:count}
