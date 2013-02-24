@@ -3,7 +3,8 @@ window.gs = {} if not gs?
 class gs.Canvas
     constructor: (uimage)->
         # Read/write-able two dimensional surface for manipulating pixel data
-        @uelement = $("<canvas>")[0]
+        @element = $("<canvas>")
+        @uelement = @element[0]
         @width = @uelement.width = uimage.width
         @height = @uelement.height = uimage.height
 
@@ -13,6 +14,7 @@ class gs.Canvas
 
         # Make pixel access more convenient
         @image_data = @context.getImageData(0, 0, @width, @height)
+        console.log("pixels: #{@image_data}")
         @pixels = @image_data.data
 
     save: ->
@@ -22,7 +24,7 @@ class gs.Canvas
 
     features: ->
         # Use JSFeat to find features
-        color_image = jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C4_t, @pixels)
+        color_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C4_t, @pixels)
 
         # Boilerplate code used by JSFeat (there are possibly-more-advanced algorithms)
         
