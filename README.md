@@ -9,7 +9,7 @@ Overview
 - Runs in a web browser
 - Only works correctly on Chrome when run on a server, works as only static files
 - Requires LeapMotion API + controller
-- Attempts to stitch together two images when requested by user via gestures 
+- Attempts to stitch together two images when requested by user via gestures
 
 Setup
 -----
@@ -20,6 +20,8 @@ To get it up and running, you need to:
  - sudo apt-get install coffeescript
 - Compile coffee files
  - coffee -c scripts/*.coffee
+
+... or you can take a look at the [development preview](http://seantater.is-a-linux-user.org/gesturestitch)
 
 Design Presentation
 -------------------
