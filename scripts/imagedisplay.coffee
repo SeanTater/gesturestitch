@@ -1,11 +1,10 @@
 window.gs = {} if not gs?
 
-class gs.ImageDisplay
-    constructor: ->
+gs.ImageDisplay = {
+    load: ->
         # Initialize and load a grid (or other layout) of images
         @box = $("#desktop")
     
-    getImageList: ->
         # Normally this would be by XHR but local can't use XHR
         # $.getJSON("images/list", {}, this.processImageList)
         this.processImageList([
@@ -19,9 +18,9 @@ class gs.ImageDisplay
         @image_list = []
         for url in imlist
             image = new gs.Image(url: url, parent: this)
+}
 
 $(->
     # Load the images when the page finishes
-    im_disp = new gs.ImageDisplay()
-    im_disp.getImageList()
+    gs.ImageDisplay.load()
 )
