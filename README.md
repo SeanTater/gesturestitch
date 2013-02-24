@@ -11,6 +11,16 @@ Overview
 - Requires LeapMotion API + controller
 - Attempts to stitch together two images when requested by user via gestures 
 
+Setup
+-----
+To get it up and running, you need to:
+- Install a web server (any old thing will do; it only needs to run static files)
+ - sudo apt-get install lighttpd
+- Install coffee, to compile .coffee files into .js
+ - sudo apt-get install coffeescript
+- Compile coffee files
+ - coffee -c scripts/*.coffee
+
 Design Presentation
 -------------------
 You can find the public design presentation here:
