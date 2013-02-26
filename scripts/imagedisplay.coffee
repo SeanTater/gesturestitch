@@ -4,6 +4,11 @@ class ImageDisplay_class
     constructor: ->
         # Initialize and load a grid (or other layout) of images
         @box = $("#desktop")
+        # Unwrap
+        @ubox = @box[0]
+        # This is necessary for image placement later
+        @width = @box.width()
+        @height = @box.height()
     
         # Normally this would be by XHR but local can't use XHR
         # $.getJSON("images/list", {}, this.processImageList)

@@ -8,6 +8,11 @@
 }
 .Image {
 }
+#desktop {
+    /* This makes it possible to anchor the images to the desktop */
+    position: relative;
+    height: 100%;
+}
 #stitch-progress {
     display: none;
 }
