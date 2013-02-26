@@ -13,15 +13,7 @@ Overview
 
 Setup
 -----
-To get it up and running, you need to:
-- Install a web server (any old thing will do; it only needs to run static files)
- - sudo apt-get install lighttpd
-- Install coffee, to compile .coffee files into .js
- - sudo apt-get install coffeescript
-- Compile coffee files
- - coffee -c scripts/*.coffee
-
-... or you can take a look at the [development preview](http://seantater.is-a-linux-user.org/gesturestitch)
+Just take a look at the [development preview](http://seantater.is-a-linux-user.org/gesturestitch)
 
 Design Presentation
 -------------------
