@@ -14,8 +14,6 @@ class gs.Canvas
 
         # Make pixel access more convenient
         @image_data = @context.getImageData(0, 0, @width, @height)
-        console.log("pixels: #{@image_data}")
-        @pixels = @image_data.data
 
     save: ->
         # Save the pixels to the canvas
@@ -24,9 +22,9 @@ class gs.Canvas
 
     features: ->
         # Use JSFeat to find features
-        color_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C4_t, @pixels)
-        gray_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C1_t, @pixels)
-        jsfeat.imgproc.grayscale(color_image.data, gray_image.data)
+        #color_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C4_t, @pixels)
+        gray_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C1_t)
+        jsfeat.imgproc.grayscale(@image_data, gray_image.data)
         # Boilerplate code used by JSFeat (there are possibly-more-advanced algorithms)
         
         # threshold on difference between intensity of the central pixel 
