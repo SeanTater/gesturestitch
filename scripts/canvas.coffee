@@ -25,7 +25,8 @@ class gs.Canvas
     features: ->
         # Use JSFeat to find features
         color_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C4_t, @pixels)
-
+        gray_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C1_t, @pixels)
+        jsfeat.imgproc.grayscale(color_image.data, gray_image.data)
         # Boilerplate code used by JSFeat (there are possibly-more-advanced algorithms)
         
         # threshold on difference between intensity of the central pixel 
@@ -37,6 +38,6 @@ class gs.Canvas
          
         # perform detection
         # returns the number of detected corners
-        count = jsfeat.fast_corners.detect(color_image, corners, 3) # border = 3
+        count = jsfeat.fast_corners.detect(gray_image.data, corners, 3) # border = 3
         
         {corners:corners, count:count}
