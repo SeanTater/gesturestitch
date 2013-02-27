@@ -24,7 +24,7 @@ class gs.Canvas
         # Use JSFeat to find features
         #color_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C4_t, @pixels)
         gray_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C1_t)
-        jsfeat.imgproc.grayscale(@image_data, gray_image.data)
+        jsfeat.imgproc.@image_data.data, gray_image.data)
         # Boilerplate code used by JSFeat (there are possibly-more-advanced algorithms)
         
         # threshold on difference between intensity of the central pixel 
