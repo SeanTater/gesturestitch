@@ -96,7 +96,8 @@ class gs.Image
     brighten: ->
         # Simple effect to demonstrate pixel manipulation
         this.setupCanvas()
-        for i in [0...@numel*4]
+        i = @numel*4
+        while --i > 0
             @image_data.data[i] = @image_data.data[i] * 2 % 256
 
 
