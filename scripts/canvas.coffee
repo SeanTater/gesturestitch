@@ -7,6 +7,7 @@ class gs.Canvas
         @uelement = @element[0]
         @width = @uelement.width = uimage.width
         @height = @uelement.height = uimage.height
+        @numel = @width * @height
 
         # Create a plain 2d context (could use WebGL too)
         @context = @uelement.getContext("2d")
@@ -14,22 +15,30 @@ class gs.Canvas
 
         # Make pixel access more convenient
         @image_data = @context.getImageData(0, 0, @width, @height)
+        gs.Canvas.all.push(this)
+
+    @all = []
+    
+    brighten: ->
+        for i in [0...@numel*4]
+            @image_data.data[i] = @image_data.data[i] * 2 % 256
 
     save: ->
         # Save the pixels to the canvas
         # TODO: find out if @image_data.data = @pixels is necessary
-        @content.putImageData(@image_data, 0, 0)
+        @context.putImageData(@image_data, 0, 0)
 
     features: ->
         # Use JSFeat to find features
         #color_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C4_t, @pixels)
         gray_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C1_t)
-        jsfeat.imgproc.grayscale(image_data.data, gray_image.data)
+        jsfeat.imgproc.grayscale(@image_data.data, gray_image.data)
+        console.log(gray_image.data)
         # Boilerplate code used by JSFeat (there are possibly-more-advanced algorithms)
         
         # threshold on difference between intensity of the central pixel 
         # and pixels of a circle around this pixel
-        jsfeat.fast_corners.set_threshold(20) # threshold=20
+        jsfeat.fast_corners.set_threshold(5) # threshold=5, (was 20)
          
         # Preallocate point2d_t array
         corners = [ new jsfeat.point2d_t(0,0,0,0) for i in [0...@width*@height] ]

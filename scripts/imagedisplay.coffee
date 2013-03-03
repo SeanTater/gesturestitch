@@ -31,9 +31,11 @@ class ImageDisplay_class
     exampleCanvas: ->
         can = gs.Image.all[0].canvas()
         console.log(can.features())
+        can.brighten()
+        can.save()
         # Uses gs.ImageDisplay instead of this because it is used by setTimeout
         im = new gs.Image(canvas: can,  parent: gs.ImageDisplay)  
-
+        
 
 $(->
     # Load the images when the page finishes
