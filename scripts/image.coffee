@@ -23,6 +23,11 @@ class gs.Image
         @image = $("<img />")
         @uimage = @image[0]
         
+        # @parent is to remove cyclic dependencies
+        # you can use "this" from ImageDisplay before its fully defined
+        # but you can't for gs.ImageDisplay
+        @parent = args.parent
+        
         # Create the picture frame and put the image in it
         @wrapper = $("<div class='Image_wrapper' />")
         this.display(@image)
@@ -33,13 +38,11 @@ class gs.Image
             # Don't place the image until there is something in it
             # self is to carry "this" across the closure
             self = this
-            @image.load(->
-                self.canvas()
-                self.scatter())
-        else if args.Image
+            @image.load(-> self.scatter())
+        else if args.image
             #NOTE: Right now you can only copy canvasses images
             # @image is a /reference/ (so when copying images you have the same <image>)
-            @image = args.Image.image
+            @image = args.image.image
             this.setupCanvas()
 
         # Tell the world
@@ -53,7 +56,7 @@ class gs.Image
             @main.remove()
         @main = element
         @main.appendTo(@wrapper)
-        @wrapper.appendTo(gs.ImageDisplay.box)
+        @wrapper.appendTo(@parent.box)
 
     setupCanvas: ->
         # Setup the canvas for this image (when it loads)
@@ -127,8 +130,8 @@ class gs.Image
         # Place and spin the image to a random place on the board, even below another image (for now)
         degrees = Math.floor(Math.random() * 60) - 30
         # Keep the image from going off the board, 1.4 accounts for a diagonal
-        x_limit = gs.ImageDisplay.width - (@wrapper.width() * 1.4) 
-        y_limit = gs.ImageDisplay.height - (@wrapper.height() * 1.4)
+        x_limit = @parent.width - (@wrapper.width() * 1.4) 
+        y_limit = @parent.height - (@wrapper.height() * 1.4)
         x = Math.floor(Math.random() * x_limit)
         y = Math.floor(Math.random() * y_limit)
 
