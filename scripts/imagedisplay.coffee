@@ -29,11 +29,11 @@ class ImageDisplay_class
             image = new gs.Image(url: url, parent: this)
     
     exampleCanvas: ->
-        im = gs.Image.all[0]
-        console.log(im.features())
-        im.brighten()
-        im.save()
-        new gs.Image(Image: im)  
+        old_im = gs.Image.all[0]
+        new_im = new gs.Image(Image: old_im, parent: gs.ImageDisplay)
+        console.log(new_im.features())
+        new_im.brighten()
+        new_im.save()  
         
 
 $(->

@@ -44,6 +44,7 @@ class gs.Image
             #NOTE: Right now you can only copy canvasses images
             # @image is a /reference/ (so when copying images you have the same <image>)
             @image = args.image.image
+            @uimage = args.image.uimage
             this.setupCanvas()
 
         # Tell the world
