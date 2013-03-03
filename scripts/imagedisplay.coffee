@@ -34,7 +34,7 @@ class ImageDisplay_class
         can.brighten()
         can.save()
         # Uses gs.ImageDisplay instead of this because it is used by setTimeout
-        im = new gs.Image(canvas: can)  
+        im = new gs.Image(canvas: can)
         
 
 $(->

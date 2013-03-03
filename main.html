@@ -4,23 +4,28 @@
         <title>
             Gesture-Initiated Image Stitcher
         </title>
+        <link rel='stylesheet' href='style/main.css' />
+        <link rel='stylesheet' href='style/jquery-ui-1.10.1.custom.css' />
         <script src='scripts/jquery-1.9.1.js'></script>
         <script src='scripts/jquery-ui-1.10.1.custom.js'></script>
         <script src='scripts/jsfeat.js'></script>
-        <script src='scripts/canvas.js'></script>
-        <script src='scripts/image.js'></script>
         <script src='scripts/imagedisplay.js'></script>
-        <link rel='stylesheet' href='style/main.css' />
-        <link rel='stylesheet' href='style/jquery-ui-1.10.1.custom.css' />
+        <script src='scripts/image.js'></script>
     </head>
     <body>
         <h1>
             Gesture-Initiated Image Stitcher
         </h1>
-        <div id='stitch-progress'>
+        <div id='stitch_progress'>
             Preparing to stitch images
         </div>
         <div id='desktop'>
         </div>
+        <ul id='image_menu'>
+            <!--
+                This is the context menu for images
+                It will be replaced (mostly) by gestures in the future
+            -->
+        </ul>
     </body>
 </html>
