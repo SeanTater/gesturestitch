@@ -126,8 +126,8 @@ class gs.Image
         # Place and spin the image to a random place on the board, even below another image (for now)
         degrees = Math.floor(Math.random() * 60) - 30
         # Keep the image from going off the board, 1.4 accounts for a diagonal
-        x_limit = @parent.width - (@wrapper.width() * 1.4) 
-        y_limit = @parent.height - (@wrapper.height() * 1.4)
+        x_limit = gs.ImageDisplay.width - (@wrapper.width() * 1.4) 
+        y_limit = gs.ImageDisplay.height - (@wrapper.height() * 1.4)
         x = Math.floor(Math.random() * x_limit)
         y = Math.floor(Math.random() * y_limit)
 
@@ -136,8 +136,8 @@ class gs.Image
     
     select: ->
         # Show the user that this image has been selected
-        @wrapper.css("border-color": "red", background: "#f99")
+        @wrapper.addClass("ui-selected")
     
     deselect: ->
         # Show the user this image is deselected
-        @wrapper.css("border-color": "black", background: "#fff")
+        @wrapper.removeClass("ui-selected")
