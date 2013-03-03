@@ -29,12 +29,11 @@ class ImageDisplay_class
             image = new gs.Image(url: url, parent: this)
     
     exampleCanvas: ->
-        can = gs.Image.all[0].canvas()
-        console.log(can.features())
-        can.brighten()
-        can.save()
-        # Uses gs.ImageDisplay instead of this because it is used by setTimeout
-        im = new gs.Image(canvas: can,  parent: gs.ImageDisplay)  
+        im = gs.Image.all[0]
+        console.log(im.features())
+        im.brighten()
+        im.save()
+        new gs.Image(Image: im)  
         
 
 $(->

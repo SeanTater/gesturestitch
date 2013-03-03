@@ -3,29 +3,33 @@ window.gs = {} if not gs?
 class gs.Image
     constructor: (args)->
         # Create a new Image
+        @image = $("<img />")
+        @uimage = @image[0]
+        
         if args.url
             # Create an Image from a url
-            @url = args.url
-            @image = $("<img />").attr(src: args.url, class: "Image")
-            @uimage = @image[0]
-        #TODO: Make an copy image 
-
-        # Its conceivable you might not want it in ImageDisplay (but maybe this isn't worth it?)
-        @parent = args.parent
+            @url = @image.attr(src: args.url, class: "Image")
+            # The main element is image until canvas is loaded
+            @main = @image
+            # Don't place the image until there is something in it
+            # self is to carry "this" across the closure
+            self = this
+            @image.load(->
+                self.canvas()
+                self.scatter())
+        else if args.Image
+            #NOTE: Right now you can only copy canvasses images
+            # @image is a /reference/ (so when copying images you have the same <image>)
+            @image = args.Image.image
+            this.setupCanvas()
 
         # Create image        
         @wrapper = $("<div class='Image_wrapper' />")
 
         # Nest image, place in document
         @image.appendTo(@wrapper)
-        @wrapper.appendTo(@parent.box)
+        @wrapper.appendTo(gs.ImageDisplay.box)
 
-        # Don't place the image until there is something in it
-        # Self is to carry "this" across the closure
-        self = this
-        @image.load(->
-            self.canvas()
-            self.scatter())
 
         # Tell the world
         gs.Image.all.push(this)
