@@ -1,6 +1,23 @@
 window.gs = {} if not gs?
 
 class gs.Image
+    ###
+        Somewhat full-featured Image
+        : brighten()
+            A simple effect to demonstrate pixel manipulation. (Use save() afterward)
+        : display()
+            Changes which element is shown (<img> or <canvas>)
+        : features()
+            Searches for 2d corners
+        : place()
+            Move the image around the ImageDisplay
+        : scatter()
+            place() and spin() the image randomly around the ImageDisplay
+        : select() and deselect()
+            Changes the style for user feedback
+        : spin()
+            Rotate the image (only in display, same in pixel manipulation)
+    ###
     constructor: (args)->
         # Create a new Image
         @image = $("<img />")
@@ -59,7 +76,6 @@ class gs.Image
         @image_data = @context.getImageData(0, 0, @width, @height)
     
     ## Canvas-related functions
-    
     save: ->
         # Save the pixels to the canvas
         # TODO: find out if @image_data.data = @pixels is necessary
