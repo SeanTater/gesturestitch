@@ -39,6 +39,7 @@ class gs.Image
             # self is to carry "this" across the closure
             self = this
             @image.load(-> self.scatter())
+            
         else if args.image
             #NOTE: Right now you can only copy canvasses images
             # @image is a /reference/ (so when copying images you have the same <image>)
@@ -60,21 +61,22 @@ class gs.Image
 
     setupCanvas: ->
         # Setup the canvas for this image (when it loads)
+        # Indempotent: run this whenever you need to use canvas to ensure it exists
+        return if @canvas?
         # Read/write-able two dimensional surface for manipulating pixel data
-        
         @canvas = $("<canvas>")
-        @ucanvas = canvas[0]
+        @ucanvas = @canvas[0]
         
-        @width = ucanvas.width = uimage.width
-        @height = ucanvas.height = uimage.height
+        @width = @ucanvas.width = @uimage.width
+        @height = @ucanvas.height = @uimage.height
         @numel = @width * @height
         
         # Create a plain 2d context (could use WebGL too)
-        @context = ucanvas.getContext("2d")
-        @context.drawImage(uimage, 0, 0)
+        @context = @ucanvas.getContext("2d")
+        @context.drawImage(@uimage, 0, 0)
         
         # Now that the image is drawn, we should be able to replace the original image
-        this.display(canvas)
+        this.display(@canvas)
         
         # Make pixel access more convenient
         @image_data = @context.getImageData(0, 0, @width, @height)
@@ -83,15 +85,19 @@ class gs.Image
     save: ->
         # Save the pixels to the canvas
         # TODO: find out if @image_data.data = @pixels is necessary
+        this.setupCanvas()
         @context.putImageData(@image_data, 0, 0)
     
     brighten: ->
+        # Simple effect to demonstrate pixel manipulation
+        this.setupCanvas()
         for i in [0...@numel*4]
             @image_data.data[i] = @image_data.data[i] * 2 % 256
 
 
     features: ->
         # Use JSFeat to find features
+        this.setupCanvas()
         #color_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C4_t, @pixels)
         gray_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C1_t)
         jsfeat.imgproc.grayscale(@image_data.data, gray_image.data)
