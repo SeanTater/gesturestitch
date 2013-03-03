@@ -6,6 +6,10 @@ class gs.Image
         @image = $("<img />")
         @uimage = @image[0]
         
+        # Create the picture frame and put the image in it
+        @wrapper = $("<div class='Image_wrapper' />")
+        this.display(image)
+        
         if args.url
             # Create an Image from a url
             @url = @image.attr(src: args.url, class: "Image")
@@ -23,18 +27,15 @@ class gs.Image
             @image = args.Image.image
             this.setupCanvas()
 
-        # Create image        
-        @wrapper = $("<div class='Image_wrapper' />")
-
-        # Nest image, place in document
-        @image.appendTo(@wrapper)
-        @wrapper.appendTo(gs.ImageDisplay.box)
-
-
         # Tell the world
         gs.Image.all.push(this)
 
     @all: []
+    
+    display: (element)->
+        # Nest the element (either <img> or <canvas>), and place in document
+        @main.appendTo(@wrapper)
+        @wrapper.appendTo(gs.ImageDisplay.box)
 
     setupCanvas: ->
         # Setup the canvas for this image (when it loads)
@@ -50,6 +51,9 @@ class gs.Image
         # Create a plain 2d context (could use WebGL too)
         @context = ucanvas.getContext("2d")
         @context.drawImage(uimage, 0, 0)
+        
+        # Now that the image is drawn, we should be able to replace the original image
+        this.display(canvas)
         
         # Make pixel access more convenient
         @image_data = @context.getImageData(0, 0, @width, @height)
