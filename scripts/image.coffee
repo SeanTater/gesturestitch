@@ -73,7 +73,8 @@ class gs.Image
         
         # Create a plain 2d context (could use WebGL too)
         @context = @ucanvas.getContext("2d")
-        @context.drawImage(@uimage, 0, 0)
+        # Draw image on the canvas
+        this.revert()
         
         # Now that the image is drawn, we should be able to replace the original image
         this.display(@canvas)
@@ -87,6 +88,10 @@ class gs.Image
         # TODO: find out if @image_data.data = @pixels is necessary
         this.setupCanvas()
         @context.putImageData(@image_data, 0, 0)
+    
+    revert: ->
+        # Draw the image on the canvas
+        @context.drawImage(@uimage, 0, 0)
     
     brighten: ->
         # Simple effect to demonstrate pixel manipulation
