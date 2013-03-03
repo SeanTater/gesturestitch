@@ -13,15 +13,12 @@ class gs.Image
             @element = args.canvas.element
             @element.attr(class: "Image")
 
-        # Its conceivable you might not want it in ImageDisplay (but maybe this isn't worth it?)
-        @parent = args.parent
-
         # Create image        
         @wrapper = $("<div class='Image_wrapper' />")
 
         # Nest image, place in document
         @element.appendTo(@wrapper)
-        @wrapper.appendTo(@parent.box)
+        @wrapper.appendTo(gs.ImageDisplay.box)
 
         # Don't place the image until there is something in it
         # Self is to carry "this" across the closure
