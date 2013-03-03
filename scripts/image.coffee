@@ -23,9 +23,6 @@ class gs.Image
         @image = $("<img />")
         @uimage = @image[0]
         
-        # The main element is image until canvas is loaded
-        @main = @image
-        
         # Create the picture frame and put the image in it
         @wrapper = $("<div class='Image_wrapper' />")
         this.display(@image)
@@ -52,6 +49,9 @@ class gs.Image
     
     display: (element)->
         # Nest the element (either <img> or <canvas>), and place in document
+        if @main?
+            @main.remove()
+        @main = element
         @main.appendTo(@wrapper)
         @wrapper.appendTo(gs.ImageDisplay.box)
 
