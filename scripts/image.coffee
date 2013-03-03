@@ -23,15 +23,16 @@ class gs.Image
         @image = $("<img />")
         @uimage = @image[0]
         
+        # The main element is image until canvas is loaded
+        @main = @image
+        
         # Create the picture frame and put the image in it
         @wrapper = $("<div class='Image_wrapper' />")
-        this.display(image)
+        this.display(@image)
         
         if args.url
             # Create an Image from a url
             @url = @image.attr(src: args.url, class: "Image")
-            # The main element is image until canvas is loaded
-            @main = @image
             # Don't place the image until there is something in it
             # self is to carry "this" across the closure
             self = this
