@@ -6,12 +6,9 @@ class gs.Image
         if args.url
             # Create an Image from a url
             @url = args.url
-            @element = $("<img />").attr(src: args.url, class: "Image")
-        else if args.canvas
-            # Or from an existing Canvas
-            @url = null
-            @element = args.canvas.element
-            @element.attr(class: "Image")
+            @image = $("<img />").attr(src: args.url, class: "Image")
+            @uimage = @image[0]
+        #TODO: Make an copy image 
 
         # Its conceivable you might not want it in ImageDisplay (but maybe this isn't worth it?)
         @parent = args.parent
@@ -20,23 +17,72 @@ class gs.Image
         @wrapper = $("<div class='Image_wrapper' />")
 
         # Nest image, place in document
-        @element.appendTo(@wrapper)
+        @image.appendTo(@wrapper)
         @wrapper.appendTo(@parent.box)
 
         # Don't place the image until there is something in it
         # Self is to carry "this" across the closure
         self = this
-        @element.load(-> self.scatter())
+        @image.load(->
+            self.canvas()
+            self.scatter())
 
         # Tell the world
         gs.Image.all.push(this)
 
     @all: []
 
-    canvas: ->
-        # Return a new canvas with this image
-        # This can be cached if necessary
-        new gs.Canvas(@element[0])
+    setupCanvas: ->
+        # Setup the canvas for this image (when it loads)
+        # Read/write-able two dimensional surface for manipulating pixel data
+        
+        @canvas = $("<canvas>")
+        @ucanvas = canvas[0]
+        
+        @width = ucanvas.width = uimage.width
+        @height = ucanvas.height = uimage.height
+        @numel = @width * @height
+        
+        # Create a plain 2d context (could use WebGL too)
+        @context = ucanvas.getContext("2d")
+        @context.drawImage(uimage, 0, 0)
+        
+        # Make pixel access more convenient
+        @image_data = @context.getImageData(0, 0, @width, @height)
+    
+    ## Canvas-related functions
+    
+    save: ->
+        # Save the pixels to the canvas
+        # TODO: find out if @image_data.data = @pixels is necessary
+        @context.putImageData(@image_data, 0, 0)
+    
+    brighten: ->
+        for i in [0...@numel*4]
+            @image_data.data[i] = @image_data.data[i] * 2 % 256
+
+
+    features: ->
+        # Use JSFeat to find features
+        #color_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C4_t, @pixels)
+        gray_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C1_t)
+        jsfeat.imgproc.grayscale(@image_data.data, gray_image.data)
+        console.log(gray_image.data)
+        # Boilerplate code used by JSFeat (there are possibly-more-advanced algorithms)
+        
+        # threshold on difference between intensity of the central pixel 
+        # and pixels of a circle around this pixel
+        jsfeat.fast_corners.set_threshold(5) # threshold=5, (was 20)
+         
+        # Preallocate point2d_t array
+        corners = [ new jsfeat.point2d_t(0,0,0,0) for i in [0...@width*@height] ]
+         
+        # perform detection
+        # returns the number of detected corners
+        count = jsfeat.fast_corners.detect(gray_image.data, corners, 3) # border = 3
+        
+        {corners:corners, count:count}
+    
     
     ## Interface
     place: (x, y) ->
