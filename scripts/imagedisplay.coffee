@@ -35,7 +35,7 @@ class ImageDisplay_class
         im.brighten()
         im.save()
 
-class ImageMenu
+class gs.ImageMenu
     constructor: (image, event)->
         # Someone right clicked
         @menu = $("#image_menu").menu()

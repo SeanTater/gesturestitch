@@ -61,8 +61,11 @@ class gs.Image
         if @main?
             @main.remove()
         @main = element
+        # Insert into DOM
         @main.appendTo(@wrapper)
         @wrapper.appendTo(@parent.box)
+        # Fix context menu
+        @main.bind("contextmenu", -> this.handleMenuEvent())
 
     setupCanvas: ->
         # Setup the canvas for this image (when it loads)
@@ -144,6 +147,9 @@ class gs.Image
     
     
     ## Interface
+    handleMenuEvent: (event)->
+        new gs.ImageMenu(this, event) 
+
     place: (x, y) ->
         # Place the image on the desktop.
         # y++ lowers, y-- raises
