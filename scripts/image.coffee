@@ -49,7 +49,7 @@ class gs.Image
             ref = @image.data("ref") ? 0
             ref++
             @image.data("ref", ref)
-            this.setupCanvas(i)
+            this.setupCanvas()
 
         # Tell the world
         gs.Image.all.push(this)
