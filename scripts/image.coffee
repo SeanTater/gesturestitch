@@ -44,6 +44,7 @@ class gs.Image
             #NOTE: Right now you can only copy canvasses images
             # @image is a /reference/ (so when copying images you have the same <image>)
             @image = args.image.image
+            @uimage = @image[0]
             this.setupCanvas()
 
         # Tell the world
@@ -70,6 +71,8 @@ class gs.Image
         @width = @ucanvas.width = @uimage.width
         @height = @ucanvas.height = @uimage.height
         @numel = @width * @height
+        if @numel == 0
+            throw "Can't display a 0 size image"
         
         # Create a plain 2d context (could use WebGL too)
         @context = @ucanvas.getContext("2d")
