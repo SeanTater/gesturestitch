@@ -74,7 +74,7 @@ class gs.Image
         # Create a plain 2d context (could use WebGL too)
         @context = @ucanvas.getContext("2d")
         # Draw image on the canvas
-        this.revert()
+        @context.drawImage(@uimage, 0, 0)
         
         # Now that the image is drawn, we should be able to replace the original image
         this.display(@canvas)
@@ -91,6 +91,7 @@ class gs.Image
     
     revert: ->
         # Draw the image on the canvas
+        this.setupCanvas()
         @context.drawImage(@uimage, 0, 0)
     
     brighten: ->
