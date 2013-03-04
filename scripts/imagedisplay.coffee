@@ -54,7 +54,6 @@ class ImageMenu
             when "Delete" then
                 @image.unlink()
                 gs.Image.remove(@image)
-        
 
 $(->
     # Load the images when the page finishes
