@@ -36,19 +36,24 @@ class ImageDisplay_class
         im.save()
 
 class ImageMenu
-    constructor: (image)->
+    constructor: (image, event)->
         # Someone right clicked
-        @menu_ul = $("#image_menu")
-        @menu = @menu_ul.menu()
+        @menu = $("#image_menu").menu()
+        @menu.css(top: event.pageY, left: event.pageX)
         @menu.show()
+        @event = event
         @image = image
     
     select: (event, ui)->
         # A user selected something on the menu
         @menu.hide()
-        if ui.item.text() == "Delete"
-            @image.unlink()
-            gs.Image.remove(@image)
+        switch ui.item.text()
+            when "Brighten" then
+                @image.brighten()
+                @image.save()
+            when "Delete" then
+                @image.unlink()
+                gs.Image.remove(@image)
         
 
 $(->
