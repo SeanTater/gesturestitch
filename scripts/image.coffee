@@ -65,7 +65,8 @@ class gs.Image
         @main.appendTo(@wrapper)
         @wrapper.appendTo(@parent.box)
         # Fix context menu
-        @main.bind("contextmenu", -> this.handleMenuEvent())
+        self = this
+        @main.on("contextmenu", this.handleMenuEvent)
 
     setupCanvas: ->
         # Setup the canvas for this image (when it loads)
@@ -148,6 +149,7 @@ class gs.Image
     
     ## Interface
     handleMenuEvent: (event)->
+        console.log("working...")
         new gs.ImageMenu(this, event) 
 
     place: (x, y) ->
