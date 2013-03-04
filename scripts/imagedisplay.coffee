@@ -34,6 +34,21 @@ class ImageDisplay_class
         im = new gs.Image(image: im, parent: gs.ImageDisplay)
         im.brighten()
         im.save()
+
+class ImageMenu
+    constructor: (image)->
+        # Someone right clicked
+        @menu_ul = $("#image_menu")
+        @menu = @menu_ul.menu()
+        @menu.show()
+        @image = image
+    
+    select: (event, ui)->
+        # A user selected something on the menu
+        @menu.hide()
+        if ui.item.text() == "Delete"
+            @image.unlink()
+            gs.Image.remove(@image)
         
 
 $(->
