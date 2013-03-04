@@ -46,7 +46,9 @@ class gs.Image
             @image = args.image.image
             @uimage = @image[0]
             # Reference counting for deleting an image after deleting all its copies
-            @image.data("ref", (@image.data("ref") ? 0)++)
+            ref = @image.data("ref") ? 0
+            ref++
+            @image.data("ref", ref)
             this.setupCanvas(i)
 
         # Tell the world

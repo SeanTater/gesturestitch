@@ -48,10 +48,10 @@ class ImageMenu
         # A user selected something on the menu
         @menu.hide()
         switch ui.item.text()
-            when "Brighten" then
+            when "Brighten" 
                 @image.brighten()
                 @image.save()
-            when "Delete" then
+            when "Delete"
                 @image.unlink()
                 gs.Image.remove(@image)
 
