@@ -71,8 +71,8 @@ class gs.Image
         @width = @ucanvas.width = @uimage.width
         @height = @ucanvas.height = @uimage.height
         @numel = @width * @height
-        if @numel == 0
-            throw "Can't display a 0 size image"
+
+        throw "Can't display a 0 size image" if @numel == 0
         
         # Create a plain 2d context (could use WebGL too)
         @context = @ucanvas.getContext("2d")
