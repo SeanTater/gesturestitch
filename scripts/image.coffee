@@ -31,7 +31,7 @@ class gs.Image
         # Create the picture frame and put the image in it
         @wrapper = $("<div class='Image_wrapper' />")
         this.display(@image)
-        
+
         if args.url
             # Create an Image from a url
             @url = @image.attr(src: args.url, class: "Image")
@@ -44,8 +44,10 @@ class gs.Image
             #NOTE: Right now you can only copy canvasses images
             # @image is a /reference/ (so when copying images you have the same <image>)
             @image = args.image.image
-            @uimage = args.image.uimage
-            this.setupCanvas()
+            @uimage = @image[0]
+            # Reference counting for deleting an image after deleting all its copies
+            @image.data("ref", (@image.data("ref") ? 0)++)
+            this.setupCanvas(i)
 
         # Tell the world
         gs.Image.all.push(this)
@@ -71,19 +73,28 @@ class gs.Image
         @width = @ucanvas.width = @uimage.width
         @height = @ucanvas.height = @uimage.height
         @numel = @width * @height
+
+        throw "Can't display a 0 size image" if @numel == 0
         
         # Create a plain 2d context (could use WebGL too)
         @context = @ucanvas.getContext("2d")
         # Draw image on the canvas
-        this.revert()
+        @context.drawImage(@uimage, 0, 0)
         
         # Now that the image is drawn, we should be able to replace the original image
         this.display(@canvas)
         
         # Make pixel access more convenient
         @image_data = @context.getImageData(0, 0, @width, @height)
+
+    unlink: ->
+        # Remove image only if it is original
+        ref = @image.data("ref") - 1 
+        @image.data("ref", ref)
+        @image.remove() if ref == 0
+        # But remove the wrapper either way
+        @wrapper.remove()
     
-    ## Canvas-related functions
     save: ->
         # Save the pixels to the canvas
         # TODO: find out if @image_data.data = @pixels is necessary
@@ -92,6 +103,11 @@ class gs.Image
     
     revert: ->
         # Draw the image on the canvas
+        this.setupCanvas()
+        ref = @image.data("ref") - 1 
+        @image.data("ref", ref)
+        @image.remove() if ref == 0
+
         @context.drawImage(@uimage, 0, 0)
     
     brighten: ->

@@ -29,12 +29,26 @@ class ImageDisplay_class
             image = new gs.Image(url: url, parent: this)
     
     exampleCanvas: ->
-        old_im = gs.Image.all[0]
-        new_im = new gs.Image(Image: old_im, parent: gs.ImageDisplay)
-        console.log(new_im.features())
-        new_im.brighten()
-        new_im.save()  
-        
+        # Do some sample stuff to the canvas to see that it works
+        im = gs.Image.all[0]
+        im = new gs.Image(image: im, parent: gs.ImageDisplay)
+        im.brighten()
+        im.save()
+
+class ImageMenu
+    constructor: (image)->
+        # Someone right clicked
+        @menu_ul = $("#image_menu")
+        @menu = @menu_ul.menu()
+        @menu.show()
+        @image = image
+    
+    select: (event, ui)->
+        # A user selected something on the menu
+        @menu.hide()
+        if ui.item.text() == "Delete"
+            @image.unlink()
+            gs.Image.remove(@image)
 
 $(->
     # Load the images when the page finishes
