@@ -58,6 +58,8 @@ class ImageMenu_class
             when "Delete"
                 @image.unlink()
                 gs.Image.remove(@image)
+            when "Features"
+                @image.features()
 
 $(->
     # Load the images when the page finishes
