@@ -65,7 +65,6 @@ class gs.Image
         @main.appendTo(@wrapper)
         @wrapper.appendTo(@parent.box)
         # Fix context menu
-        self = this
         @main.on("contextmenu", $.proxy(this.handleMenuEvent, this))
 
     setupCanvas: ->
