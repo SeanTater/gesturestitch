@@ -121,6 +121,7 @@ class gs.Image
         i = @numel*4
         while --i > 0
             @image_data.data[i] = @image_data.data[i] * 2 % 256
+        return
 
 
     features: ->
@@ -133,9 +134,10 @@ class gs.Image
         
         # threshold on difference between intensity of the central pixel 
         # and pixels of a circle around this pixel
-        jsfeat.fast_corners.set_threshold(0) # threshold=5, (was 20)
+        jsfeat.fast_corners.set_threshold(5) # threshold=5, (was 20)
          
         # Preallocate point2d_t array
+        # TODO: optimize: This compiles to insane javascript
         corners = [ new jsfeat.point2d_t(0,0,0,0) for i in [0...@width*@height] ]
          
         # perform detection
