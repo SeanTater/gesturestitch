@@ -39,7 +39,8 @@ class ImageMenu_class
     constructor: ->
         # Someone right clicked
         @menu = $("#image_menu").menu(select: $.proxy(this.select, this))
-        @menu.on("blur", $.proxy(this.menu.hide, this))
+        @menu.mouseleave(-> $(this).hide())
+        
 
     show: (image, event) ->
         @menu.css(top: event.pageY, left: event.pageX)
