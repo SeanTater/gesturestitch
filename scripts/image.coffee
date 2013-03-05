@@ -149,8 +149,8 @@ class gs.Image
     
     ## Interface
     handleMenuEvent: (event)->
-        console.log("working...")
-        new gs.ImageMenu(this, event) 
+        event.preventDefault()
+        gs.ImageMenu.show(this, event) 
 
     place: (x, y) ->
         # Place the image on the desktop.

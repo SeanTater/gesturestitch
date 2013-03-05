@@ -35,10 +35,14 @@ class ImageDisplay_class
         im.brighten()
         im.save()
 
-class gs.ImageMenu
-    constructor: (image, event)->
+class ImageMenu_class
+    constructor: ->
         # Someone right clicked
-        @menu = $("#image_menu").menu()
+        @menu = $("#image_menu").menu(select: $.proxy(this.select, this))
+        self = this
+        @menu.on("blur", -> self.menu.hide())
+
+    show: (image, event) ->
         @menu.css(top: event.pageY, left: event.pageX)
         @menu.show()
         @event = event
@@ -47,6 +51,7 @@ class gs.ImageMenu
     select: (event, ui)->
         # A user selected something on the menu
         @menu.hide()
+        console.log("loading...")
         switch ui.item.text()
             when "Brighten" 
                 @image.brighten()
@@ -58,5 +63,6 @@ class gs.ImageMenu
 $(->
     # Load the images when the page finishes
     gs.ImageDisplay = new ImageDisplay_class()
+    gs.ImageMenu = new ImageMenu_class()
     setTimeout(gs.ImageDisplay.exampleCanvas, 1000)
 )
