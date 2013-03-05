@@ -15,4 +15,5 @@
 }
 #stitch-progress {
     display: none;
+    position:absolute;
 }
