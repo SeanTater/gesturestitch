@@ -126,15 +126,20 @@ class gs.Image
 
     features: ->
         # Use JSFeat to find features
+        # FAST doesn't seem to work. Using YAPE06
         this.setupCanvas()
         #color_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C4_t, @pixels)
         gray_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C1_t)
         jsfeat.imgproc.grayscale(@image_data.data, gray_image.data)
-        # Boilerplate code used by JSFeat (there are possibly-more-advanced algorithms)
+
+        #TODO: Find out what 2, 0 are
+        jsfeat.imgproc.box_blur_gray(gray_image, gray_image, 2, 0)
         
-        # threshold on difference between intensity of the central pixel 
-        # and pixels of a circle around this pixel
-        jsfeat.fast_corners.set_threshold(5) # threshold=5, (was 20)
+        #TODO: Fill these in
+        #TODO: Find out what they are
+        jsfeat.yape06.laplacian_threshold = FILL_ME_IN
+        jsfeat.yape06.min_eigen_value_threshold = FILL_ME_IN
+
          
         # Preallocate point2d_t array
         # TODO: optimize: This compiles to insane javascript
@@ -142,7 +147,7 @@ class gs.Image
          
         # perform detection
         # returns the number of detected corners
-        count = jsfeat.fast_corners.detect(gray_image.data, corners, 3) # border = 3
+        count = jsfeat.yape06.detect(gray_image.data, corners)
         console.log("#{count} features")
         {corners:corners, count:count}
     
