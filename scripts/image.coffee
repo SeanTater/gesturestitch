@@ -142,8 +142,9 @@ class gs.Image
 
          
         # Preallocate point2d_t array
-        # TODO: optimize: This compiles to insane javascript
-        corners = [ new jsfeat.point2d_t(0,0,0,0) for i in [0...@width*@height] ]
+        i = @width*@height
+        while --i > 0
+            corners[i] = new jsfeat.point2d_t(0,0,0,0)
          
         # perform detection
         # returns the number of detected corners
