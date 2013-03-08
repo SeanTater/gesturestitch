@@ -142,14 +142,16 @@ class gs.Image
 
          
         # Preallocate point2d_t array
+        corners = []
         i = @width*@height
-        while --i > 0
+        while --i >= 0
             corners[i] = new jsfeat.point2d_t(0,0,0,0)
          
         # perform detection
         # returns the number of detected corners
         count = jsfeat.yape06.detect(gray_image.data, corners)
         console.log("#{count} features")
+        console.log(corners)
         {corners:corners, count:count}
     
     
