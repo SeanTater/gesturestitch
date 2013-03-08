@@ -137,8 +137,8 @@ class gs.Image
         
         #TODO: Fill these in
         #TODO: Find out what they are
-        jsfeat.yape06.laplacian_threshold = FILL_ME_IN
-        jsfeat.yape06.min_eigen_value_threshold = FILL_ME_IN
+        jsfeat.yape06.laplacian_threshold = 30
+        jsfeat.yape06.min_eigen_value_threshold = 25
 
          
         # Preallocate point2d_t array
