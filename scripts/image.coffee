@@ -124,8 +124,45 @@ class gs.Image
             @image_data.data[i] = @image_data.data[i] * 2 % 256
         return
 
-
+    render_corners: (corners, count, image, step) -> 
+        pixel = (0xff << 24) | (0x00 << 16) | (0xff << 8) | 0x00
+        for i in [i..count]
+            x = corners[i].x
+            y = corners[i].y
+            offset = (x + y * step)
+            image[offset] = pixel
+            image[offset-1] = pixel
+            image[offset+1] = pixel
+            image[offset-step] = pixel
+            image[offset+step] = pixel
+    
     features: ->
+        #var corners, count, gray_image, i;
+        this.setupCanvas()
+        corners = []
+        i = 640*480
+        while --i >= 0
+            corners[i] = new jsfeat.point2d_t(0,0,0,0)
+        img_u8 = new jsfeat.matrix_t(640, 480, jsfeat.U8_t | jsfeat.C1_t)
+        #ctx.drawImage(video, 0, 0, 640, 480)
+        imageData = this.context.getImageData(0, 0, 640, 480)
+        #stat.start("grayscale");
+        jsfeat.imgproc.grayscale(this.image_data.data, img_u8.data)
+        #stat.stop("grayscale");
+        #stat.start("box blur");
+        jsfeat.imgproc.box_blur_gray(img_u8, img_u8, 2, 0)
+        #stat.stop("box blur");
+        #jsfeat.yape06.laplacian_threshold = options.lap_thres|0;
+        #jsfeat.yape06.min_eigen_value_threshold = options.eigen_thres|0;
+        #stat.start("yape06");
+        count = jsfeat.yape06.detect(img_u8, corners)
+        #stat.stop("yape06");
+        #render result back to canvas
+        data_u32 = new Uint32Array(imageData.data.buffer)
+        this.render_corners(corners, count, data_u32, 640)
+        console.log("" + count + " features")
+        return console.log(corners)
+        ###
         # Use JSFeat to find features
         # FAST doesn't seem to work. Using YAPE06
         this.setupCanvas()
@@ -152,6 +189,7 @@ class gs.Image
         count = jsfeat.yape06.detect(gray_image, corners)
         console.log("#{count} features")
         console.log(corners)
+        ###
     
     
     ## Interface
