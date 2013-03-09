@@ -137,59 +137,30 @@ class gs.Image
             image[offset+step] = pixel
     
     features: ->
-        #var corners, count, gray_image, i;
         this.setupCanvas()
+
+        # Create output corner array
         corners = []
-        i = @width*@height
+        i = @width*@height # This is the absolute upper limit (i/1000 is more typical)
         while --i >= 0
             corners[i] = new jsfeat.point2d_t(0,0,0,0)
+
+        # Convert image to grayscale  
         img_u8 = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C1_t)
-        #ctx.drawImage(video, 0, 0, 640, 480)
         imageData = this.context.getImageData(0, 0, @width, @height)
-        #stat.start("grayscale");
         jsfeat.imgproc.grayscale(this.image_data.data, img_u8.data)
-        #stat.stop("grayscale");
-        #stat.start("box blur");
+
+        # Blur
         jsfeat.imgproc.box_blur_gray(img_u8, img_u8, 2, 0)
-        #stat.stop("box blur");
-        #jsfeat.yape06.laplacian_threshold = options.lap_thres|0;
-        #jsfeat.yape06.min_eigen_value_threshold = options.eigen_thres|0;
-        #stat.start("yape06");
+
+        # Detect
         count = jsfeat.yape06.detect(img_u8, corners)
-        #stat.stop("yape06");
-        #render result back to canvas
+
+        # Render result back to canvas
         data_u32 = new Uint32Array(imageData.data.buffer)
         this.render_corners(corners, count, data_u32, @width)
         console.log("" + count + " features")
         return console.log(corners)
-        ###
-        # Use JSFeat to find features
-        # FAST doesn't seem to work. Using YAPE06
-        this.setupCanvas()
-        #color_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C4_t, @pixels)
-        gray_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C1_t)
-        jsfeat.imgproc.grayscale(@image_data, gray_image)
-        
-        #TODO: Find out what 2, 0 are
-        #jsfeat.imgproc.box_blur_gray(gray_image, gray_image, 2, 0)
-        
-        #TODO: Find out what they are
-        jsfeat.yape06.laplacian_threshold = 30
-        jsfeat.yape06.min_eigen_value_threshold = 25
-
-         
-        # Preallocate point2d_t array
-        corners = []
-        i = @width*@height
-        while --i >= 0
-            corners[i] = new jsfeat.point2d_t(0,0,0,0)
-         
-        # perform detection
-        # returns the number of detected corners
-        count = jsfeat.yape06.detect(gray_image, corners)
-        console.log("#{count} features")
-        console.log(corners)
-        ###
     
     
     ## Interface
