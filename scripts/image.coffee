@@ -140,12 +140,12 @@ class gs.Image
         #var corners, count, gray_image, i;
         this.setupCanvas()
         corners = []
-        i = 640*480
+        i = @width*@height
         while --i >= 0
             corners[i] = new jsfeat.point2d_t(0,0,0,0)
-        img_u8 = new jsfeat.matrix_t(640, 480, jsfeat.U8_t | jsfeat.C1_t)
+        img_u8 = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C1_t)
         #ctx.drawImage(video, 0, 0, 640, 480)
-        imageData = this.context.getImageData(0, 0, 640, 480)
+        imageData = this.context.getImageData(0, 0, @width, @height)
         #stat.start("grayscale");
         jsfeat.imgproc.grayscale(this.image_data.data, img_u8.data)
         #stat.stop("grayscale");
@@ -159,7 +159,7 @@ class gs.Image
         #stat.stop("yape06");
         #render result back to canvas
         data_u32 = new Uint32Array(imageData.data.buffer)
-        this.render_corners(corners, count, data_u32, 640)
+        this.render_corners(corners, count, data_u32, @width)
         console.log("" + count + " features")
         return console.log(corners)
         ###
