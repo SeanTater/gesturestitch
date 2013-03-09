@@ -50,6 +50,7 @@ class gs.Image
             ref++
             @image.data("ref", ref)
             this.setupCanvas()
+            this.scatter()
 
         # Tell the world
         gs.Image.all.push(this)
@@ -130,12 +131,11 @@ class gs.Image
         this.setupCanvas()
         #color_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C4_t, @pixels)
         gray_image = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C1_t)
-        jsfeat.imgproc.grayscale(@image_data.data, gray_image.data)
-
-        #TODO: Find out what 2, 0 are
-        jsfeat.imgproc.box_blur_gray(gray_image, gray_image, 2, 0)
+        jsfeat.imgproc.grayscale(@image_data, gray_image)
         
-        #TODO: Fill these in
+        #TODO: Find out what 2, 0 are
+        #jsfeat.imgproc.box_blur_gray(gray_image, gray_image, 2, 0)
+        
         #TODO: Find out what they are
         jsfeat.yape06.laplacian_threshold = 30
         jsfeat.yape06.min_eigen_value_threshold = 25
@@ -149,10 +149,9 @@ class gs.Image
          
         # perform detection
         # returns the number of detected corners
-        count = jsfeat.yape06.detect(gray_image.data, corners)
+        count = jsfeat.yape06.detect(gray_image, corners)
         console.log("#{count} features")
         console.log(corners)
-        {corners:corners, count:count}
     
     
     ## Interface
