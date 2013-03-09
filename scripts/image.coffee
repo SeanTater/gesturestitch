@@ -157,10 +157,10 @@ class gs.Image
         count = jsfeat.yape06.detect(img_u8, corners)
 
         # Render result back to canvas
-        data_u32 = new Uint32Array(imageData.data.buffer)
-        this.render_corners(corners, count, data_u32, @width)
+        #data_u32 = new Uint32Array(imageData.data.buffer)
+        #this.render_corners(corners, count, data_u32, @width)
         console.log("" + count + " features")
-        return console.log(corners)
+        corners[0...count]
     
     
     ## Interface
