@@ -18,9 +18,14 @@ class gs.Pixels extends jsfeat.matrix_t
             return @data[location...location+@channel]
     
     box: (x1, y1, x2, y2, value) ->
-        # Naive implementation: this could be faster
+        #TODO: Naive implementation: this could be faster
+
+        # Calculate size to create new box and to ensure sane values
         cols = x2-x1
         rows = y2-y1
+        throw "Box width out of bounds: #{cols}" unless cols > 0
+        throw "Box height out of bounds: #{rows}" unless rows > 0
+
         if value?
             # Set 
             for x in [x1...x2]
@@ -34,6 +39,25 @@ class gs.Pixels extends jsfeat.matrix_t
                 for y in [y1...y2]
                     box.pixel(x, y, this.pixel(x, y))
             return box
+    
+    # ruby-like iterators
+    each: (callback)->
+        # Do something with each pixel.
+        # callback(x, y, value)
+        #TODO: naive
+        for x in [0...@cols]
+            for y in [0...@rows]
+                callback(x, y, this.pixel)
+        return this
+
+    filter: (callback)->
+        # Filter the image with callback.
+        # callback(x, y, value) => value
+        # TODO: this is naive and could be faster
+        for x in [0...@cols]
+            for y in [0...@rows]
+                this.pixel(x, y, callback(x, y, this.pixel(x, y)))
+        return this
 
 class gs.Image
     ###
@@ -126,7 +150,8 @@ class gs.Image
         this.display(@canvas)
         
         # Make pixel access more convenient
-        @image_data = @context.getImageData(0, 0, @width, @height)
+        @ctx_image_data = @context.getImageData(0, 0, @width, @height)
+        @image_data = new gs.Pixels(@width, @height, jsfeat.U8_t | jsfeat.C4_t, @ctx_image_data.data)
 
     unlink: ->
         # Remove image only if it is original
@@ -192,8 +217,8 @@ class gs.Image
         count = jsfeat.yape06.detect(img_u8, corners)
 
         # Render result back to canvas
-        #data_u32 = new Uint32Array(imageData.data.buffer)
-        #this.render_corners(corners, count, data_u32, @width)
+        data_u32 = new Uint32Array(imageData.data.buffer)
+        this.render_corners(corners, count, data_u32, @width)
         console.log("" + count + " features")
         corners[0...count]
 
