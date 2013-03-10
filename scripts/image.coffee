@@ -1,6 +1,6 @@
 window.gs = {} if not gs?
 
-class Pixels extends jsfeat.matrix_t
+class gs.Pixels extends jsfeat.matrix_t
     pixel: (x, y, value)->
         # Safeguards
         throw "X #{x} out of bounds" unless 0 <= x < @cols
@@ -29,7 +29,7 @@ class Pixels extends jsfeat.matrix_t
             return this
         else
             # Get
-            box = new Pixels(cols, rows, @type)
+            box = new gs.Pixels(cols, rows, @type)
             for x in [x1...x2]
                 for y in [y1...y2]
                     box.pixel(x, y, this.pixel(x, y))
