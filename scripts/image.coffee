@@ -1,5 +1,40 @@
 window.gs = {} if not gs?
 
+class Pixels extends jsfeat.matrix_t
+    pixel: (x, y, value)->
+        # Safeguards
+        throw "X #{x} out of bounds" unless 0 <= x < @cols
+        throw "Y #{y} out of bounds" unless 0 <= y < @rows
+        
+        # Locate..
+        location = y * @cols
+        location += x
+        location *= @channel
+
+        # Get or set
+        if value?
+            return @data[location...location+@channel] = @data
+        else
+            return @data[location...location+@channel]
+    
+    box: (x1, y1, x2, y2, value) ->
+        # Naive implementation: this could be faster
+        cols = x2-x1
+        rows = y2-y1
+        if value?
+            # Set 
+            for x in [x1...x2]
+                for y in [y1...y2]
+                    this.pixel(x, y, value.pixel(x, y))
+            return this
+        else
+            # Get
+            box = new Pixels(cols, rows, @type)
+            for x in [x1...x2]
+                for y in [y1...y2]
+                    box.pixel(x, y, this.pixel(x, y))
+            return box
+
 class gs.Image
     ###
         Somewhat full-featured Image
@@ -124,9 +159,9 @@ class gs.Image
             @image_data.data[i] = @image_data.data[i] * 2 % 256
         return
 
-    render_corners: (corners, count, image, step) -> 
+    render_corners: (corners, image, step) ->
         pixel = (0xff << 24) | (0x00 << 16) | (0xff << 8) | 0x00
-        for i in [i..count]
+        for i in [i..corners.length]
             x = corners[i].x
             y = corners[i].y
             offset = (x + y * step)
