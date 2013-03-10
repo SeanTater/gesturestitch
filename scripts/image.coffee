@@ -1,7 +1,6 @@
 window.gs = {} if not gs?
 
-class gs.Pixels extends jsfeat.matrix_t
-    pixel: (x, y, value)->
+jsfeat.matrix_t::pixel = (x, y, value)->
         # Safeguards
         throw "X #{x} out of bounds" unless 0 <= x < @cols
         throw "Y #{y} out of bounds" unless 0 <= y < @rows
@@ -13,11 +12,11 @@ class gs.Pixels extends jsfeat.matrix_t
 
         # Get or set
         if value?
-            return @data[location...location+@channel] = @data
+            return @data[location...location+@channel] = value
         else
             return @data[location...location+@channel]
     
-    box: (x1, y1, x2, y2, value) ->
+jsfeat.matrix_t::box = (x1, y1, x2, y2, value) ->
         #TODO: Naive implementation: this could be faster
 
         # Calculate size to create new box and to ensure sane values
@@ -34,14 +33,14 @@ class gs.Pixels extends jsfeat.matrix_t
             return this
         else
             # Get
-            box = new gs.Pixels(cols, rows, @type)
+            box = new jsfeat.matrix_t(cols, rows, @type)
             for x in [x1...x2]
                 for y in [y1...y2]
                     box.pixel(x, y, this.pixel(x, y))
             return box
     
-    # ruby-like iterators
-    each: (callback)->
+# ruby-like iterators
+jsfeat.matrix_t::each = (callback)->
         # Do something with each pixel.
         # callback(x, y, value)
         #TODO: naive
@@ -50,7 +49,7 @@ class gs.Pixels extends jsfeat.matrix_t
                 callback(x, y, this.pixel)
         return this
 
-    filter: (callback)->
+jsfeat.matrix_t::filter = (callback)->
         # Filter the image with callback.
         # callback(x, y, value) => value
         # TODO: this is naive and could be faster
@@ -151,7 +150,8 @@ class gs.Image
         
         # Make pixel access more convenient
         @ctx_image_data = @context.getImageData(0, 0, @width, @height)
-        @image_data = new gs.Pixels(@width, @height, jsfeat.U8_t | jsfeat.C4_t, @ctx_image_data.data)
+        @image_data = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C4_t)
+        @image_data.set_data(@ctx_image_data)
 
     unlink: ->
         # Remove image only if it is original
@@ -179,9 +179,9 @@ class gs.Image
     brighten: ->
         # Simple effect to demonstrate pixel manipulation
         this.setupCanvas()
-        i = @numel*4
-        while --i > 0
-            @image_data.data[i] = @image_data.data[i] * 2 % 256
+        @image_data.filter(
+            (x, y, value)-> value * 2 % 256
+            )
         return
 
     render_corners: (corners, image, step) ->
