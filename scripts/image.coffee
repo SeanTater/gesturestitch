@@ -1,7 +1,23 @@
 window.gs = {} if not gs?
+class Pixels
+    constructor: (@imageData, @offsetx, @offsety, @cols, @rows)->
+        @offsetx ?= 0
+        @offsety ?= 0
+        @cols ?= @imageData.width - @offsetx
+        @rows ?= @imageData.height - @offsety
+        @data = @imageData.data
+        # This is only for code clarity now. We probably don't need any other channels
+        @channel = 4
+        
+        throw "Pixels() offset x #{@offsetx} out of bounds" unless 0 <= @offsetx < @imageData.width
+        throw "Pixels() offset y #{@offsety} out of bounds" unless 0 <= @offsety < @imageData.height
+        throw "Pixels() width #{@cols} out of bounds" unless 0 <= (@offsetx + @cols) <= @imageData.width
+        throw "Pixels() height #{@rows} out of bounds" unless 0 <= (@offsety + @rows) <= @imageData.height
 
-jsfeat.matrix_t::pixel = (x, y, value)->
+        
+    pixel: (x, y, value)->
         # Safeguards
+        throw "Missing data" unless @data?
         throw "X #{x} out of bounds" unless 0 <= x < @cols
         throw "Y #{y} out of bounds" unless 0 <= y < @rows
         
@@ -11,12 +27,14 @@ jsfeat.matrix_t::pixel = (x, y, value)->
         location *= @channel
 
         # Get or set
+        # uses subarray because it is actually a ClampedUint8Array, which does not have slice() aka: [a...b]
         if value?
-            return @data[location...location+@channel] = value
+            @data.set(value, location)
+            return value
         else
-            return @data[location...location+@channel]
+            return @data.subarray(location, location+@channel)
     
-jsfeat.matrix_t::box = (x1, y1, x2, y2, value) ->
+    box:  (x1, y1, x2, y2, value) ->
         #TODO: Naive implementation: this could be faster
 
         # Calculate size to create new box and to ensure sane values
@@ -39,8 +57,8 @@ jsfeat.matrix_t::box = (x1, y1, x2, y2, value) ->
                     box.pixel(x, y, this.pixel(x, y))
             return box
     
-# ruby-like iterators
-jsfeat.matrix_t::each = (callback)->
+    # ruby-like iterators
+    each:  (callback)->
         # Do something with each pixel.
         # callback(x, y, value)
         #TODO: naive
@@ -49,7 +67,7 @@ jsfeat.matrix_t::each = (callback)->
                 callback(x, y, this.pixel)
         return this
 
-jsfeat.matrix_t::filter = (callback)->
+    filter:  (callback)->
         # Filter the image with callback.
         # callback(x, y, value) => value
         # TODO: this is naive and could be faster
@@ -96,7 +114,9 @@ class gs.Image
             # Don't place the image until there is something in it
             # self is to carry "this" across the closure
             self = this
-            @image.load(-> self.scatter())
+            @image.load(->
+                self.scatter()
+                self.setupCanvas())
             
         else if args.image
             #NOTE: Right now you can only copy canvasses images
@@ -149,9 +169,8 @@ class gs.Image
         this.display(@canvas)
         
         # Make pixel access more convenient
-        @ctx_image_data = @context.getImageData(0, 0, @width, @height)
-        @image_data = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C4_t)
-        @image_data.set_data(@ctx_image_data)
+        @image_data = @context.getImageData(0, 0, @width, @height)
+        @pixels = new Pixels(@image_data)
 
     unlink: ->
         # Remove image only if it is original
@@ -179,8 +198,11 @@ class gs.Image
     brighten: ->
         # Simple effect to demonstrate pixel manipulation
         this.setupCanvas()
-        @image_data.filter(
-            (x, y, value)-> value * 2 % 256
+        @pixels.filter(
+            (x, y, pbright)->
+                for vi in [0...4]
+                    pbright[vi] = pbright[vi] * 2
+                return pbright
             )
         return
 
