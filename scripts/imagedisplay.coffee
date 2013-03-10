@@ -1,5 +1,8 @@
 window.gs = {} if not gs?
 
+# Very cool, came from StackOverflow(Amir). Removes an item from an array
+Array::remove = (e) -> @[t..t] = [] if (t = @indexOf(e)) > -1
+
 class ImageDisplay_class
     constructor: ->
         # Initialize and load a grid (or other layout) of images
@@ -9,7 +12,6 @@ class ImageDisplay_class
         # This is necessary for image placement later
         @width = @box.width()
         @height = @box.height()
-    
         # Normally this would be by XHR but local can't use XHR
         # $.getJSON("images/list", {}, this.processImageList)
         this.processImageList([
@@ -59,7 +61,8 @@ class ImageMenu_class
                 @image.save()
             when "Delete"
                 @image.unlink()
-                gs.Image.remove(@image)
+                gs.Image.all.remove(@image)
+                
             when "Features"
                 @image.features()
 

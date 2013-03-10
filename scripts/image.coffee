@@ -1,5 +1,7 @@
 window.gs = {} if not gs?
 
+# Give JSFeat much needed x, y referencing 
+
 class gs.Image
     ###
         Somewhat full-featured Image
@@ -161,6 +163,10 @@ class gs.Image
         #this.render_corners(corners, count, data_u32, @width)
         console.log("" + count + " features")
         corners[0...count]
+
+    match: (features)->
+        # Naive feature matching using SSE
+
     
     
     ## Interface
