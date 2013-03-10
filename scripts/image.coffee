@@ -1,7 +1,5 @@
 window.gs = {} if not gs?
 
-# Give JSFeat much needed x, y referencing 
-
 class gs.Image
     ###
         Somewhat full-featured Image
