@@ -1,29 +1,40 @@
 window.gs = {} if not gs?
+class BoundsError
+    constructor: (@message)->
+    toString: ->@message
 class Pixels
-    constructor: (@imageData, @offsetx, @offsety, @cols, @rows)->
-        @offsetx ?= 0
-        @offsety ?= 0
-        @cols ?= @imageData.width - @offsetx
-        @rows ?= @imageData.height - @offsety
-        @data = @imageData.data
+    constructor: (args)->
+        # Create a new Pixels from either an image or out of thin air
+
         # This is only for code clarity now. We probably don't need any other channels
         @channel = 4
+        @offsetx = args.x ? 0
+        @offsety = args.y ? 0
+        if args.imdata?
+            @imageData = args.imdata
+            @cols = @imageData.width - @offsetx
+            @rows = @imageData.height - @offsety
+            @data = @imageData.data
+        else
+            @cols = args.cols
+            @rows = args.rows
+            @data = Uint8ClampedArray(@cols * @rows * @channel)
         
-        throw "Pixels() offset x #{@offsetx} out of bounds" unless 0 <= @offsetx < @imageData.width
-        throw "Pixels() offset y #{@offsety} out of bounds" unless 0 <= @offsety < @imageData.height
-        throw "Pixels() width #{@cols} out of bounds" unless 0 <= (@offsetx + @cols) <= @imageData.width
-        throw "Pixels() height #{@rows} out of bounds" unless 0 <= (@offsety + @rows) <= @imageData.height
+        throw BoundsError("Pixels() offset x #{@offsetx} out of bounds") unless 0 <= @offsetx < @imageData.width
+        throw BoundsError("Pixels() offset y #{@offsety} out of bounds") unless 0 <= @offsety < @imageData.height
+        throw BoundsError("Pixels() width #{@cols} out of bounds") unless 0 <= (@offsetx + @cols) <= @imageData.width
+        throw BoundsError("Pixels() height #{@rows} out of bounds") unless 0 <= (@offsety + @rows) <= @imageData.height
 
         
     pixel: (x, y, value)->
         # Safeguards
         throw "Missing data" unless @data?
-        throw "X #{x} out of bounds" unless 0 <= x < @cols
-        throw "Y #{y} out of bounds" unless 0 <= y < @rows
+        throw BoundsError("X #{x} out of bounds") unless 0 <= x < @cols
+        throw BoundsError("Y #{y} out of bounds") unless 0 <= y < @rows
         
         # Locate..
-        location = y * @cols
-        location += x
+        location = (y+@offsety) * @cols
+        location += (x+@offsetx)
         location *= @channel
 
         # Get or set
@@ -40,8 +51,8 @@ class Pixels
         # Calculate size to create new box and to ensure sane values
         cols = x2-x1
         rows = y2-y1
-        throw "Box width out of bounds: #{cols}" unless cols > 0
-        throw "Box height out of bounds: #{rows}" unless rows > 0
+        throw BoundsError("Box width out of bounds: #{cols}") unless cols > 0
+        throw BoundsError("Box height out of bounds: #{rows}") unless rows > 0
 
         if value?
             # Set 
@@ -57,8 +68,17 @@ class Pixels
                     box.pixel(x, y, this.pixel(x, y))
             return box
     
+    region: (x, y, diameter)->
+        # Get a region around a pixel
+        left_top_margin = Math.floor(diameter/2)
+        right_bottom_margin = Math.ceil(diameter/2)
+        throw BoundsError("Region x dimension too close to a bound") unless left_top_margin < x < (@cols - right_top_margin)
+        throw BoundsError("Region y dimension too close to a bound") unless left_top_margin < y < (@rows - right_top_margin)
+
+        return this.box(x-left_top_margin, y-left_top_margin, x+right_bottom_margin, y+right_bottom_margin)
+
     # ruby-like iterators
-    each:  (callback)->
+    each: (callback)->
         # Do something with each pixel.
         # callback(x, y, value)
         #TODO: naive
@@ -67,7 +87,7 @@ class Pixels
                 callback(x, y, this.pixel)
         return this
 
-    filter:  (callback)->
+    filter: (callback)->
         # Filter the image with callback.
         # callback(x, y, value) => value
         # TODO: this is naive and could be faster
@@ -75,6 +95,13 @@ class Pixels
             for y in [0...@rows]
                 this.pixel(x, y, callback(x, y, this.pixel(x, y)))
         return this
+    
+    sse: (other)->
+        # Calculate the sum of squared error with another Pixels
+        sum = 0
+        for d in [0...@data.length]
+            sum += (@data[d]-other[c]) ** 2
+        return sum
 
 class gs.Image
     ###
@@ -246,7 +273,7 @@ class gs.Image
 
     match: (features)->
         # Naive feature matching using SSE
-
+        @pixels.box(
     
     
     ## Interface
