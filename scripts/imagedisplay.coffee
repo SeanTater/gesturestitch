@@ -58,7 +58,6 @@ class ImageMenu_class
         switch ui.item.text()
             when "Brighten" 
                 @image.brighten()
-                @image.save()
             when "Delete"
                 @image.unlink()
                 gs.Image.all.remove(@image)

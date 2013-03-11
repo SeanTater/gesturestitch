@@ -80,7 +80,7 @@ class gs.Image
     ###
         Somewhat full-featured Image
         : brighten()
-            A simple effect to demonstrate pixel manipulation. (Use save() afterward)
+            A simple effect to demonstrate pixel manipulation.
         : display()
             Changes which element is shown (<img> or <canvas>)
         : features()
@@ -204,19 +204,19 @@ class gs.Image
                     pbright[vi] = pbright[vi] * 2
                 return pbright
             )
-        return
+        # This could be unnecessary but it makes it easier to use
+        this.save()
 
-    render_corners: (corners, image, step) ->
-        pixel = (0xff << 24) | (0x00 << 16) | (0xff << 8) | 0x00
+    render_corners: (corners, image) ->
+        pixel = new Uint8ClampedArray([255, 0, 255, 255])
         for i in [i..corners.length]
             x = corners[i].x
             y = corners[i].y
-            offset = (x + y * step)
-            image[offset] = pixel
-            image[offset-1] = pixel
-            image[offset+1] = pixel
-            image[offset-step] = pixel
-            image[offset+step] = pixel
+            @pixels.pixel(x+1, y, pixel)
+            @pixels.pixel(x-1, y, pixel)
+            @pixels.pixel(x, y+1, pixel)
+            @pixels.pixel(x, y-1, pixel)
+        this.save()
     
     features: ->
         this.setupCanvas()
