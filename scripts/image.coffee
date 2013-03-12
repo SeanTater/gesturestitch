@@ -18,7 +18,7 @@ class Pixels
         else
             @cols = args.cols
             @rows = args.rows
-            @data = Uint8ClampedArray(@cols * @rows * @channel)
+            @data = new Uint8ClampedArray(@cols * @rows * @channel)
         
         throw BoundsError("Pixels() offset x #{@offsetx} out of bounds") unless 0 <= @offsetx < @imageData.width
         throw BoundsError("Pixels() offset y #{@offsety} out of bounds") unless 0 <= @offsety < @imageData.height
