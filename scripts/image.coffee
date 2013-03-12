@@ -100,7 +100,8 @@ class Pixels
         # Calculate the sum of squared error with another Pixels
         sum = 0
         for d in [0...@data.length]
-            sum += (@data[d]-other[c]) ** 2
+            a = (@data[d]-other[c])
+            sum += a*a
         return sum
 
 class gs.Image
@@ -273,7 +274,7 @@ class gs.Image
 
     match: (features)->
         # Naive feature matching using SSE
-        @pixels.box(
+        console.log("Unimplemented")
     
     
     ## Interface
