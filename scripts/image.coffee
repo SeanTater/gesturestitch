@@ -18,12 +18,12 @@ class Pixels
             @cols = @imageData.width - @offsetx
             @rows = @imageData.height - @offsety
             @data = @imageData.data
-            throw BoundsError("Pixels() offset x #{@offsetx} out of bounds") unless 0 <= @offsetx < @imageData.width
-            throw BoundsError("Pixels() offset y #{@offsety} out of bounds") unless 0 <= @offsety < @imageData.height
-            throw BoundsError("Pixels() width #{@cols} out of bounds") unless 0 <= (@offsetx + @cols) <= @imageData.width
-            throw BoundsError("Pixels() height #{@rows} out of bounds") unless 0 <= (@offsety + @rows) <= @imageData.height
+            throw new BoundsError("Pixels() offset x #{@offsetx} out of bounds") unless 0 <= @offsetx < @imageData.width
+            throw new BoundsError("Pixels() offset y #{@offsety} out of bounds") unless 0 <= @offsety < @imageData.height
+            throw new BoundsError("Pixels() width #{@cols} out of bounds") unless 0 <= (@offsetx + @cols) <= @imageData.width
+            throw new BoundsError("Pixels() height #{@rows} out of bounds") unless 0 <= (@offsety + @rows) <= @imageData.height
         else
-            throw BoundsError("Must include width and height for bounds") unless args.cols? and args.rows?
+            throw new BoundsError("Must include width and height for bounds") unless args.cols? and args.rows?
             @cols = args.cols
             @rows = args.rows
             @data = new Uint8ClampedArray(@cols * @rows * @channel)
@@ -33,8 +33,8 @@ class Pixels
     pixel: (x, y, value)->
         # Safeguards
         throw "Missing data" unless @data?
-        throw BoundsError("X #{x} out of bounds") unless 0 <= x < @cols
-        throw BoundsError("Y #{y} out of bounds") unless 0 <= y < @rows
+        throw new BoundsError("X #{x} out of bounds") unless 0 <= x < @cols
+        throw new BoundsError("Y #{y} out of bounds") unless 0 <= y < @rows
         
         # Locate..
         location = (y+@offsety) * @cols
@@ -55,10 +55,10 @@ class Pixels
         # Calculate size to create new box and to ensure sane values
         cols = x2-x1
         rows = y2-y1
-        throw BoundsError("Box origin out of bounds: #{x1}, #{y1}") unless 0 <= x1 < @cols and 0 <= y1 < @rows
-        throw BoundsError("Box extent out of bounds: #{x2}, #{y2}") unless 0 <= x2 < @cols and 0 <= y2 < @rows
-        throw BoundsError("Box width out of bounds: #{cols}") unless 0 < cols <=@cols
-        throw BoundsError("Box height out of bounds: #{rows}") unless 0 < rows <= @rows
+        throw new BoundsError("Box origin out of bounds: #{x1}, #{y1}") unless 0 <= x1 < @cols and 0 <= y1 < @rows
+        throw new BoundsError("Box extent out of bounds: #{x2}, #{y2}") unless 0 <= x2 < @cols and 0 <= y2 < @rows
+        throw new BoundsError("Box width out of bounds: #{cols}") unless 0 < cols <=@cols
+        throw new BoundsError("Box height out of bounds: #{rows}") unless 0 < rows <= @rows
 
 
         if value?
@@ -79,8 +79,8 @@ class Pixels
         # Get a region around a pixel
         left_top_margin = Math.floor(diameter/2)
         right_bottom_margin = Math.ceil(diameter/2)
-        throw BoundsError("Region x dimension #{x} too close to a bound") unless left_top_margin < x < (@cols - right_bottom_margin)
-        throw BoundsError("Region y dimension #{y} too close to a bound") unless left_top_margin < y < (@rows - right_bottom_margin)
+        throw new BoundsError("Region x dimension #{x} too close to a bound") unless left_top_margin < x < (@cols - right_bottom_margin)
+        throw new BoundsError("Region y dimension #{y} too close to a bound") unless left_top_margin < y < (@rows - right_bottom_margin)
 
         return this.box(x-left_top_margin, y-left_top_margin, x+right_bottom_margin, y+right_bottom_margin)
 
