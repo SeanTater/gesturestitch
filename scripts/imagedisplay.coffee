@@ -67,7 +67,7 @@ class ImageMenu_class
                 # TODO: Come up with a way to render this
                 features = @image.features()
                 matches = @image.match(features)
-                console.log("#{features.length} features, #{matches.length} matches")
+                console.log("#{features.length} features, #{matches.agreed.length} matches")
 $(->
     # Load the images when the page finishes
     gs.ImageDisplay = new ImageDisplay_class()
