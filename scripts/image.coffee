@@ -65,14 +65,14 @@ class Pixels
             # Set 
             for x in [x1...x2]
                 for y in [y1...y2]
-                    this.pixel(x, y, value.pixel(x, y))
+                    this.pixel(x, y, value.pixel(x-x1, y-y1))
             return this
         else
             # Get
             box = new Pixels(cols:cols, rows:rows)
             for x in [x1...x2]
                 for y in [y1...y2]
-                    box.pixel(x, y, this.pixel(x, y))
+                    box.pixel(x-x1, y-y1, this.pixel(x, y))
             return box
     
     region: (x, y, diameter)->
