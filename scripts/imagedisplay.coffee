@@ -63,11 +63,15 @@ class ImageMenu_class
             when "Features"
                 features = @image.features()
                 @image.renderFeatures(features)
-            when "Match"
-                # TODO: Come up with a way to render this
+                # Debugging info
+                $("#dialog").text("#{features.length} features detected.").dialog()
+            when "Matched Features"
+                #TODO: Come up with a way to render this
                 features = @image.features()
                 matches = @image.match(features)
+                # Debugging info
                 console.log("#{features.length} features, #{matches.agreed.length} matches")
+                $("#dialog").text("#{features.length} features, #{matches.agreed.length} matches").dialog()
 $(->
     # Load the images when the page finishes
     gs.ImageDisplay = new ImageDisplay_class()

@@ -69,7 +69,7 @@ class Pixels
             return this
         else
             # Get
-            box = new jsfeat.matrix_t(cols, rows, @type)
+            box = new Pixels(cols:cols, rows:rows)
             for x in [x1...x2]
                 for y in [y1...y2]
                     box.pixel(x, y, this.pixel(x, y))
@@ -79,8 +79,8 @@ class Pixels
         # Get a region around a pixel
         left_top_margin = Math.floor(diameter/2)
         right_bottom_margin = Math.ceil(diameter/2)
-        throw BoundsError("Region x dimension #{x} too close to a bound") unless left_top_margin < x < (@cols - right_top_margin)
-        throw BoundsError("Region y dimension #{y} too close to a bound") unless left_top_margin < y < (@rows - right_top_margin)
+        throw BoundsError("Region x dimension #{x} too close to a bound") unless left_top_margin < x < (@cols - right_bottom_margin)
+        throw BoundsError("Region y dimension #{y} too close to a bound") unless left_top_margin < y < (@rows - right_bottom_margin)
 
         return this.box(x-left_top_margin, y-left_top_margin, x+right_bottom_margin, y+right_bottom_margin)
 
@@ -287,8 +287,8 @@ class gs.Image
                 end_point = features[end_index]
                 
                 if start_point isnt end_point
-                    start_region = @pixels.region(point.x, point.y, 8)
-                    end_region = @pixels.region(point.x, point.y, 8)
+                    start_region = @pixels.region(start_point.x, start_point.y, 8)
+                    end_region = @pixels.region(end_point.x, end_point.y, 8)
                     sse = start_region.sse(end_region)
                     if sse < best_matches[start_region].sse
                         best_matches[start_region] = {point:end_point, sse:sse}
