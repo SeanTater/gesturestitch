@@ -18,8 +18,7 @@ class ImageDisplay_class
             'images/jumping.jpg',
             'images/jumping_dad.jpg',
             'images/jumping_kid.jpg',
-            'images/tigers.jpg',
-            'images/blackonwhite.png'])
+            'images/tigers.jpg'])
         
         # This comes from jquery-ui
         # TODO: Implement the LeapMotion-based equivalent
