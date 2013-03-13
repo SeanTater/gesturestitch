@@ -106,9 +106,9 @@ class Pixels
     sse: (other)->
         # Calculate the sum of squared error with another Pixels
         sum = 0
-        for d in [0...@data.length]
-            a = (@data[d]-other[c])
-            sum += a*a
+        for pvalue_index in [0...@data.length]
+            err = (@data[pvalue_index]-other[pvalue_index])
+            sum += err*err
         return sum
 
 class gs.Image
