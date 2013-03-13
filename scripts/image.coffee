@@ -1,7 +1,10 @@
 window.gs = {} if not gs?
+jsfeat.point2d_t::toString = -> "#{@x},#{@y}"
+
 class BoundsError
     constructor: (@message)->
     toString: ->@message
+
 class Pixels
     constructor: (args)->
         # Create a new Pixels from either an image or out of thin air
@@ -16,6 +19,7 @@ class Pixels
             @rows = @imageData.height - @offsety
             @data = @imageData.data
         else
+            throw BoundsError("Must include width and height for bounds") unless args.cols? and args.rows?
             @cols = args.cols
             @rows = args.rows
             @data = new Uint8ClampedArray(@cols * @rows * @channel)
@@ -51,8 +55,10 @@ class Pixels
         # Calculate size to create new box and to ensure sane values
         cols = x2-x1
         rows = y2-y1
-        throw BoundsError("Box width out of bounds: #{cols}") unless cols > 0
-        throw BoundsError("Box height out of bounds: #{rows}") unless rows > 0
+        throw BoundsError("Box origin out of bounds: #{x1, y1}") unless 0 <= x1 < @cols and 0 <= y1 < @rows
+        throw BoundsError("Box extent out of bounds: #{x2, y2}") unless 0 <= x2 < @cols and 0 <= y2 < @rows
+        throw BoundsError("Box width out of bounds: #{cols}") unless 0 < cols <=@cols
+        throw BoundsError("Box height out of bounds: #{rows}") unless 0 < rows <= @rows
 
         if value?
             # Set 
@@ -72,8 +78,8 @@ class Pixels
         # Get a region around a pixel
         left_top_margin = Math.floor(diameter/2)
         right_bottom_margin = Math.ceil(diameter/2)
-        throw BoundsError("Region x dimension too close to a bound") unless left_top_margin < x < (@cols - right_top_margin)
-        throw BoundsError("Region y dimension too close to a bound") unless left_top_margin < y < (@rows - right_top_margin)
+        throw BoundsError("Region x dimension #{x} too close to a bound") unless left_top_margin < x < (@cols - right_top_margin)
+        throw BoundsError("Region y dimension #{y} too close to a bound") unless left_top_margin < y < (@rows - right_top_margin)
 
         return this.box(x-left_top_margin, y-left_top_margin, x+right_bottom_margin, y+right_bottom_margin)
 
@@ -274,8 +280,36 @@ class gs.Image
 
     match: (features)->
         # Naive feature matching using SSE
-        console.log("Unimplemented")
-    
+        best_matches = {}
+        # This non-idiomatic syntax is to take advantage of the fact that
+        #  start_region.see(end_point) == end_region.sse(start_point)
+        for start_index in [0...features.length-1]
+            start_point = features[start_index]
+            for end_index in [start_index...features.length]
+                end_point = features[end_index]
+                
+                if start_point isnt end_point
+                    start_region = @pixels.region(point.x, point.y, 8)
+                    end_region = @pixels.region(point.x, point.y, 8)
+                    sse = start_region.sse(end_region)
+                    if sse < best_matches[start_region].sse
+                        best_matches[start_region] = {point:end_point, sse:sse}
+                    if sse < best_matches[end_region].sse
+                        best_matches[end_region] = {point:start_point, sse:sse}
+
+        # Look for features that both agree they are the best for each other
+        agreed_matches = []
+        for origin_loc of best_matches
+            # Trick here: a point can't be a key but it can be a value
+            # So compare the neighbor's neighbor to the initial _location_ key
+            origin = best_matches[point_loc]
+            neighbor_loc = neighbor.point.toString()
+            neighbor = best_matches[neighbor_loc]
+            # If they agree, and the reverse entry is not already there..
+            if neighbor.point == origin and not agreed_matches[neighbor_loc]?
+                agreed_matches.push_back([origin, neighbor])
+        
+        return {best:best_matches, agreed:agreed_matches}
     
     ## Interface
     handleMenuEvent: (event)->
