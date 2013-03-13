@@ -18,16 +18,16 @@ class Pixels
             @cols = @imageData.width - @offsetx
             @rows = @imageData.height - @offsety
             @data = @imageData.data
+            throw BoundsError("Pixels() offset x #{@offsetx} out of bounds") unless 0 <= @offsetx < @imageData.width
+            throw BoundsError("Pixels() offset y #{@offsety} out of bounds") unless 0 <= @offsety < @imageData.height
+            throw BoundsError("Pixels() width #{@cols} out of bounds") unless 0 <= (@offsetx + @cols) <= @imageData.width
+            throw BoundsError("Pixels() height #{@rows} out of bounds") unless 0 <= (@offsety + @rows) <= @imageData.height
         else
             throw BoundsError("Must include width and height for bounds") unless args.cols? and args.rows?
             @cols = args.cols
             @rows = args.rows
             @data = new Uint8ClampedArray(@cols * @rows * @channel)
         
-        throw BoundsError("Pixels() offset x #{@offsetx} out of bounds") unless 0 <= @offsetx < @imageData.width
-        throw BoundsError("Pixels() offset y #{@offsety} out of bounds") unless 0 <= @offsety < @imageData.height
-        throw BoundsError("Pixels() width #{@cols} out of bounds") unless 0 <= (@offsetx + @cols) <= @imageData.width
-        throw BoundsError("Pixels() height #{@rows} out of bounds") unless 0 <= (@offsety + @rows) <= @imageData.height
 
         
     pixel: (x, y, value)->
