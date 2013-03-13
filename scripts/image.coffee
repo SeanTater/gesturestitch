@@ -55,10 +55,11 @@ class Pixels
         # Calculate size to create new box and to ensure sane values
         cols = x2-x1
         rows = y2-y1
-        throw BoundsError("Box origin out of bounds: #{x1, y1}") unless 0 <= x1 < @cols and 0 <= y1 < @rows
-        throw BoundsError("Box extent out of bounds: #{x2, y2}") unless 0 <= x2 < @cols and 0 <= y2 < @rows
+        throw BoundsError("Box origin out of bounds: #{x1}, #{y1}") unless 0 <= x1 < @cols and 0 <= y1 < @rows
+        throw BoundsError("Box extent out of bounds: #{x2}, #{y2}") unless 0 <= x2 < @cols and 0 <= y2 < @rows
         throw BoundsError("Box width out of bounds: #{cols}") unless 0 < cols <=@cols
         throw BoundsError("Box height out of bounds: #{rows}") unless 0 < rows <= @rows
+
 
         if value?
             # Set 
@@ -241,9 +242,9 @@ class gs.Image
         # This could be unnecessary but it makes it easier to use
         this.save()
 
-    render_corners: (corners, image) ->
-        pixel = new Uint8ClampedArray([255, 0, 255, 255])
-        for i in [i..corners.length]
+    renderFeatures: (corners) ->
+        pixel = new Uint8ClampedArray([0, 255, 0, 0])
+        for i in [i...corners.length]
             x = corners[i].x
             y = corners[i].y
             @pixels.pixel(x+1, y, pixel)
@@ -272,9 +273,6 @@ class gs.Image
         # Detect
         count = jsfeat.yape06.detect(img_u8, corners)
 
-        # Render result back to canvas
-        data_u32 = new Uint32Array(imageData.data.buffer)
-        this.render_corners(corners, count, data_u32, @width)
         console.log("" + count + " features")
         corners[0...count]
 

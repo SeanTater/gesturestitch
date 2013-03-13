@@ -59,11 +59,15 @@ class ImageMenu_class
                 @image.brighten()
             when "Delete"
                 @image.unlink()
-                gs.Image.all.remove(@image)
-                
+                gs.Image.all.remove(@image) 
             when "Features"
-                @image.features()
-
+                features = @image.features()
+                @image.renderFeatures(features)
+            when "Match"
+                # TODO: Come up with a way to render this
+                features = @image.features()
+                matches = @image.match(features)
+                console.log("#{features.length} features, #{matches.length} matches")
 $(->
     # Load the images when the page finishes
     gs.ImageDisplay = new ImageDisplay_class()
