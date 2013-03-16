@@ -314,6 +314,16 @@ class gs.Image
         event.preventDefault()
         gs.ImageMenu.show(this, event) 
 
+    getCorners: ->
+        # Return the coordinates of the corners of the image relative to the display
+        this.setupCanvas()
+        [
+            [@image.style.left, @image.style.top],
+            [@image.style.left + @pixels.cols, @image.style.top],
+            [@image.style.left, @image.style.top + @pixels.rows],
+            [@image.style.left + @pixels.cols, @image.style.top + @pixels.rows],
+        ]
+
     place: (x, y) ->
         # Place the image on the desktop.
         # y++ lowers, y-- raises
