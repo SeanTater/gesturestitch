@@ -304,8 +304,13 @@ class gs.Image
                 end_point = features[end_index]
                 
                 if start_point isnt end_point
-                    start_region = @pixels.region(start_point.x, start_point.y, 8)
-                    end_region = @pixels.region(end_point.x, end_point.y, 8)
+                    try
+                        start_region = @pixels.region(start_point.x, start_point.y, 8)
+                        end_region = @pixels.region(end_point.x, end_point.y, 8)
+                    catch BoundsError
+                        # We can't match features really close to an edge
+                        # It may not be a bad idea to delete the feature, but not here probably, so skip it.
+                        continue
                     sse = start_region.sse(end_region)
                     if sse < best_matches[start_point].sse
                         best_matches[start_point] = {point:end_point, sse:sse}
