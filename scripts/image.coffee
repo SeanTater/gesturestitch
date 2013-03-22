@@ -187,10 +187,10 @@ class gs.Image
         # Nest the element (either <img> or <canvas>), and place in document
         if @main?
             @main.remove()
-        @main = element.draggable()
+        @main = element
         # Insert into DOM
         @main.appendTo(@wrapper)
-        @wrapper.appendTo(@parent.box)
+        @wrapper.draggable().appendTo(@parent.box)
         # Fix context menu
         @main.on("contextmenu", $.proxy(this.handleMenuEvent, this))
 
