@@ -22,7 +22,7 @@ class ImageDisplay_class
         
         # This comes from jquery-ui
         # TODO: Implement the LeapMotion-based equivalent
-        @box.sortable()
+        @box.draggable()
     
     processImageList: (imlist)->
         # Load each of the images (by url) from a list
