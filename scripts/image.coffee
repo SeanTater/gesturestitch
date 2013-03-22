@@ -106,9 +106,12 @@ class Pixels
     sse: (other)->
         # Calculate the sum of squared error with another Pixels
         sum = 0
-        for pvalue_index in [0...@data.length]
-            err = (@data[pvalue_index]-other[pvalue_index])
-            sum += err*err
+        this.each((x, y, pixel)->
+            other_pixel = other.pixel(x, y)
+            for i in [0...4]
+                err = value[i] - other_pixel[i]
+                sum += err*err
+        )
         return sum
 
     compareHistogram: (other)->
