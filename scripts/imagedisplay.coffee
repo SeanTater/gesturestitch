@@ -20,9 +20,7 @@ class ImageDisplay_class
             'images/jumping_kid.jpg',
             'images/tigers.jpg'])
         
-        # This comes from jquery-ui
-        # TODO: Implement the LeapMotion-based equivalent
-        @box.draggable()
+        # draggable() is gone because Image has to implement this
     
     processImageList: (imlist)->
         # Load each of the images (by url) from a list

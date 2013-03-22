@@ -111,6 +111,19 @@ class Pixels
             sum += err*err
         return sum
 
+    compareHistogram: (other)->
+        my_histogram = (0 for x in [0...16])
+        other_histogram = (0 for x in [0...16])
+        
+        # FYI |0 means force coersion to int
+        this.each( (x, y, value)->my_histogram[value[0]/16|0]++ )
+        other.each( (x, y, value)->other_histogram[value[0]/16|0]++ )
+        console.log(my_histogram)
+        
+        for i in [0...16]
+            difference = (my_histogram[i] - other_histogram[i])
+            difference * difference
+
 class gs.Image
     ###
         Somewhat full-featured Image
@@ -174,7 +187,7 @@ class gs.Image
         # Nest the element (either <img> or <canvas>), and place in document
         if @main?
             @main.remove()
-        @main = element
+        @main = element.draggable()
         # Insert into DOM
         @main.appendTo(@wrapper)
         @wrapper.appendTo(@parent.box)
