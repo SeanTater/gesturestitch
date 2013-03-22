@@ -293,11 +293,13 @@ class gs.Image
         # Naive feature matching using SSE
         this.setupCanvas()
         best_matches = {}
+        for point in features
+            best_matches[point] = {point: null, sse: 1e100}
+
         # This non-idiomatic syntax is to take advantage of the fact that
         #  start_region.see(end_point) == end_region.sse(start_point)
         for start_index in [0...features.length-1]
             start_point = features[start_index]
-            best_matches[start_point] = {point: null, sse: 1e100}
             for end_index in [start_index...features.length]
                 end_point = features[end_index]
                 
@@ -305,10 +307,10 @@ class gs.Image
                     start_region = @pixels.region(start_point.x, start_point.y, 8)
                     end_region = @pixels.region(end_point.x, end_point.y, 8)
                     sse = start_region.sse(end_region)
-                    if sse < best_matches[start_region].sse
-                        best_matches[start_region] = {point:end_point, sse:sse}
-                    if sse < best_matches[end_region].sse
-                        best_matches[end_region] = {point:start_point, sse:sse}
+                    if sse < best_matches[start_point].sse
+                        best_matches[start_point] = {point:end_point, sse:sse}
+                    if sse < best_matches[end_point].sse
+                        best_matches[end_point] = {point:start_point, sse:sse}
 
         # Look for features that both agree they are the best for each other
         agreed_matches = []
