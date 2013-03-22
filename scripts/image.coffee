@@ -323,7 +323,7 @@ class gs.Image
             # Trick here: a point can't be a key but it can be a value
             # So compare the neighbor's neighbor to the initial _location_ key
             origin = best_matches[origin_loc]
-            neighbor_loc = neighbor.point.toString()
+            neighbor_loc = origin.point
             neighbor = best_matches[neighbor_loc]
             # If they agree, and the reverse entry is not already there..
             if neighbor.point == origin and not agreed_matches[neighbor_loc]?
