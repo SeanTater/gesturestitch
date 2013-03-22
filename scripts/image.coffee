@@ -277,8 +277,8 @@ class gs.Image
 
         # Convert image to grayscale  
         img_u8 = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C1_t)
-        imageData = this.context.getImageData(0, 0, @width, @height)
-        jsfeat.imgproc.grayscale(this.image_data.data, img_u8.data)
+        imageData = @context.getImageData(0, 0, @width, @height)
+        jsfeat.imgproc.grayscale(@image_data.data, img_u8.data)
 
         # Blur
         jsfeat.imgproc.box_blur_gray(img_u8, img_u8, 2, 0)
@@ -291,6 +291,7 @@ class gs.Image
 
     match: (features)->
         # Naive feature matching using SSE
+        this.setupCanvas()
         best_matches = {}
         # This non-idiomatic syntax is to take advantage of the fact that
         #  start_region.see(end_point) == end_region.sse(start_point)
