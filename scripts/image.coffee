@@ -297,7 +297,7 @@ class gs.Image
         #  start_region.see(end_point) == end_region.sse(start_point)
         for start_index in [0...features.length-1]
             start_point = features[start_index]
-            best_features[start_point] = {point: null, sse: 1e100}
+            best_matches[start_point] = {point: null, sse: 1e100}
             for end_index in [start_index...features.length]
                 end_point = features[end_index]
                 
