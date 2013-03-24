@@ -39,7 +39,7 @@ class ImageDisplay_class
         @selected_images.push(image)
         # Limit to two images
         if @selected_images.length == 3
-            @selected_images[0].deselect()
+            @selected_images[0].toggleSelect()
 
     deselect: (image)->
         # we made up remove()
