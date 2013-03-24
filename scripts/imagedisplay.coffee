@@ -21,7 +21,6 @@ class ImageDisplay_class
             'images/tigers.jpg'])
         
         @selected_images = []
-        $("#button-match").click(this.select)
     
     processImageList: (imlist)->
         # Load each of the images (by url) from a list

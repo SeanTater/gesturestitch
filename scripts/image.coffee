@@ -193,7 +193,7 @@ class gs.Image
             @main.remove()
         @main = element
         # Insert into DOM
-        @main.click(this.toggleSelect).appendTo(@wrapper)
+        @main.click($.proxy(this.toggleSelect)).appendTo(@wrapper)
         @wrapper.draggable().appendTo(@parent.box)
         # Fix context menu
         @main.on("contextmenu", $.proxy(this.handleMenuEvent, this))
