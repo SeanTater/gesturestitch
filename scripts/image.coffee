@@ -293,33 +293,31 @@ class gs.Image
         console.log("" + count + " features")
         corners[0...count]
 
-    match: (features)->
+    match: (other_image)->
         # Naive feature matching using SSE
         this.setupCanvas()
         best_matches = {}
-        for point in features
-            best_matches[point] = {point: null, sse: 1e100}
 
-        # This non-idiomatic syntax is to take advantage of the fact that
-        #  start_region.see(end_point) == end_region.sse(start_point)
-        for start_index in [0...features.length-1]
-            start_point = features[start_index]
-            for end_index in [start_index...features.length]
-                end_point = features[end_index]
-                
-                if start_point isnt end_point
-                    try
-                        start_region = @pixels.region(start_point.x, start_point.y, 8)
-                        end_region = @pixels.region(end_point.x, end_point.y, 8)
-                    catch BoundsError
-                        # We can't match features really close to an edge
-                        # It may not be a bad idea to delete the feature, but not here probably, so skip it.
-                        continue
-                    sse = start_region.sse(end_region)
-                    if sse < best_matches[start_point].sse
-                        best_matches[start_point] = {point:end_point, sse:sse}
-                    if sse < best_matches[end_point].sse
-                        best_matches[end_point] = {point:start_point, sse:sse}
+        # These are really expensive to calculate so save them
+        our_features = this.features()
+        their_features = other_image.features()
+        for feature in our_features.concat(their_features)
+            best_matches[feature] = {point:null, sse: 1e100}
+        
+        for our_point in this.features()
+            for their_point in other_image.features()
+                try 
+                    our_region = @pixels.region(our_point.x, our_point.y, 8)
+                    their_region = @pixels.region(their_point.x, their_point.y, 8)
+                catch BoundsError
+                    # We can't match features really close to an edge
+                    # It may not be a bad idea to delete the feature, but not here probably, so skip it.
+                    continue
+                sse = our_region.sse(their_region)
+                if sse < best_matches[our_point].sse
+                    best_matches[our_point] = {point:their_point, sse:sse}
+                if sse < best_matches[their_point].sse
+                    best_matches[their_point] = {point:our_point, sse:sse}
 
         # Look for features that both agree they are the best for each other
         agreed_matches = []
