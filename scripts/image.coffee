@@ -157,7 +157,7 @@ class gs.Image
         @parent = args.parent
         
         # Create the picture frame and put the image in it
-        @wrapper = $("<div class='Image_wrapper' />").draggable().click($.proxy(-> this.toggleSelect))
+        @wrapper = $("<div class='Image_wrapper' />").draggable().click($.proxy(-> this.toggleSelect()))
         this.display(@image)
 
         if args.url
