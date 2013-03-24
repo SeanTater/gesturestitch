@@ -377,7 +377,7 @@ class gs.Image
     toggleSelect: ->
         if @wrapper.hasClass("ui-selected")
             @wrapper.removeClass("ui-selected")
-            @parent.select(this)
+            @parent.deselect(this)
         else
             @wrapper.addClass("ui-selected")
-            @parent.deselect(this)
+            @parent.select(this)
