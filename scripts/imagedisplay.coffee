@@ -20,6 +20,7 @@ class ImageDisplay_class
             'images/jumping_kid.jpg',
             'images/tigers.jpg'])
         
+        $("#button-match").click(this.match.bind(this))
         @selected_images = []
     
     processImageList: (imlist)->
