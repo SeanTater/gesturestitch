@@ -21,6 +21,7 @@ class ImageDisplay_class
             'images/tigers.jpg'])
         
         @selected_images = []
+        $("#button-match").click(this.select)
     
     processImageList: (imlist)->
         # Load each of the images (by url) from a list
@@ -39,7 +40,7 @@ class ImageDisplay_class
         @selected_images.push(image)
         # Limit to two images
         if @selected_images.length == 3
-            @selected_images.shift()
+            @selected_images[0].deselect()
 
     deselect: (image)->
         # we made up remove()
