@@ -7,7 +7,9 @@ body {
 #commands {background: black;}
     #commands li {
         list-style: none;
-        padding: 0.3em 0.5em;}
+        padding: 0.3em 0.1em;}
+    #commands li:hover {
+        color: gray;}
 
 #desktop {
     /* This makes it possible to anchor the images to the desktop */
