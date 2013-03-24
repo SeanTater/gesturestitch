@@ -157,7 +157,7 @@ class gs.Image
         @parent = args.parent
         
         # Create the picture frame and put the image in it
-        @wrapper = $("<div class='Image_wrapper' />")
+        @wrapper = $("<div class='Image_wrapper' />").draggable().click($.proxy(this.toggleSelect))
         this.display(@image)
 
         if args.url
@@ -194,7 +194,7 @@ class gs.Image
         @main = element
         # Insert into DOM
         @main.appendTo(@wrapper)
-        @wrapper.draggable().click($.proxy(this.toggleSelect)).appendTo(@parent.box)
+        @wrapper.appendTo(@parent.box)
         # Fix context menu
         @main.on("contextmenu", $.proxy(this.handleMenuEvent, this))
 
