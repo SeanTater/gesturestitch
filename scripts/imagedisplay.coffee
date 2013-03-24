@@ -20,7 +20,7 @@ class ImageDisplay_class
             'images/jumping_kid.jpg',
             'images/tigers.jpg'])
         
-        # draggable() is gone because Image has to implement this
+        @selected_images = []
     
     processImageList: (imlist)->
         # Load each of the images (by url) from a list
@@ -34,6 +34,25 @@ class ImageDisplay_class
         im = new gs.Image(image: im, parent: gs.ImageDisplay)
         im.brighten()
         im.save()
+
+    select: (image)->
+        @selected_images.push(image)
+        # Limit to two images
+        if @selected_images.length == 3
+            @selected_images.shift()
+
+    deselect: (image)->
+        # we made up remove()
+        @selected_images.remove(image)
+
+    match: ->
+        if @selected_images.length != 2
+            $("<p>Need two images to match.</p>").dialog()
+            return
+
+        matches = @selected_images[0].match(@selected_images[1])
+        # Debugging info
+        $("<p>#{features.length} features, #{matches.agreed.length} matches</p>").dialog()
 
 class ImageMenu_class
     constructor: ->
@@ -62,14 +81,8 @@ class ImageMenu_class
                 features = @image.features()
                 @image.renderFeatures(features)
                 # Debugging info
-                $("#dialog").text("#{features.length} features detected.").dialog()
-            when "Matched Features"
-                #TODO: Come up with a way to render this
-                features = @image.features()
-                matches = @image.match(features)
-                # Debugging info
-                console.log("#{features.length} features, #{matches.agreed.length} matches")
-                $("#dialog").text("#{features.length} features, #{matches.agreed.length} matches").dialog()
+                $("<p>#{features.length} features detected.</p>").dialog()
+
 $(->
     # Load the images when the page finishes
     gs.ImageDisplay = new ImageDisplay_class()

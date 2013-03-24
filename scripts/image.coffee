@@ -193,7 +193,7 @@ class gs.Image
             @main.remove()
         @main = element
         # Insert into DOM
-        @main.appendTo(@wrapper)
+        @main.click(this.toggleSelect).appendTo(@wrapper)
         @wrapper.draggable().appendTo(@parent.box)
         # Fix context menu
         @main.on("contextmenu", $.proxy(this.handleMenuEvent, this))
@@ -374,10 +374,10 @@ class gs.Image
         this.place(x, y)
         this.spin(degrees)
     
-    select: ->
-        # Show the user that this image has been selected
-        @wrapper.addClass("ui-selected")
-    
-    deselect: ->
-        # Show the user this image is deselected
-        @wrapper.removeClass("ui-selected")
+    toggleSelect: ->
+        if @wrapper.hasClass("ui-selected")
+            @wrapper.removeClass("ui-selected")
+            @parent.select(this)
+        else
+            @wrapper.addClass("ui-selected")
+            @parent.deselect(this)
