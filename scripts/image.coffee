@@ -106,10 +106,10 @@ class Pixels
     sse: (other)->
         # Calculate the sum of squared error with another Pixels
         sum = 0
-        this.each((x, y, pixel)->
+        this.each((x, y, value)->
             other_pixel = other.pixel(x, y)
             for i in [0...4]
-                err = pixel[i] - other_pixel[i]
+                err = value[i] - other_pixel[i]
                 sum += err*err
             return
         )
