@@ -304,8 +304,8 @@ class gs.Image
         for feature in our_features.concat(their_features)
             best_matches[feature] = {point:null, sse: 1e100}
         
-        for our_point in this.features()
-            for their_point in other_image.features()
+        for our_point in our_features
+            for their_point in their_features
                 try 
                     our_region = @pixels.region(our_point.x, our_point.y, 8)
                     their_region = @pixels.region(their_point.x, their_point.y, 8)
