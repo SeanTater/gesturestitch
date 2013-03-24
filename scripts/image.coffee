@@ -109,8 +109,9 @@ class Pixels
         this.each((x, y, pixel)->
             other_pixel = other.pixel(x, y)
             for i in [0...4]
-                err = value[i] - other_pixel[i]
+                err = pixel[i] - other_pixel[i]
                 sum += err*err
+            return
         )
         return sum
 
