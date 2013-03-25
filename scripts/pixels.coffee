@@ -1,8 +1,8 @@
-class BoundsError
+class gs.BoundsError
     constructor: (@message)->
     toString: ->@message
 
-class Pixels
+class gs.Pixels
     constructor: (args)->
         # Create a new Pixels from either an image or out of thin air
 

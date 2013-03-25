@@ -95,7 +95,7 @@ class gs.Image
         
         # Make pixel access more convenient
         @image_data = @context.getImageData(0, 0, @width, @height)
-        @pixels = new Pixels(imdata: @image_data)
+        @pixels = new gs.Pixels(imdata: @image_data)
 
     unlink: ->
         # Remove image only if it is original
