@@ -113,7 +113,6 @@ class Pixels
                 for i in [0...4]
                     err = this_pixel[i] - other_pixel[i]
                     sum += err*err
-        throw "debug" if isNaN(sum)
         return sum
 
     compareHistogram: (other)->
@@ -301,9 +300,14 @@ class gs.Image
 
         # These are really expensive to calculate so save them
         our_features = this.features()
+        our_best = {}
+        for feature in our_features
+            our_best[feature] = {point:null, sse: 1e100}
+
         their_features = other_image.features()
-        for feature in our_features.concat(their_features)
-            best_matches[feature] = {point:null, sse: 1e100}
+        their_best = {}
+        for feature in their_features
+            their_best[feature] = {point:null, sse: 1e100}
         
 
         for our_point in our_features
@@ -321,10 +325,9 @@ class gs.Image
                     # It may not be a bad idea to delete the feature, but not here probably, so skip it.
                     continue
                 sse = our_region.sse(their_region)
-                if sse < best_matches[our_point].sse
-                    best_matches[our_point] = {point:their_point, sse:sse}
-                if sse < best_matches[their_point].sse
-                    best_matches[their_point] = {point:our_point, sse:sse}
+                if sse < our_best[our_point].sse and sse < their_best[their_point].sse
+                    our_best[our_point] = {point:their_point, sse:sse}
+                    their_best[their_point] = {point:our_point, sse:sse}
 
         # Look for features that both agree they are the best for each other
         agreed_matches = []
