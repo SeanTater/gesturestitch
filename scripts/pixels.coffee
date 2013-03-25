@@ -2,6 +2,30 @@ class gs.BoundsError
     constructor: (@message)->
     toString: ->@message
 
+class gs.Transform
+    constructor: (@matrix)->
+        # jsfeat has matrix_t but it seems too complicated for what we need.
+        @matrix ?= [[1.0, 0.0],
+                   [0.0, 1.0]]
+
+    multiply: (trans)->
+        # As many rows as us, as many columns as them.
+        # TODO: should probably rewrite to take advantage of only having 3x3 matrices
+        rows = @matrix.length
+        columns = trans[0].length
+        
+        adds = @matrix[0].length
+        throw "Invalid size for matrix multiplication" unless @matrix[0].length == trans.length
+        
+        gs.Transform(for row_i in [0...rows]
+            for column_i in [0...columns]
+                sum = 0
+                for part in [0...adds]
+                    sum += @matrix[row][part] * trans[part][column]
+                sum
+            )
+        
+
 class gs.Pixels
     constructor: (args)->
         # Create a new Pixels from either an image or out of thin air
