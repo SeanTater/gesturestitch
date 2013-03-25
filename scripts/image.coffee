@@ -106,13 +106,12 @@ class Pixels
     sse: (other)->
         # Calculate the sum of squared error with another Pixels
         sum = 0
-        this.each((x, y, value)->
-            other_pixel = other.pixel(x, y)
-            for i in [0...4]
-                err = value[i] - other_pixel[i]
-                sum += err*err
-            return
-        )
+        for x in [0...@cols]
+            for y in [0...@cols]
+                other_pixel = other.pixel(x, y)
+                for i in [0...4]
+                    err = value[i] - other_pixel[i]
+                    sum += err*err
         return sum
 
     compareHistogram: (other)->
@@ -304,6 +303,7 @@ class gs.Image
         for feature in our_features.concat(their_features)
             best_matches[feature] = {point:null, sse: 1e100}
         
+
         for our_point in our_features
             for their_point in their_features
                 try 

@@ -48,7 +48,7 @@ class ImageDisplay_class
 
     match: ->
         if @selected_images.length != 2
-            $("<p>Need two images to match.</p>").dialog()
+            $("#status").text("Need two images to match.").dialog()
             return
 
         matches = @selected_images[0].match(@selected_images[1])
