@@ -113,6 +113,7 @@ class Pixels
                 for i in [0...4]
                     err = this_pixel[i] - other_pixel[i]
                     sum += err*err
+        throw "debug" if isNaN(NaN)
         return sum
 
     compareHistogram: (other)->
