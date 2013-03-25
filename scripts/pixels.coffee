@@ -1,3 +1,7 @@
+class BoundsError
+    constructor: (@message)->
+    toString: ->@message
+
 class Pixels
     constructor: (args)->
         # Create a new Pixels from either an image or out of thin air
