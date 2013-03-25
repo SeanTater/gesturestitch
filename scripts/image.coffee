@@ -332,8 +332,8 @@ class gs.Image
         agreed_matches = {}
         agreed_matches.all = []
         for our_point of our_best when our_point.point isnt null
-            agreed_matches[our_point] = their_point
-            agreed_matches.all.push([our_point, their_point])
+            agreed_matches[our_point] = our_best[our_point]
+            agreed_matches.all.push([our_point, their_point, agreed_matches[our_point].sse])
         
         return agreed_matches
     
