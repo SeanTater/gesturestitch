@@ -53,7 +53,7 @@ class ImageDisplay_class
 
         matches = @selected_images[0].match(@selected_images[1])
         # Debugging info
-        $("<p>#{features.length} features, #{matches.agreed.length} matches</p>").dialog()
+        $("#status").text("#{matches.length} matches found")
 
 class ImageMenu_class
     constructor: ->

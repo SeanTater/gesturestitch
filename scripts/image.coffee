@@ -329,19 +329,11 @@ class gs.Image
                     our_best[our_point] = {point:their_point, sse:sse}
                     their_best[their_point] = {point:our_point, sse:sse}
 
-        # Look for features that both agree they are the best for each other
-        agreed_matches = []
-        for origin_loc of best_matches
-            # Trick here: a point can't be a key but it can be a value
-            # So compare the neighbor's neighbor to the initial _location_ key
-            origin = best_matches[origin_loc]
-            neighbor_loc = origin.point
-            neighbor = best_matches[neighbor_loc]
-            # If they agree, and the reverse entry is not already there..
-            if neighbor.point == origin and not agreed_matches[neighbor_loc]?
-                agreed_matches.push_back([origin, neighbor])
+        agreed_matches = {}
+        for our_point of our_best when our_point.point isnt null
+            agreed_matches[our_point] = their_point
         
-        return {best:best_matches, agreed:agreed_matches}
+        return agreed_matches
     
     ## Interface
     handleMenuEvent: (event)->
