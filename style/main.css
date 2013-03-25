@@ -6,10 +6,10 @@ body {
 
 #commands {background: black;}
     #commands li {
+        display: inline-block;
         list-style: none;
         padding: 0.3em 0.1em;}
-    #commands li:hover {
-        color: gray;}
+    #status {float: right;}
 
 #desktop {
     /* This makes it possible to anchor the images to the desktop */
