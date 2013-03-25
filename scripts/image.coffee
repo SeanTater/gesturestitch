@@ -108,9 +108,10 @@ class Pixels
         sum = 0
         for x in [0...@cols]
             for y in [0...@cols]
+                this_pixel = this.pixel(x, y)
                 other_pixel = other.pixel(x, y)
                 for i in [0...4]
-                    err = value[i] - other_pixel[i]
+                    err = this_pixel[i] - other_pixel[i]
                     sum += err*err
         return sum
 
