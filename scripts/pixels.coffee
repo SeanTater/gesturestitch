@@ -2,6 +2,7 @@ class gs.BoundsError
     constructor: (@message)->
     toString: ->@message
 
+# TODO: Could this be joined with Pixels.pixel? Can we make it efficient enough for that?
 class gs.Transform
     constructor: (@matrix)->
         # jsfeat has matrix_t but it seems too complicated for what we need.
@@ -24,6 +25,11 @@ class gs.Transform
                     sum += @matrix[row][part] * trans[part][column]
                 sum
             )
+    
+    translate: (x, y)->
+        new Transform([[1, 0, x
+                        0, 1, y, 
+                        0, 0, 1]]).multiply(this)
         
 
 class gs.Pixels
