@@ -8,8 +8,7 @@ Overview
 --------
 - Runs in a web browser
 - Must be on a server (not local) in order to run correctly on Chrome (cross site origin rules)
-- Requires LeapMotion API + controller
-- Attempts to stitch together two images when requested by user via gestures
+- Gesture features require LeapMotion API + controller
 
 Setup
 -----
@@ -22,19 +21,21 @@ http://goo.gl/gxRUF
 
 Code Conventions
 ----------------
-- @_ = private
+- @\_ = private
 - @u = unwrapped (DOM element)
 
-Manifest
---------
+Code Overview
+-------------
 - ImageDisplay
  - Loads image list
- - Creates Image's
- - Arranges them in a wrapper
+ - Creates Images
+ - Holds list of selected images
 - Image
- - Calls for image loading
- - Creates Canvas's
- - Has the image DOM element
+ - Loads Images
+ - Creates/displays <canvas>'s
+ - Creates Pixels
+ - Searches for 2D corners using features()
+ - Matches features using match()
 - Canvas
  - Creates a 2d canvas for pixel manipulation
  - Provides convenient access to pixel data
