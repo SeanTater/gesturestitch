@@ -27,7 +27,7 @@ class gs.Image
         # @parent is to remove cyclic dependencies
         # you can use "this" from ImageDisplay before its fully defined
         # but you can't for gs.ImageDisplay
-        parent = args.parent
+        @parent = args.parent
         
         # Create the picture frame and put the image in it
         @wrapper = $("<div class='Image_wrapper' />").draggable().click(this.toggleSelect.bind(this))
@@ -53,6 +53,7 @@ class gs.Image
             @image.data("ref", ref)
             this.setupCanvas()
             this.scatter()
+
         else if args.pixels
             # Note this means some images actually have no @image
             @pixels = args.pixels
