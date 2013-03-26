@@ -215,9 +215,9 @@ class gs.Image
         
         return agreed_matches
    
-    overlay: (other)->
-        # TODO: Needs to actually take matched points into account
-        new Image(@pixels.merge(other.pixels))
+    overlay: (other, trans)->
+        # TODO: stub: needs to actually take matched points into account
+        new gs.Image(@pixels.merge(other.pixels), new gs.Transform().translate(25, 34))
 
     ## Interface
     handleMenuEvent: (event)->

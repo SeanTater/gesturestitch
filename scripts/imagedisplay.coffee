@@ -54,6 +54,8 @@ class ImageDisplay_class
         matches = @selected_images[0].match(@selected_images[1])
         # Debugging info
         $("#status").text("#{matches.all.length} matches found")
+        # Now pretend to overlay
+        @selected_images[0].overlay(@selected_images[1], null)
 
 class ImageMenu_class
     constructor: ->
