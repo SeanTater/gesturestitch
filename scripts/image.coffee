@@ -27,7 +27,7 @@ class gs.Image
         # @parent is to remove cyclic dependencies
         # you can use "this" from ImageDisplay before its fully defined
         # but you can't for gs.ImageDisplay
-        @parent = args.parent
+        parent = args.parent
         
         # Create the picture frame and put the image in it
         @wrapper = $("<div class='Image_wrapper' />").draggable().click(this.toggleSelect.bind(this))
@@ -44,7 +44,6 @@ class gs.Image
                 self.setupCanvas())
             
         else if args.image
-            #NOTE: Right now you can only copy canvasses images
             # @image is a /reference/ (so when copying images you have the same <image>)
             @image = args.image.image
             @uimage = @image[0]
@@ -54,6 +53,11 @@ class gs.Image
             @image.data("ref", ref)
             this.setupCanvas()
             this.scatter()
+        else if args.pixels
+            # Note this means some images actually have no @image
+            @pixels = args.pixels
+            this.scatter()
+            this.setupCanvas()
 
         # Tell the world
         gs.Image.all.push(this)
@@ -88,7 +92,7 @@ class gs.Image
         # Create a plain 2d context (could use WebGL too)
         @context = @ucanvas.getContext("2d")
         # Draw image on the canvas
-        @context.drawImage(@uimage, 0, 0)
+        @context.drawImage(@uimage, 0, 0) if @uimage?
         
         # Now that the image is drawn, we should be able to replace the original image
         this.display(@canvas)
@@ -209,11 +213,15 @@ class gs.Image
             agreed_matches.all.push([our_point, their_point, agreed_matches[our_point].sse])
         
         return agreed_matches
-    
+   
+    overlay: (other)->
+        # TODO: Needs to actually take matched points into account
+        new Image(@pixels.merge(other.pixels))
+
     ## Interface
     handleMenuEvent: (event)->
         event.preventDefault()
-        gs.ImageMenu.show(this, event) 
+        gs.ImageMenu.show(this, event)
 
     getCorners: ->
         # Return the coordinates of the corners of the image relative to the display
