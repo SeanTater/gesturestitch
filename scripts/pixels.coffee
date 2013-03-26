@@ -150,10 +150,10 @@ class gs.Pixels
         shift = trans.getTranslation()
 
         # Find image extrema
-        greatest_x = max(shift.x + other.cols, @cols)
-        least_x = min(shift.x, 0)
-        greatest_y = max(shift.y + other.rows, @rows)
-        least_y = min(shift.y, 0)
+        greatest_x = Math.max(shift.x + other.cols, @cols)
+        least_x = Math.min(shift.x, 0)
+        greatest_y = Math.max(shift.y + other.rows, @rows)
+        least_y = Math.min(shift.y, 0)
          
         # Calculate new image dimensions
         new_width = greatest_x - least_x
@@ -162,7 +162,6 @@ class gs.Pixels
         # How much to move both of the images so that 0,0 is the minimum x,y
         shift_x = -least_x
         shift_y = -least_y
-
         new_image = new Pixels(cols: new_width, rows: new_height)
         # Do the simple part first: copy the first image
         for x in [0...@cols]
