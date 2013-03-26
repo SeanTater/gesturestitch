@@ -19,7 +19,7 @@ class gs.Transform
         adds = @matrix[0].length
         throw "Invalid size for matrix multiplication" unless @matrix[0].length == trans.matrix.length
         
-        gs.Transform(for row_i in [0...rows]
+        new gs.Transform(for row_i in [0...rows]
             for column_i in [0...columns]
                 sum = 0
                 for part in [0...adds]
