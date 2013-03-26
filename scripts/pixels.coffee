@@ -23,7 +23,7 @@ class gs.Transform
             for column_i in [0...columns]
                 sum = 0
                 for part in [0...adds]
-                    sum += @matrix[row][part] * trans.matrix[part][column]
+                    sum += @matrix[row_i][part] * trans.matrix[part][column_i]
                 sum
             )
     
