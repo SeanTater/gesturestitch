@@ -6,8 +6,9 @@ class gs.BoundsError
 class gs.Transform
     constructor: (@matrix)->
         # jsfeat has matrix_t but it seems too complicated for what we need.
-        @matrix ?= [[1.0, 0.0],
-                   [0.0, 1.0]]
+        @matrix ?= [[1.0, 0.0, 0.0],
+                    [0.0, 1.0, 0.0]
+                    [0.0, 0.0, 1.0]]
 
     multiply: (trans)->
         # As many rows as us, as many columns as them.
