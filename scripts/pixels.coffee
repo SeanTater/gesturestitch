@@ -13,24 +13,40 @@ class gs.Transform
         # As many rows as us, as many columns as them.
         # TODO: should probably rewrite to take advantage of only having 3x3 matrices
         rows = @matrix.length
-        columns = trans[0].length
+        columns = trans.matrix[0].length
         
         adds = @matrix[0].length
-        throw "Invalid size for matrix multiplication" unless @matrix[0].length == trans.length
+        throw "Invalid size for matrix multiplication" unless @matrix[0].length == trans.matrix.length
         
         gs.Transform(for row_i in [0...rows]
             for column_i in [0...columns]
                 sum = 0
                 for part in [0...adds]
-                    sum += @matrix[row][part] * trans[part][column]
+                    sum += @matrix[row][part] * trans.matrix[part][column]
                 sum
             )
+    
+    coord: (x, y)->
+        # This should be pretty efficient. It will be run a lot of times.
+        {x: (@matrix[0][0] * x) + (@matrix[0][1] * y) + @matrix[0][2]
+         y: (@matrix[1][0] * x) + (@matrix[1][1] * y) + @matrix[1][2]}
+
+    getTranslation: -> {x: @matrix[0][2], y: @matrix[1][2]}
     
     translate: (x, y)->
         new Transform([[1, 0, x
                         0, 1, y, 
                         0, 0, 1]]).multiply(this)
-        
+
+    rotate: (radians)->
+        new Transform([Math.cos(radians), Math.sin(radians), 0],
+                      [-Math.sin(radians), Math.cos(radians), 0],
+                      [0, 0, 1]).multiply(this)
+    
+    scale: (factor)->
+        new Transform([[factor, 0, 0],
+                       [0, factor, 0],
+                       [0, 0, 1]]).multiply(this)
 
 class gs.Pixels
     constructor: (args)->
@@ -54,8 +70,6 @@ class gs.Pixels
             @cols = args.cols
             @rows = args.rows
             @data = new Uint8ClampedArray(@cols * @rows * @channel)
-        
-
         
     pixel: (x, y, value)->
         # Safeguards
@@ -129,6 +143,44 @@ class gs.Pixels
             for y in [0...@rows]
                 this.pixel(x, y, callback(x, y, this.pixel(x, y)))
         return this
+
+    merge: (other, trans)->
+        # Merge two images given a specific transformation matrix
+        shift = trans.getTranslation()
+
+        # Find image extrema
+        greatest_x = max(shift.x + other.cols, @cols)
+        least_x = min(shift.x, 0)
+        greatest_y = max(shift.y + other.rows, @rows)
+        least_y = min(shift.y, 0)
+         
+        # Calculate new image dimensions
+        new_width = greatest_x - least_x
+        new_height = greatest_y - least_y
+        
+        # How much to move both of the images so that 0,0 is the minimum x,y
+        shift_x = -least_x
+        shift_y = -least_y
+
+        new_image = new Pixels(cols: new_width, rows: new_height)
+        # Do the simple part first: copy the first image
+        for x in [0...@cols]
+            for y in [0...@rows]
+                new_image.pixel(x+shift_x, y+shift_y, this.pixel(x, y))
+        
+        # Now copy the second image using the transform
+        #TODO: Improve performance
+        #NOTE: This raytracing-like approach assumes every pixel in the output is a function of the second
+        #      but this is not really a sane assumption (usually <25% actually overlaps)
+        for x in [0...new_width]
+            for y in [0...new_height]
+                im2_coord = trans.coord(x, y)
+                # TODO: use interpolation
+                try
+                    pvalue = other.pixel(im2_coord.x|0, im2_coord.y|0)
+                catch BoundsError
+                    this.pixel(x, y, pvalue)
+        return new_image
     
     sse: (other)->
         # Calculate the sum of squared error with another Pixels
