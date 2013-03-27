@@ -60,8 +60,8 @@ class gs.Image
         else if args.pixels
             # Note this means some images actually have no @image
             @pixels = args.pixels
-            @width = pixels.rows
-            @height = pixels.cols
+            @width = @pixels.rows
+            @height = @pixels.cols
             this.scatter()
             this.setupCanvas()
 
