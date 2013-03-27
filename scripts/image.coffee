@@ -37,16 +37,19 @@ class gs.Image
             # Create an Image from a url
             @url = @image.attr(src: args.url, class: "Image")
             # Don't place the image until there is something in it
-            # self is to carry "this" across the closure
-            self = this
-            @image.load(->
-                self.scatter()
-                self.setupCanvas())
+            @image.load((->
+                @width = @uimage.width
+                @height = @uimage.height
+                this.scatter()
+                this.setupCanvas()).bind(this))
             
         else if args.image
             # @image is a /reference/ (so when copying images you have the same <image>)
             @image = args.image.image
             @uimage = @image[0]
+            @width = @uimage.width
+            @height = @uimage.height
+            
             # Reference counting for deleting an image after deleting all its copies
             ref = @image.data("ref") ? 0
             ref++
@@ -57,6 +60,8 @@ class gs.Image
         else if args.pixels
             # Note this means some images actually have no @image
             @pixels = args.pixels
+            @width = pixels.row
+            @height = pixels.cols
             this.scatter()
             this.setupCanvas()
 
@@ -84,8 +89,8 @@ class gs.Image
         @canvas = $("<canvas>")
         @ucanvas = @canvas[0]
         
-        @width = @ucanvas.width = @uimage.width
-        @height = @ucanvas.height = @uimage.height
+        @ucanvas.width = @width
+        @ucanvas.height = @height
         @numel = @width * @height
 
         throw "Can't display a 0 size image" if @numel == 0
