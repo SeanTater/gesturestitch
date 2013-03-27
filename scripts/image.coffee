@@ -60,7 +60,7 @@ class gs.Image
         else if args.pixels
             # Note this means some images actually have no @image
             @pixels = args.pixels
-            @width = pixels.row
+            @width = pixels.rows
             @height = pixels.cols
             this.scatter()
             this.setupCanvas()
@@ -117,7 +117,6 @@ class gs.Image
     
     save: ->
         # Save the pixels to the canvas
-        # TODO: find out if @image_data.data = @pixels is necessary
         this.setupCanvas()
         @context.putImageData(@image_data, 0, 0)
     
