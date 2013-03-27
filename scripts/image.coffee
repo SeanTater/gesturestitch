@@ -64,6 +64,7 @@ class gs.Image
             @height = @pixels.cols
             this.scatter()
             this.setupCanvas()
+            this.draw()
 
         # Tell the world
         gs.Image.all.push(this)
@@ -120,14 +121,14 @@ class gs.Image
         this.setupCanvas()
         @context.putImageData(@image_data, 0, 0)
     
-    revert: ->
+    draw: (pixels)->
         # Draw the image on the canvas
         this.setupCanvas()
-        ref = @image.data("ref") - 1 
-        @image.data("ref", ref)
-        @image.remove() if ref == 0
+        
+        i_data = @context.createImageData(@width, @height)
+        i_data.data = @pixels.data
+        @context.putImageData(i_data, 0, 0)
 
-        @context.drawImage(@uimage, 0, 0)
     
     brighten: ->
         # Simple effect to demonstrate pixel manipulation
