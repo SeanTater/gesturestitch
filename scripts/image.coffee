@@ -217,7 +217,7 @@ class gs.Image
    
     overlay: (other, trans)->
         # TODO: stub: needs to actually take matched points into account
-        new gs.Image(@pixels.merge(other.pixels, trans))
+        new gs.Image(pixels: @pixels.merge(other.pixels, trans), parent: @parent)
 
     ## Interface
     handleMenuEvent: (event)->
