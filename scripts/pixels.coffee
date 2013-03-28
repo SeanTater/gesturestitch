@@ -182,7 +182,7 @@ class gs.Pixels
                     pvalue = other.pixel(im2_coord.x|0, im2_coord.y|0)
                 catch err
                     continue
-                this.pixel(x, y, pvalue)
+                new_image.pixel(x, y, pvalue)
         return new_image
     
     sse: (other)->
