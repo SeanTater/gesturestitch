@@ -20,9 +20,6 @@ class gs.Image
             Rotate the image (only in display, same in pixel manipulation)
     ###
     constructor: (args)->
-        # Create a new Image
-        @image = $("<img />")
-        @uimage = @image[0]
         
         # @parent is to remove cyclic dependencies
         # you can use "this" from ImageDisplay before its fully defined
@@ -31,11 +28,19 @@ class gs.Image
         
         # Create the picture frame and put the image in it
         @wrapper = $("<div class='Image_wrapper' />").draggable().click(this.toggleSelect.bind(this))
-        this.display(@image)
 
+        if args.pixels?
+            @pixels = args.pixels
+            @width = @pixels.cols
+            @height = @pixels.rows
+            this.setupCanvas()
+            this.draw()
+            this.scatter()
         if args.url
             # Create an Image from a url
-            @url = @image.attr(src: args.url, class: "Image")
+            @image = $("<img/>")
+            @uimage = @image[0]
+            @image.attr(src: args.url, class: "Image")
             # Don't place the image until there is something in it
             @image.load((->
                 @width = @uimage.width
@@ -56,15 +61,8 @@ class gs.Image
             @image.data("ref", ref)
             this.setupCanvas()
             this.scatter()
-
-        else if args.pixels
-            # Note this means some images actually have no @image
-            @pixels = args.pixels
-            @width = @pixels.rows
-            @height = @pixels.cols
-            this.scatter()
-            this.setupCanvas()
-            this.draw()
+        
+        this.display(image)
 
         # Tell the world
         gs.Image.all.push(this)
