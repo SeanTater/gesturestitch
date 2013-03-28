@@ -41,13 +41,14 @@ class gs.Image
             @image = $("<img/>")
             @uimage = @image[0]
             @image.attr(src: args.url, class: "Image")
+            this.display(@image)
             # Don't place the image until there is something in it
             @image.load((->
                 @width = @uimage.width
                 @height = @uimage.height
                 this.scatter()
                 this.setupCanvas()).bind(this))
-            
+        ###    
         else if args.image
             # @image is a /reference/ (so when copying images you have the same <image>)
             @image = args.image.image
@@ -61,9 +62,7 @@ class gs.Image
             @image.data("ref", ref)
             this.setupCanvas()
             this.scatter()
-        
-        this.display(image)
-
+        ###
         # Tell the world
         gs.Image.all.push(this)
 
