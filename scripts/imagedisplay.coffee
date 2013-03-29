@@ -32,8 +32,8 @@ class ImageDisplay_class
     exampleCanvas: ->
         # Do some sample stuff to the canvas to see that it works
         im = gs.Image.all[0]
-        im.setupCanvas()
-        im = new gs.Image(pixels: im.pixels, parent: gs.ImageDisplay)
+        #im.setupCanvas()
+        #im = new gs.Image(pixels: im.pixels, parent: gs.ImageDisplay)
         im.brighten()
         im.save()
 
