@@ -69,9 +69,9 @@ class gs.Pixels
             throw new gs.BoundsError("Pixels() width #{@width} out of bounds") unless 0 <= (@offsetx + @width) <= @imageData.width
             throw new gs.BoundsError("Pixels() height #{@height} out of bounds") unless 0 <= (@offsety + @height) <= @imageData.height
         else
-            throw new gs.BoundsError("Must include width and height for bounds") unless args.cols? and args.rows?
-            @width = args.cols
-            @height = args.rows
+            throw new gs.BoundsError("Must include width and height for bounds") unless args.width? and args.height?
+            @width = args.width
+            @height = args.height
             @data = new Uint8ClampedArray(@width * @height * @channel)
         
     pixel: (x, y, value)->
@@ -164,7 +164,7 @@ class gs.Pixels
         # How much to move both of the images so that 0,0 is the minimum x,y
         shift_x = -least_x
         shift_y = -least_y
-        new_image = new gs.Pixels(cols: new_width, rows: new_height)
+        new_image = new gs.Pixels(width: new_width, height: new_height)
         # Do the simple part first: copy the first image
         for x in [0...@width]
             for y in [0...@height]
