@@ -115,8 +115,7 @@ class gs.Image
     
     save: ->
         # Save the pixels to the canvas
-        this.setupCanvas()
-        @context.putImageData(@image_data, 0, 0)
+        this.draw(this)
     
     draw: (pixels)->
         # Draw the image on the canvas
