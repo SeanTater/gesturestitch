@@ -36,7 +36,7 @@ class gs.Image
             this.setupCanvas()
             this.draw()
             this.scatter()
-        else if gs.url?
+        else if args.url?
             # Create an Image from a url
             @image = $("<img/>")
             @uimage = @image[0]
