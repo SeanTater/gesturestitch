@@ -36,7 +36,7 @@ class gs.Image
             this.setupCanvas()
             this.draw()
             this.scatter()
-        if args.url
+        else if gs.url?
             # Create an Image from a url
             @image = $("<img/>")
             @uimage = @image[0]
@@ -74,9 +74,8 @@ class gs.Image
         
         @ucanvas.width = @width
         @ucanvas.height = @height
-        @numel = @width * @height
 
-        throw "Can't display a 0 size image" if @numel == 0
+        throw "Can't display a 0 size image" if @width * @height == 0
         
         # Create a plain 2d context (could use WebGL too)
         @context = @ucanvas.getContext("2d")
@@ -85,10 +84,10 @@ class gs.Image
         
         # Now that the image is drawn, we should be able to replace the original image
         this.display(@canvas)
-        
-        # Make pixel access more convenient
-        @image_data = @context.getImageData(0, 0, @width, @height)
-        @pixels = new gs.Pixels(imdata: @image_data)
+        if @uimage? 
+            # Make pixel access more convenient
+            @image_data = @context.getImageData(0, 0, @width, @height)
+            @pixels = new gs.Pixels(imdata: @image_data)
 
     unlink: ->
         # Remove the wrapper
