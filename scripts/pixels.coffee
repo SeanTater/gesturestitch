@@ -114,7 +114,7 @@ class gs.Pixels
             return this
         else
             # Get
-            box = new gs.Pixels(cols:cols, rows:rows)
+            box = new gs.Pixels(width:cols, height:rows)
             for x in [x1...x2]
                 for y in [y1...y2]
                     box.pixel(x-x1, y-y1, this.pixel(x, y))
