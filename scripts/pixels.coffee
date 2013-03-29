@@ -50,6 +50,7 @@ class gs.Transform
         new gs.Transform([[factor, 0, 0],
                        [0, factor, 0],
                        [0, 0, 1]]).multiply(this)
+         
 
 class gs.Pixels
     constructor: (args)->
@@ -146,7 +147,7 @@ class gs.Pixels
             for y in [0...@height]
                 this.pixel(x, y, callback(x, y, this.pixel(x, y)))
         return this
-
+    
     merge: (other, trans)->
         # Merge two images given a specific transformation matrix
         shift = trans.getTranslation()
