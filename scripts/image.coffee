@@ -125,7 +125,7 @@ class gs.Image
         i_data.data = @pixels.data
         i = @pixels.data.length
         while --i > 0
-            i_data[i] = @pixels.data[i]
+            i_data.data[i] = @pixels.data[i]
         @context.putImageData(i_data, 0, 0)
 
     
