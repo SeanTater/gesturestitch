@@ -31,8 +31,8 @@ class gs.Image
 
         if args.pixels?
             @pixels = args.pixels
-            @width = @pixels.cols
-            @height = @pixels.rows
+            @width = @pixels.width
+            @height = @pixels.height
             this.setupCanvas()
             this.draw()
             this.scatter()
