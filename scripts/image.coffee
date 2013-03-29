@@ -48,21 +48,6 @@ class gs.Image
                 @height = @uimage.height
                 this.scatter()
                 this.setupCanvas()).bind(this))
-        ###    
-        else if args.image
-            # @image is a /reference/ (so when copying images you have the same <image>)
-            @image = args.image.image
-            @uimage = @image[0]
-            @width = @uimage.width
-            @height = @uimage.height
-            
-            # Reference counting for deleting an image after deleting all its copies
-            ref = @image.data("ref") ? 0
-            ref++
-            @image.data("ref", ref)
-            this.setupCanvas()
-            this.scatter()
-        ###
         # Tell the world
         gs.Image.all.push(this)
 
@@ -106,11 +91,7 @@ class gs.Image
         @pixels = new gs.Pixels(imdata: @image_data)
 
     unlink: ->
-        # Remove image only if it is original
-        ref = @image.data("ref") - 1 
-        @image.data("ref", ref)
-        @image.remove() if ref == 0
-        # But remove the wrapper either way
+        # Remove the wrapper
         @wrapper.remove()
     
     save: ->
