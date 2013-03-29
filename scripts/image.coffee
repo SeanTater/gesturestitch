@@ -123,7 +123,7 @@ class gs.Image
 
     renderFeatures: (corners) ->
         pixel = new Uint8ClampedArray([0, 255, 0, 255])
-        for i in [i...corners.length]
+        for i in [0...corners.length]
             x = corners[i].x
             y = corners[i].y
             @pixels.pixel(x+1, y, pixel)
