@@ -96,7 +96,7 @@ class gs.Image
     
     save: ->
         # Save the pixels to the canvas
-        this.draw(this)
+        this.draw(@pixels)
     
     draw: (pixels)->
         # Draw the image on the canvas
