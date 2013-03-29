@@ -120,9 +120,12 @@ class gs.Image
     draw: (pixels)->
         # Draw the image on the canvas
         this.setupCanvas()
-        # This is probably inefficient but without it, you would have to merge the pixels and image classes
+        # This is inefficient but without it, you would have to merge the pixels and image classes
         i_data = @context.createImageData(@width, @height)
         i_data.data = @pixels.data
+        i = @pixels.data.length
+        while --i > 0
+            i_data[i] = @pixels.data[i]
         @context.putImageData(i_data, 0, 0)
 
     
