@@ -122,7 +122,7 @@ class gs.Image
         this.save()
 
     renderFeatures: (corners) ->
-        pixel = new Uint8ClampedArray([0, 255, 0, 0])
+        pixel = new Uint8ClampedArray([0, 255, 0, 255])
         for i in [i...corners.length]
             x = corners[i].x
             y = corners[i].y
