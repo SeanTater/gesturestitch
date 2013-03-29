@@ -152,9 +152,9 @@ class gs.Pixels
         shift = trans.getTranslation()
 
         # Find image extrema
-        greatest_x = Math.max(shift.x + other.cols, @width)
+        greatest_x = Math.max(shift.x + other.width, @width)
         least_x = Math.min(shift.x, 0)
-        greatest_y = Math.max(shift.y + other.rows, @height)
+        greatest_y = Math.max(shift.y + other.height, @height)
         least_y = Math.min(shift.y, 0)
          
         # Calculate new image dimensions
