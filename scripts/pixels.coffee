@@ -61,27 +61,27 @@ class gs.Pixels
         @offsety = args.y ? 0
         if args.imdata?
             @imageData = args.imdata
-            @cols = @imageData.width - @offsetx
-            @rows = @imageData.height - @offsety
+            @width = @imageData.width - @offsetx
+            @height = @imageData.height - @offsety
             @data = @imageData.data
             throw new gs.BoundsError("Pixels() offset x #{@offsetx} out of bounds") unless 0 <= @offsetx < @imageData.width
             throw new gs.BoundsError("Pixels() offset y #{@offsety} out of bounds") unless 0 <= @offsety < @imageData.height
-            throw new gs.BoundsError("Pixels() width #{@cols} out of bounds") unless 0 <= (@offsetx + @cols) <= @imageData.width
-            throw new gs.BoundsError("Pixels() height #{@rows} out of bounds") unless 0 <= (@offsety + @rows) <= @imageData.height
+            throw new gs.BoundsError("Pixels() width #{@width} out of bounds") unless 0 <= (@offsetx + @width) <= @imageData.width
+            throw new gs.BoundsError("Pixels() height #{@height} out of bounds") unless 0 <= (@offsety + @height) <= @imageData.height
         else
             throw new gs.BoundsError("Must include width and height for bounds") unless args.cols? and args.rows?
-            @cols = args.cols
-            @rows = args.rows
-            @data = new Uint8ClampedArray(@cols * @rows * @channel)
+            @width = args.cols
+            @height = args.rows
+            @data = new Uint8ClampedArray(@width * @height * @channel)
         
     pixel: (x, y, value)->
         # Safeguards
         throw "Missing data" unless @data?
-        throw new gs.BoundsError("X #{x} out of bounds") unless 0 <= x < @cols
-        throw new gs.BoundsError("Y #{y} out of bounds") unless 0 <= y < @rows
+        throw new gs.BoundsError("X #{x} out of bounds") unless 0 <= x < @width
+        throw new gs.BoundsError("Y #{y} out of bounds") unless 0 <= y < @height
         
         # Locate..
-        location = (y+@offsety) * @cols
+        location = (y+@offsety) * @width
         location += (x+@offsetx)
         location *= @channel
 
@@ -99,10 +99,10 @@ class gs.Pixels
         # Calculate size to create new box and to ensure sane values
         cols = x2-x1
         rows = y2-y1
-        throw new gs.BoundsError("Box origin out of bounds: #{x1}, #{y1}") unless 0 <= x1 < @cols and 0 <= y1 < @rows
-        throw new gs.BoundsError("Box extent out of bounds: #{x2}, #{y2}") unless 0 <= x2 < @cols and 0 <= y2 < @rows
-        throw new gs.BoundsError("Box width out of bounds: #{cols}") unless 0 < cols <=@cols
-        throw new gs.BoundsError("Box height out of bounds: #{rows}") unless 0 < rows <= @rows
+        throw new gs.BoundsError("Box origin out of bounds: #{x1}, #{y1}") unless 0 <= x1 < @width and 0 <= y1 < @height
+        throw new gs.BoundsError("Box extent out of bounds: #{x2}, #{y2}") unless 0 <= x2 < @width and 0 <= y2 < @height
+        throw new gs.BoundsError("Box width out of bounds: #{cols}") unless 0 < cols <=@width
+        throw new gs.BoundsError("Box height out of bounds: #{rows}") unless 0 < rows <= @height
 
 
         if value?
@@ -123,8 +123,8 @@ class gs.Pixels
         # Get a region around a pixel
         left_top_margin = Math.floor(diameter/2)
         right_bottom_margin = Math.ceil(diameter/2)
-        throw new gs.BoundsError("Region x dimension #{x} too close to a bound") unless left_top_margin < x < (@cols - right_bottom_margin)
-        throw new gs.BoundsError("Region y dimension #{y} too close to a bound") unless left_top_margin < y < (@rows - right_bottom_margin)
+        throw new gs.BoundsError("Region x dimension #{x} too close to a bound") unless left_top_margin < x < (@width - right_bottom_margin)
+        throw new gs.BoundsError("Region y dimension #{y} too close to a bound") unless left_top_margin < y < (@height - right_bottom_margin)
 
         return this.box(x-left_top_margin, y-left_top_margin, x+right_bottom_margin, y+right_bottom_margin)
 
@@ -133,8 +133,8 @@ class gs.Pixels
         # Do something with each pixel.
         # callback(x, y, value)
         #TODO: naive
-        for x in [0...@cols]
-            for y in [0...@rows]
+        for x in [0...@width]
+            for y in [0...@height]
                 callback(x, y, this.pixel)
         return this
 
@@ -142,8 +142,8 @@ class gs.Pixels
         # Filter the image with callback.
         # callback(x, y, value) => value
         # TODO: this is naive and could be faster
-        for x in [0...@cols]
-            for y in [0...@rows]
+        for x in [0...@width]
+            for y in [0...@height]
                 this.pixel(x, y, callback(x, y, this.pixel(x, y)))
         return this
 
@@ -152,9 +152,9 @@ class gs.Pixels
         shift = trans.getTranslation()
 
         # Find image extrema
-        greatest_x = Math.max(shift.x + other.cols, @cols)
+        greatest_x = Math.max(shift.x + other.cols, @width)
         least_x = Math.min(shift.x, 0)
-        greatest_y = Math.max(shift.y + other.rows, @rows)
+        greatest_y = Math.max(shift.y + other.rows, @height)
         least_y = Math.min(shift.y, 0)
          
         # Calculate new image dimensions
@@ -166,8 +166,8 @@ class gs.Pixels
         shift_y = -least_y
         new_image = new gs.Pixels(cols: new_width, rows: new_height)
         # Do the simple part first: copy the first image
-        for x in [0...@cols]
-            for y in [0...@rows]
+        for x in [0...@width]
+            for y in [0...@height]
                 new_image.pixel(x+shift_x, y+shift_y, this.pixel(x, y))
         
         # Now copy the second image using the transform
@@ -188,8 +188,8 @@ class gs.Pixels
     sse: (other)->
         # Calculate the sum of squared error with another Pixels
         sum = 0
-        for x in [0...@cols]
-            for y in [0...@cols]
+        for x in [0...@width]
+            for y in [0...@height]
                 this_pixel = this.pixel(x, y)
                 other_pixel = other.pixel(x, y)
                 for i in [0...4]

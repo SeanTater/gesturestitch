@@ -121,9 +121,9 @@ class gs.Image
         # Draw the image on the canvas
         this.setupCanvas()
         
-        i_data = @context.createImageData(@width, @height)
-        i_data.data = @pixels.data
-        @context.putImageData(i_data, 0, 0)
+        #i_data = @context.createImageData(@width, @height)
+        #i_data.data = @pixels.data
+        @context.putImageData(pixels, 0, 0)
 
     
     brighten: ->
