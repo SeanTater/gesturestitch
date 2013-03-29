@@ -123,7 +123,7 @@ class gs.Image
         # This is probably inefficient but without it, you would have to merge the pixels and image classes
         i_data = @context.createImageData(@width, @height)
         i_data.data = @pixels.data
-        @context.putImageData(pixels, 0, 0)
+        @context.putImageData(i_data, 0, 0)
 
     
     brighten: ->
