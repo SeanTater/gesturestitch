@@ -200,6 +200,42 @@ class gs.Image
         
         return agreed_matches
    
+    matchBubble: (other_image)->
+        our_features = this.features()
+        their_features = other_image.features()
+        sses = []
+        
+        swap = (i1, i2)->
+            temp = our_features[i1]
+            our_features[i1] = our_features[i2]
+            our_features[i2] = temp
+
+        #TODO: handle length better
+        len = Math.min(our_features.length, their_features.length)
+        for start in [0...len-1]
+            our_start_region = @pixels.region(our_features[start])
+            their_start_region = @pixels.region(their_features[start])
+            start_sse = sses[start] = our_start_region.sse(their_start_region)
+            for end in [start...len]
+                our_end_region = @pixels.region(our_features[end])
+                their_end_region = @pixels.region(their_features[end])
+                end_sse = sses[end] = our_end_region.sse(their_end_region)
+                swap_one_sse = our_end_region.sse(their_start_region)
+                swap_two_sse = their_end_region.sse(our_start_region)
+                if (start_sse + end_sse) < (swap_one_sse + swap_two_sse)
+                    swap(start, end)
+                    sses[start] = swap_one_sse
+                    sses[end] = swap_two_sse
+        
+        for index in [0...len]
+            tr = $("<tr>")
+            tr.append($("<td>").text(our_features[index].x))
+            tr.append($("<td>").text(our_features[index].y))
+            tr.append($("<td>").text(their_features[index].x))
+            tr.append($("<td>").text(their_features[index].y))
+            tr.append($("<td>").text(sses[index]))
+            $("#statistics").append(tr)
+
     overlay: (other, trans)->
         # TODO: stub: needs to actually take matched points into account
         new gs.Image(pixels: @pixels.merge(other.pixels, trans), parent: @parent)

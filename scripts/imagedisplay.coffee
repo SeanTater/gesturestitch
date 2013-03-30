@@ -52,9 +52,9 @@ class ImageDisplay_class
             $("#status").text("Need two images to match.").dialog()
             return
 
-        matches = @selected_images[0].match(@selected_images[1])
+        matches = @selected_images[0].matchBubble(@selected_images[1])
         # Debugging info
-        $("#status").text("#{matches.all.length} matches found")
+        #$("#status").text("#{matches.all.length} matches found")
         # Now pretend to overlay
         @selected_images[0].overlay(@selected_images[1], new gs.Transform().translate(23, 34))
 
