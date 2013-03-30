@@ -161,7 +161,7 @@ class gs.Image
                 corners[i..i] = []
             else if not 4 < corners[i].y < (@height-4)
                 corners[i..i] = []
-        console.log("#{count} features after filtering")
+        console.log("#{corners.length} features after filtering")
         corners
 
     match: (other_image)->
