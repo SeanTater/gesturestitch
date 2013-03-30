@@ -152,8 +152,16 @@ class gs.Image
         # Detect
         count = jsfeat.yape06.detect(img_u8, corners)
 
-        console.log("" + count + " features")
-        corners[0...count]
+        console.log("" + count + " features before filtering")
+
+        corners = corners[0...count]
+        i = corners.length
+        while --i >= 0
+            if not 4 < corner.x < (@width-4)
+                corners[i..i] = []
+            else if not 4 < corner.y < (@height-4)
+                corners[i..i] = []
+        corners
 
     match: (other_image)->
         # Naive feature matching using SSE
