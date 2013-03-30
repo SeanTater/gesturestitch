@@ -157,10 +157,10 @@ class gs.Image
         corners = corners[0...count]
         i = corners.length
         while --i >= 0
-            if not 4 < corners[i].x < (@width-4)
-                console.log("#{corners[i].x} failed x")
+            if not (4 < corners[i].x < (@width-4))
+                con sole.log("#{corners[i].x} failed x")
                 corners[i..i] = []
-            else if not 4 < corners[i].y < (@height-4)
+            else if not (4 < corners[i].y < (@height-4))
                 corners[i..i] = []
         console.log("#{corners.length} features after filtering")
         corners
