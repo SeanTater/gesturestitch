@@ -209,16 +209,19 @@ class gs.Image
             temp = our_features[i1]
             our_features[i1] = our_features[i2]
             our_features[i2] = temp
+            return
+        pregion = (pix, point)->
+            pix.region(point.x, point.y, 4)
 
         #TODO: handle length better
         len = Math.min(our_features.length, their_features.length)
         for start in [0...len-1]
-            our_start_region = @pixels.region(our_features[start])
-            their_start_region = @pixels.region(their_features[start])
+            our_start_region = pregion(@pixels, our_features[start])
+            their_start_region = pregion(@pixels, their_features[start])
             start_sse = sses[start] = our_start_region.sse(their_start_region)
             for end in [start...len]
-                our_end_region = @pixels.region(our_features[end])
-                their_end_region = @pixels.region(their_features[end])
+                our_end_region = pregion(@pixels, our_features[end])
+                their_end_region = pregion(@pixels, their_features[end])
                 end_sse = sses[end] = our_end_region.sse(their_end_region)
                 swap_one_sse = our_end_region.sse(their_start_region)
                 swap_two_sse = their_end_region.sse(our_start_region)
