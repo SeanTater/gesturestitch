@@ -231,7 +231,7 @@ class gs.Image
             our_region = pregion(@pixels, our_features[start])
             for end in [0...len]
                 their_region = pregion(other_image.pixels, their_features[end])
-                test = our_region.sse(their_region)
+                test = our_region.compareHistogram(their_region)
                 if test < hs[start]
                     swap(start, end)
                     hs[start] = test
