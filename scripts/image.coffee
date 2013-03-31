@@ -213,7 +213,7 @@ class gs.Image
     matchBubble: (other_image)->
         our_features = this.features()
         their_features = other_image.features()
-        sses = []
+        hs = []
         
         swap = (i1, i2)->
             temp = our_features[i1]
@@ -228,17 +228,17 @@ class gs.Image
         for start in [0...len-1]
             our_start_region = pregion(@pixels, our_features[start])
             their_start_region = pregion(@pixels, their_features[start])
-            start_sse = sses[start] = our_start_region.sse(their_start_region)
+            start_h = sses[start] = our_start_region.compareHistogram(their_start_region)
             for end in [start...len]
                 our_end_region = pregion(@pixels, our_features[end])
                 their_end_region = pregion(@pixels, their_features[end])
-                end_sse = sses[end] = our_end_region.sse(their_end_region)
-                swap_one_sse = our_end_region.sse(their_start_region)
-                swap_two_sse = their_end_region.sse(our_start_region)
-                if (start_sse + end_sse) < (swap_one_sse + swap_two_sse)
+                end_h = hs[end] = our_end_region.compareHistogram(their_end_region)
+                swap_one_h = our_end_region.compareHistogram(their_start_region)
+                swap_two_h = their_end_region.compareHistogram(our_start_region)
+                if (start_h + end_h) < (swap_one_h + swap_two_h)
                     swap(start, end)
-                    sses[start] = swap_one_sse
-                    sses[end] = swap_two_sse
+                    sses[start] = swap_one_h
+                    sses[end] = swap_two_h
         
         for index in [0...len]
             tr = $("<tr>")
@@ -246,7 +246,7 @@ class gs.Image
             tr.append($("<td>").text(our_features[index].y))
             tr.append($("<td>").text(their_features[index].x))
             tr.append($("<td>").text(their_features[index].y))
-            tr.append($("<td>").text(sses[index]))
+            tr.append($("<td>").text(hs[index]))
             $("#statistics").append(tr)
 
     overlay: (other, trans)->

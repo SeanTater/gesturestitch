@@ -199,14 +199,17 @@ class gs.Pixels
         return sum
 
     compareHistogram: (other)->
-        my_histogram = (0 for x in [0...16])
-        other_histogram = (0 for x in [0...16])
+        my_histogram = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0]
+        other_histogram = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0]
         
         # FYI |0 means force coersion to int
-        this.each( (x, y, value)->my_histogram[value[0]/16|0]++ )
-        other.each( (x, y, value)->other_histogram[value[0]/16|0]++ )
-        console.log(my_histogram)
-        
+        for x in [0...@width]
+            for y in [0...@height]
+                my_histogram[this.pixel(x, y)[0]/16|0]++
+                other_histogram[other.pixel(x, y)[0]/16|0]++
+        error = 0
         for i in [0...16]
             difference = (my_histogram[i] - other_histogram[i])
-            difference * difference
+            difference *= difference
+            error += difference
+        return error
