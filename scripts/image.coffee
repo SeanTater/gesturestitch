@@ -227,13 +227,14 @@ class gs.Image
         #TODO: handle length better
         len = Math.min(our_features.length, their_features.length)
         for start in [0...len]
-            min = 1e100
+            hs[start] = 1e100
             our_region = pregion(@pixels, our_features[start])
             for end in [0...len]
                 their_region = pregion(other_image.pixels, their_features[end])
-                hs[start] = our_region.sse(their_region)
-                if hs[start] < min
+                test = our_region.sse(their_region)
+                if test < hs[start]
                     swap(start, end)
+                    hs[start] = test
         
         for index in [0...len]
             tr = $("<tr>")
