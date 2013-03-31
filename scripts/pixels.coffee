@@ -207,11 +207,11 @@ class gs.Pixels
         # FYI |0 means force coersion to int
         for x in [0...@width]
             for y in [0...@height]
-                my_histogram[this.pixel(x, y)[0]/8|0]++
-                other_histogram[other.pixel(x, y)[0]/8|0]++
+                my_histogram[this.pixel(x, y)[0]/16|0]++
+                other_histogram[other.pixel(x, y)[0]/16|0]++
         error = 0
         for i in [0...16]
             difference = (my_histogram[i] - other_histogram[i])
             difference *= difference
             error += difference
-        return error
+        return erro1r

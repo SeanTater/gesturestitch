@@ -221,7 +221,7 @@ class gs.Image
             our_features[i2] = temp
             return
         pregion = (pix, point)->
-            pix.region(point.x, point.y, 8)
+            pix.region(point.x, point.y, 4)
 
         #TODO: handle length better
         len = Math.min(our_features.length, their_features.length)
