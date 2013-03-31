@@ -230,7 +230,7 @@ class gs.Image
             min = 1e100
             our_region = pregion(@pixels, our_features[start])
             for end in [0...len]
-                their_region = pregion(@pixels, their_features[end])
+                their_region = pregion(other_image.pixels, their_features[end])
                 hs[start] = our_region.compareHistogram(their_region)
                 if hs[start] < min
                     swap(start, end)
