@@ -150,7 +150,8 @@ class gs.Image
         #jsfeat.imgproc.box_blur_gray(img_u8, img_u8, 2, 0)
 
         # Detect
-        count = jsfeat.yape06.detect(img_u8, corners)
+        #count = jsfeat.yape06.detect(img_u8, corners)
+        count = jsfeat.fast_corners.detect(img_u8, corners)
 
         console.log("#{count} features before filtering")
 
