@@ -235,7 +235,7 @@ class gs.Image
                 end_h = hs[end] = our_end_region.compareHistogram(their_end_region)
                 swap_one_h = our_end_region.compareHistogram(their_start_region)
                 swap_two_h = their_end_region.compareHistogram(our_start_region)
-                if (start_h + end_h) > (swap_one_h + swap_two_h)
+                if Math.min(start_h, end_h) > Math.min(swap_one_h, swap_two_h)
                     swap(start, end)
                     hs[start] = swap_one_h
                     hs[end] = swap_two_h
