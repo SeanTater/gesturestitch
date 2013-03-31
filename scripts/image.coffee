@@ -216,9 +216,9 @@ class gs.Image
         hs = []
         
         swap = (i1, i2)->
-            temp = our_features[i1]
-            our_features[i1] = our_features[i2]
-            our_features[i2] = temp
+            temp = their_features[i1]
+            their_features[i1] = their_features[i2]
+            their_features[i2] = temp
             return
         pregion = (pix, point)->
             pix.region(point.x, point.y, 4)
