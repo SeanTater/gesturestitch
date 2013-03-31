@@ -147,7 +147,7 @@ class gs.Image
         jsfeat.imgproc.grayscale(@image_data.data, img_u8.data)
 
         # Blur
-        jsfeat.imgproc.box_blur_gray(img_u8, img_u8, 2, 0)
+        #jsfeat.imgproc.box_blur_gray(img_u8, img_u8, 2, 0)
 
         # Detect
         count = jsfeat.yape06.detect(img_u8, corners)
