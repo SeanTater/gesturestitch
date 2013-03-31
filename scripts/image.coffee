@@ -225,10 +225,10 @@ class gs.Image
 
         #TODO: handle length better
         len = Math.min(our_features.length, their_features.length)
-        for start in [0...len-1]
+        for start in [0...len]
             min = 1e100
             our_region = pregion(@pixels, our_features[start])
-            for end in [start...len]
+            for end in [0...len]
                 their_region = pregion(@pixels, their_features[end])
                 hs[start] = our_region.compareHistogram(their_region)
                 if hs[start] > min
