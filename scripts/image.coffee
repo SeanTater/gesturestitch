@@ -226,19 +226,13 @@ class gs.Image
         #TODO: handle length better
         len = Math.min(our_features.length, their_features.length)
         for start in [0...len-1]
-            our_start_region = pregion(@pixels, our_features[start])
-            their_start_region = pregion(@pixels, their_features[start])
-            start_h = hs[start] = our_start_region.compareHistogram(their_start_region)
+            min = 1e100
+            our_region = pregion(@pixels, our_features[start])
             for end in [start...len]
-                our_end_region = pregion(@pixels, our_features[end])
-                their_end_region = pregion(@pixels, their_features[end])
-                end_h = hs[end] = our_end_region.compareHistogram(their_end_region)
-                swap_one_h = our_end_region.compareHistogram(their_start_region)
-                swap_two_h = their_end_region.compareHistogram(our_start_region)
-                if Math.min(start_h, end_h) > Math.min(swap_one_h, swap_two_h)
+                their_region = pregion(@pixels, their_features[end])
+                hs[start] = our_region.compareHistogram(their_region)
+                if hs[start] > min
                     swap(start, end)
-                    hs[start] = swap_one_h
-                    hs[end] = swap_two_h
         
         for index in [0...len]
             tr = $("<tr>")
