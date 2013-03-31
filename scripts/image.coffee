@@ -192,7 +192,7 @@ class gs.Image
                 continue
             for their_point in their_features
                 try
-                    their_region = other_image.region(their_point.x, their_point.y, 4)
+                    their_region = other_image.pixels.region(their_point.x, their_point.y, 4)
                 catch BoundsError
                     # We can't match features really close to an edge
                     # It may not be a bad idea to delete the feature, but not here probably, so skip it.
