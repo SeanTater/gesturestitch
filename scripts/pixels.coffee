@@ -214,4 +214,4 @@ class gs.Pixels
             difference = (my_histogram[i] - other_histogram[i])
             difference *= difference
             error += difference
-        return erro1r
+        return error
