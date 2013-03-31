@@ -91,5 +91,5 @@ $(->
     # Load the images when the page finishes
     gs.ImageDisplay = new ImageDisplay_class()
     gs.ImageMenu = new ImageMenu_class()
-    setTimeout(gs.ImageDisplay.exampleCanvas, 1000)
+    #setTimeout(gs.ImageDisplay.exampleCanvas, 1000)
 )
