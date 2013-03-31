@@ -228,7 +228,7 @@ class gs.Image
         for start in [0...len-1]
             our_start_region = pregion(@pixels, our_features[start])
             their_start_region = pregion(@pixels, their_features[start])
-            start_h = sses[start] = our_start_region.compareHistogram(their_start_region)
+            start_h = hs[start] = our_start_region.compareHistogram(their_start_region)
             for end in [start...len]
                 our_end_region = pregion(@pixels, our_features[end])
                 their_end_region = pregion(@pixels, their_features[end])
@@ -237,8 +237,8 @@ class gs.Image
                 swap_two_h = their_end_region.compareHistogram(our_start_region)
                 if (start_h + end_h) < (swap_one_h + swap_two_h)
                     swap(start, end)
-                    sses[start] = swap_one_h
-                    sses[end] = swap_two_h
+                    hs[start] = swap_one_h
+                    hs[end] = swap_two_h
         
         for index in [0...len]
             tr = $("<tr>")
