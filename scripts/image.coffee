@@ -278,7 +278,7 @@ class gs.Image
             min_variance = score_variance(ms[1...])
             for i in [1...ms.length]
                 this_variance = score_variance(ms[...i].concat(ms[i+1...]))
-                if this_variance > min_variance
+                if this_variance < min_variance
                     min_variance = this_variance
                     min_variance_index = i
             ms = ms[...min_variance_index].concat(ms[min_variance_index+1...])
