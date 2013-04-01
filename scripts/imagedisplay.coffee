@@ -53,10 +53,13 @@ class ImageDisplay_class
             return
 
         matches = @selected_images[0].matchBubble(@selected_images[1])
+        culled = @selected_images[0].cull(matches)
         # Debugging info
-        #$("#status").text("#{matches.all.length} matches found")
+        $("#status").text("#{matches.length} matches found, #{culled.length}")
         # Now pretend to overlay
         @selected_images[0].overlay(@selected_images[1], new gs.Transform().translate(23, 34))
+
+
 
 class ImageMenu_class
     constructor: ->

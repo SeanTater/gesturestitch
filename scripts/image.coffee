@@ -250,7 +250,7 @@ class gs.Image
                 movement: jsfeat.Point2d_t(their_features[index].x - our_features[index].x, their_features[index].y - our_features[index].y)
             }
 
-    optimizeMatches: (matches)->
+    cull: (matches)->
         # This is a naive hill-climber based on the variance in feature movement
         # The limitation is that it can only handle translation (not rotation, etc)
         # It could be adjusted to work otherwise I imagine
