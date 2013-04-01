@@ -281,7 +281,7 @@ class gs.Image
                 if this_variance > min_variance
                     min_variance = this_variance
                     min_variance_index = i
-            ms = ms[...i].concat(ms[i+1...])
+            ms = ms[...min_variance_index].concat(ms[min_variance_index+1...])
             return {matches: ms, min_variance: min_variance, min_variance_index: min_variance_index}
 
         variance=1e100
