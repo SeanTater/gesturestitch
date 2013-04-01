@@ -247,7 +247,7 @@ class gs.Image
             {
                 ours: our_features[index]
                 theirs: their_features[index]
-                movement: jsfeat.Point2d_t(their_features[index].x - our_features[index].x, their_features[index].y - our_features[index].y)
+                movement: new jsfeat.point2d_t(their_features[index].x - our_features[index].x, their_features[index].y - our_features[index].y)
             }
 
     cull: (matches)->
@@ -257,7 +257,7 @@ class gs.Image
         matches = matches[..] # Copy
         
         mean_movement = (ms)->
-            move = jsfeat.Point2d_t(0,0)
+            move = new jsfeat.point2d_t(0,0)
             for m in ms
                 move.x += m.x
                 move.y += m.y
