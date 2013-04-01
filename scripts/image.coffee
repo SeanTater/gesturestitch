@@ -244,6 +244,58 @@ class gs.Image
             tr.append($("<td>").text(their_features[index].y))
             tr.append($("<td>").text(hs[index]))
             $("#statistics").append(tr)
+            {
+                ours: our_features[index]
+                theirs: their_features[index]
+                movement: jsfeat.Point2d_t(their_features[index].x - our_features[index].x, their_features[index].y - our_features[index].y)
+            }
+
+    optimizeMatches: (matches)->
+        # This is a naive hill-climber based on the variance in feature movement
+        # The limitation is that it can only handle translation (not rotation, etc)
+        # It could be adjusted to work otherwise I imagine
+        matches = matches[..] # Copy
+        
+        mean_movement = (ms)->
+            move = jsfeat.Point2d_t(0,0)
+            for m in ms
+                move.x += m.x
+                move.y += m.y
+            move.x /= ms.length
+            move.y /= ms.length
+            return move
+
+        score_variance = (ms)->
+            error = 0
+            mean = mean_movement(ms)
+            for m in ms
+                error += Math.pow(m.movement.x - mean.x, 2)
+                error += Math.pow(m.movement.y - mean.y, 2)
+            return error / Math.pow(ms.length, 2)
+
+        argmin_variance_change = (ms)->
+            min_variance_index = 0
+            min_variance = score_variance(ms[1...])
+            for i in [1...ms.length]
+                this_variance = score_variance(ms[...i].concat(ms[i+1...]))
+                if this_variance > min_variance
+                    min_variance = this_variance
+                    min_variance_index = i
+            ms = ms[...i].concat(ms[i+1...])
+            return {matches: ms, min_variance: min_variance, min_variance_index: min_variance_index}
+
+        variance=1e100
+        step = argmin_variance_change(matches)
+        while step.min_variance <= variance and variance > 1 and matches.length > 5
+            variance = step.min_variance
+            matches = step.matches
+            step = argmin_variance_change(matches)
+        
+        if matches.variance > 5
+            throw "No match found between images"
+
+        return matches
+
 
     overlay: (other, trans)->
         # TODO: stub: needs to actually take matched points into account
