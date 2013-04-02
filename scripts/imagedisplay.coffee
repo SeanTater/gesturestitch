@@ -57,7 +57,7 @@ class ImageDisplay_class
         # Debugging info
         $("#status").text("#{matches.length} matches found, centered on #{translation}")
         # Now pretend to overlay
-        @selected_images[0].overlay(@selected_images[1], new gs.Transform().translate(translation))
+        @selected_images[1].overlay(@selected_images[0], new gs.Transform().translate(translation))
 
 
 
