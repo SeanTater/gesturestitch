@@ -128,25 +128,6 @@ class gs.Pixels
         throw new gs.BoundsError("Region y dimension #{y} too close to a bound") unless left_top_margin < y < (@height - right_bottom_margin)
 
         return this.box(x-left_top_margin, y-left_top_margin, x+right_bottom_margin, y+right_bottom_margin)
-
-    # ruby-like iterators
-    each: (callback)->
-        # Do something with each pixel.
-        # callback(x, y, value)
-        #TODO: naive
-        for x in [0...@width]
-            for y in [0...@height]
-                callback(x, y, this.pixel)
-        return this
-
-    filter: (callback)->
-        # Filter the image with callback.
-        # callback(x, y, value) => value
-        # TODO: this is naive and could be faster
-        for x in [0...@width]
-            for y in [0...@height]
-                this.pixel(x, y, callback(x, y, this.pixel(x, y)))
-        return this
     
     merge: (other, trans)->
         # Merge two images given a specific transformation matrix

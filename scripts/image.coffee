@@ -294,8 +294,9 @@ class gs.Image
         if matches.variance > 5
             throw "No match found between images"
 
-        return matches
-
+        # At this point we need one good representative value. The median would probably be better, but mean is easy:
+        # NOTE: There is no reason to assume the mean is going to be an integer (this is a feature!)
+        return mean_movement(matches)
 
     overlay: (other, trans)->
         # TODO: stub: needs to actually take matched points into account
