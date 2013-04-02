@@ -37,8 +37,9 @@ class gs.Transform
     getTranslation: -> {x: -@matrix[0][2], y: -@matrix[1][2]}
     
     translate: (point)->
-        new gs.Transform([[1, 0, -point.x],
-                       [0, 1, -point.y], 
+        # Eventually we should handle floating point locations (but that requires interpolation)
+        new gs.Transform([[1, 0, -point.x|0],
+                       [0, 1, -point.y|0], 
                        [0, 0, 1]]).multiply(this)
 
     rotate: (radians)->
