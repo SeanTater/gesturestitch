@@ -259,8 +259,8 @@ class gs.Image
         mean_movement = (ms)->
             move = new jsfeat.point2d_t(0,0)
             for m in ms
-                move.x += m.x
-                move.y += m.y
+                move.x += m.movement.x
+                move.y += m.movement.y
             move.x /= ms.length
             move.y /= ms.length
             return move
