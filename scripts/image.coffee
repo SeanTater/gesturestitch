@@ -298,7 +298,7 @@ class gs.Image
             # sort by distance moved
             (point1.x*point1.x) + (point2.y*point2.y
             ))
-        return matches[matches.length/2].movement
+        return matches[matches.length/2|0].movement
 
     overlay: (other, trans)->
         # TODO: stub: needs to actually take matched points into account
