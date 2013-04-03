@@ -294,9 +294,11 @@ class gs.Image
         if step.min_variance > 5
             throw "No match found between images"
 
-        # At this point we need one good representative value. The median would probably be better, but mean is easy:
-        # NOTE: There is no reason to assume the mean is going to be an integer (this is a feature!)
-        return mean_movement(matches)
+        matches.sort( (point1, point2)->
+            # sort by distance moved
+            (point1.x*point1.x) + (point2.y*point2.y
+            ))
+        return matches[matches.length/2]
 
     overlay: (other, trans)->
         # TODO: stub: needs to actually take matched points into account
