@@ -144,7 +144,7 @@ class gs.Image
         # Convert image to grayscale  
         img_u8 = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C1_t)
         imageData = @context.getImageData(0, 0, @width, @height)
-        jsfeat.imgproc.grayscale(@image_data.data, img_u8.data)
+        jsfeat.imgproc.grayscale(@pixels.data, img_u8.data)
 
         # Blur
         #jsfeat.imgproc.box_blur_gray(img_u8, img_u8, 2, 0)
