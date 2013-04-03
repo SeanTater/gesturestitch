@@ -291,7 +291,7 @@ class gs.Image
             matches = step.matches
             step = argmin_variance_change(matches)
         
-        if matches.variance > 5
+        if step.variance > 5
             throw "No match found between images"
 
         # At this point we need one good representative value. The median would probably be better, but mean is easy:
