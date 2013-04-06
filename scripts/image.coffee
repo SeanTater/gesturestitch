@@ -248,57 +248,22 @@ class gs.Image
                 ours: our_features[index]
                 theirs: their_features[index]
                 movement: new jsfeat.point2d_t(their_features[index].x - our_features[index].x, their_features[index].y - our_features[index].y)
+                score: 0 # This is used in cull
             }
 
     cull: (matches)->
-        # This is a naive hill-climber based on the variance in feature movement
-        # The limitation is that it can only handle translation (not rotation, etc)
-        # It could be adjusted to work otherwise I imagine
-        matches = matches[..] # Copy
-        
-        mean_movement = (ms)->
-            move = new jsfeat.point2d_t(0,0)
-            for m in ms
-                move.x += m.movement.x
-                move.y += m.movement.y
-            move.x /= ms.length
-            move.y /= ms.length
-            return move
-
-        score_variance = (ms)->
-            error = 0
-            mean = mean_movement(ms)
-            for m in ms
-                error += Math.pow(m.movement.x - mean.x, 2)
-                error += Math.pow(m.movement.y - mean.y, 2)
-            return error / Math.pow(ms.length, 2)
-
-        argmin_variance_change = (ms)->
-            min_variance_index = 0
-            min_variance = score_variance(ms[1...])
-            for i in [1...ms.length]
-                this_variance = score_variance(ms[...i].concat(ms[i+1...]))
-                if this_variance < min_variance
-                    min_variance = this_variance
-                    min_variance_index = i
-            ms = ms[...min_variance_index].concat(ms[min_variance_index+1...])
-            return {matches: ms, min_variance: min_variance, min_variance_index: min_variance_index}
-
-        variance=1e100
-        step = argmin_variance_change(matches)
-        while step.min_variance <= variance and variance > 1 and matches.length > 5
-            variance = step.min_variance
-            matches = step.matches
-            step = argmin_variance_change(matches)
-        
-        if step.min_variance > 5
-            throw "No match found between images"
-
-        matches.sort( (point1, point2)->
-            # sort by distance moved
-            (point1.x*point1.x) + (point2.y*point2.y
-            ))
-        return matches[matches.length/2|0].movement
+        # This is still limited by the fact that it can only handle translation
+        max_match = matches[0]
+        # This is not the fastest but it will probably be rewritten
+        for m1 in matches
+            for m2 in matches
+                # Give features a score based on how close they are to other scores
+                squared_distance = Math.pow(m1.movement.x-m2.movement.x, 2) + Math.pow(m1.movement.y-m2.movement.y, 2)
+                # The 0-distance constant is important and shows how much close pairs are favored.
+                m1.score += (1/squared_distance if squared_distance > 0 else 3)
+            if m1.score > max_match.score
+                max_match = m1
+        return max_match.movement
 
     overlay: (other, trans)->
         # TODO: stub: needs to actually take matched points into account
