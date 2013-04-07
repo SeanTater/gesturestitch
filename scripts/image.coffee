@@ -165,51 +165,6 @@ class gs.Image
                 corners[i..i] = []
         console.log("#{corners.length} features after filtering")
         corners
-
-    match: (other_image)->
-        # Naive feature matching using SSE
-        this.setupCanvas()
-        best_matches = {}
-
-        # These are really expensive to calculate so save them
-        our_features = this.features()
-        our_best = {}
-        for feature in our_features
-            our_best[feature] = {point:null, sse: 1e100}
-
-        their_features = other_image.features()
-        their_best = {}
-        for feature in their_features
-            their_best[feature] = {point:null, sse: 1e100}
-        
-
-        for our_point in our_features
-            try
-                our_region = @pixels.region(our_point.x, our_point.y, 4)
-            catch BoundsError
-                # We can't match features really close to an edge
-                # It may not be a bad idea to delete the feature, but not here probably, so skip it.
-                continue
-            for their_point in their_features
-                try
-                    their_region = other_image.pixels.region(their_point.x, their_point.y, 4)
-                catch BoundsError
-                    # We can't match features really close to an edge
-                    # It may not be a bad idea to delete the feature, but not here probably, so skip it.
-                    continue
-                sse = our_region.sse(their_region)
-                if sse < our_best[our_point].sse and sse < their_best[their_point].sse
-                    our_best[our_point] = {point:their_point, sse:sse}
-                    their_best[their_point] = {point:our_point, sse:sse}
-
-        agreed_matches = {}
-        agreed_matches.all = []
-        for our_point of our_best when our_point.point isnt null
-            agreed_matches[our_point] = our_best[our_point]
-            their_point_name = our_best[our_point].point
-            agreed_matches.all.push([our_point, their_point_name, agreed_matches[our_point].sse])
-        
-        return agreed_matches
    
     matchBubble: (other_image)->
         our_features = this.features()
