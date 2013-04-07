@@ -147,12 +147,12 @@ class gs.Pixels
         # How much to move both of the images so that 0,0 is the minimum x,y
         shift_x = -least_x
         shift_y = -least_y
+        trans = trans.translate({x: shift_x, y: shift_y})
         new_image = new gs.Pixels(width: new_width, height: new_height)
         # Do the simple part first: copy the first image
         for x in [0...@width]
             for y in [0...@height]
                 new_image.pixel(x+shift_x, y+shift_y, this.pixel(x, y))
-        
         # Now copy the second image using the transform
         #TODO: Improve performance
         #NOTE: This raytracing-like approach assumes every pixel in the output is a function of the second
