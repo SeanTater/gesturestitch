@@ -77,20 +77,19 @@ class gs.Pixels
             @data = new Uint8ClampedArray(@width * @height * @channel)
 
     location: (x, y)->
+        # Locate..
+        index = (y+@offsety) * @width
+        index += (x+@offsetx)
+        index *= @channel
+        index
+
+    pixel: (x, y, value)->
         # Safeguard
         throw "Missing data" unless @data?
         throw new gs.BoundsError("X #{x} out of bounds") unless 0 <= x < @width
         throw new gs.BoundsError("Y #{y} out of bounds") unless 0 <= y < @height
-        
-        # Locate..
-        location = (y+@offsety) * @width
-        location += (x+@offsetx)
-        location *= @channel
-        location
-
-    pixel: (x, y, value)->
-        index = location(x, y)
-        _pixel(index, value)
+        index = this.location(x, y)
+        this._pixel(index, value)
 
     _pixel: (index, value)->
         # Get or set
@@ -100,6 +99,24 @@ class gs.Pixels
             return value
         else
             return @data.subarray(index, index+@channel)
+    
+    iter: (pt1, pt2)->
+        index = this.location(pt1.x, pt1.y)
+        stride = (pt2.x - pt1.x) * @channel
+        step = this.location(pt1.x, pt1.y+1) - index
+        end = this.location(pt2.x, pt2.y)
+        stride_i = 0
+        return ->
+            stride_i++
+            index++
+            if stride_i == stride
+                strude_i = 0
+                index += step
+            if index >= end
+                return null
+            return index
+
+            
     
     box:  (x1, y1, x2, y2, value) ->
         #TODO: Naive implementation: this could be faster
@@ -111,7 +128,7 @@ class gs.Pixels
         throw new gs.BoundsError("Box extent out of bounds: #{x2}, #{y2}") unless 0 <= x2 < @width and 0 <= y2 < @height
         throw new gs.BoundsError("Box width out of bounds: #{cols}") unless 0 < cols <=@width
         throw new gs.BoundsError("Box height out of bounds: #{rows}") unless 0 < rows <= @height
-
+        
 
         if value?
             # Set 
