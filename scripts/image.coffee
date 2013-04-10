@@ -257,7 +257,7 @@ class gs.Image
 
     scatter: ->
         # Place and spin the image to a random place on the board, even below another image (for now)
-        degrees = Math.floor(Math.random() * 45) - 30
+        degrees = Math.floor(Math.random() * 20) - 10
         # Keep the image from going off the board, 1.4 accounts for a diagonal
         #TODO: Something is wrong here; they're still going off the screen
         x_limit = @parent.width - (@wrapper.width() * 1.4) 
