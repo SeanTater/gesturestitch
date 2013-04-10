@@ -75,9 +75,9 @@ class gs.Pixels
             @width = args.width
             @height = args.height
             @data = new Uint8ClampedArray(@width * @height * @channel)
-        
-    pixel: (x, y, value)->
-        # Safeguards
+
+    location: (x, y)->
+        # Safeguard
         throw "Missing data" unless @data?
         throw new gs.BoundsError("X #{x} out of bounds") unless 0 <= x < @width
         throw new gs.BoundsError("Y #{y} out of bounds") unless 0 <= y < @height
@@ -86,14 +86,20 @@ class gs.Pixels
         location = (y+@offsety) * @width
         location += (x+@offsetx)
         location *= @channel
+        location
 
+    pixel: (x, y, value)->
+        index = location(x, y)
+        _pixel(index, value)
+
+    _pixel: (index, value)->
         # Get or set
         # uses subarray because it is actually a ClampedUint8Array, which does not have slice() aka: [a...b]
         if value?
-            @data.set(value, location)
+            @data.set(value, index)
             return value
         else
-            return @data.subarray(location, location+@channel)
+            return @data.subarray(index, index+@channel)
     
     box:  (x1, y1, x2, y2, value) ->
         #TODO: Naive implementation: this could be faster
