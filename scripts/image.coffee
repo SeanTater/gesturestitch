@@ -213,12 +213,8 @@ class gs.Image
         for m1 in matches
             for m2 in matches
                 # Give features a score based on how close they are to other scores
-                squared_distance = Math.pow(m1.movement.x-m2.movement.x, 2) + Math.pow(m1.movement.y-m2.movement.y, 2)
-                # The 0-distance constant is important and shows how much close pairs are favored.
-                if squared_distance > 0
-                    m1.score += 1/squared_distance
-                else
-                    m1.score += 3
+                squared_distance = Math.pow(m1.movement.x-m2.movement.x, 2) + Math.pow(m1.movement.y-m2.movement.y, 2) + 1
+                m1.score += 1/squared_distance
             if m1.score > max_match.score
                 max_match = m1
         return max_match.movement
