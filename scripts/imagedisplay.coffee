@@ -18,7 +18,9 @@ class ImageDisplay_class
             'images/jumping.jpg',
             'images/jumping_dad.jpg',
             'images/jumping_kid.jpg',
-            'images/tigers.jpg'])
+            'images/tigers.jpg',
+            'images/yard-left.jpg',
+            'images/yard right.jpg'])
         
         $("#button-match").click(this.match.bind(this))
         @selected_images = []
