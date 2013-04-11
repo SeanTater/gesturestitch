@@ -166,7 +166,7 @@ class gs.Image
         console.log("#{corners.length} features after filtering")
         corners
    
-    matchBubble: (other_image)->
+    match: (other_image)->
         our_features = this.features()
         their_features = other_image.features()
         hs = []
@@ -206,7 +206,7 @@ class gs.Image
                 score: 0 # This is used in cull
             }
 
-    cull: (matches)->
+    estimateTranslation: (matches)->
         # This is still limited by the fact that it can only handle translation
         max_match = matches[0]
         # This is not the fastest but it will probably be rewritten

@@ -54,8 +54,8 @@ class ImageDisplay_class
             $("#status").text("Need two images to match.").dialog()
             return
 
-        matches = @selected_images[0].matchBubble(@selected_images[1])
-        translation = @selected_images[0].cull(matches)
+        matches = @selected_images[0].match(@selected_images[1])
+        translation = @selected_images[0].estimateTranslation(matches)
         # Debugging info
         $("#status").text("#{matches.length} matches found, centered on #{translation}")
         # Now pretend to overlay
