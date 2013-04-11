@@ -110,7 +110,7 @@ class gs.Pixels
             stride_i++
             index++
             if stride_i == stride
-                strude_i = 0
+                stride_i = 0
                 index += step
             if index >= end
                 return null
@@ -131,10 +131,18 @@ class gs.Pixels
         
 
         if value?
-            # Set 
-            for x in [x1...x2]
-                for y in [y1...y2]
-                    this.pixel(x, y, value.pixel(x-x1, y-y1))
+            # Set
+            start = this.location(pt1.x, pt1.y)
+            stride = (pt2.x - pt1.x) * @channel
+            step = this.location(pt1.x, pt1.y+1) - index
+            end = this.location(pt2.x, pt2.y)
+            read_cursor = start
+            write_cursor = 0
+            while read_cursor < end
+                value.data.set(@data.subarray(read_cursor, read_cursor+stride), write_cursor)
+                read_cursor += (stride+step)
+                write_cursor += stride
+            
             return this
         else
             # Get
