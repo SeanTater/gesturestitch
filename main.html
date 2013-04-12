@@ -4,15 +4,95 @@
         <title>
             Gesture-Initiated Image Stitcher
         </title>
+        <meta charset="utf-8">
         <link rel='stylesheet' href='style/main.css' />
         <link rel='stylesheet' href='style/jquery-ui-1.10.1.custom.css' />
         <script src='scripts/jquery-1.9.1.js'></script>
         <script src='scripts/jquery-ui-1.10.1.custom.js'></script>
         <script src='scripts/jsfeat.js'></script>
         <script src='scripts/imagedisplay.js'></script>
-	<script src='scripts/pixels.js'></script>
+	    <script src='scripts/pixels.js'></script>
         <script src='scripts/image.js'></script>
+        <script src="scripts/leap.min.js"></script>
+        <script src="scripts/leapcanvas.js"></script>
+
+        <script>
+            $(document).ready(function() {
+    LeapEx.init('#canvas', '#debug');
+  });
+
+    //   var fingers = {};
+    //   var spheres = {};
+    // var leapMinX = -200;
+    // var leapMaxX = 200;
+    // var leapMinY = 100;
+    // var leapMaxY = 600;
+    // var leapMinZ = -180;
+    // var leapMaxZ = 180;
+
+
+      // Leap.loop(function(frame) {
+
+      //   var fingerIds = {};
+      //   var handIds = {};
+      //   for (var pointableId = 0, pointableCount = frame.pointables.length; pointableId != pointableCount; pointableId++) {
+      //     var pointable = frame.pointables[pointableId];
+      //     var finger = fingers[pointable.id]
+
+      //     if (!finger) {
+      //       //finger = new THREE.ArrowHelper(origin, direction, pointable.length, Math.random() * 0xffffff);
+      //       fingers[pointable.id] = finger;
+      //       //scene.add(finger);
+      //     } else {
+      //       //finger.position = origin
+      //       //finger.setDirection(direction)
+      //     }
+
+      //     fingerIds[pointable.id] = true
+      //   }
+
+      //   for (fingerId in fingers) {
+      //     if (!fingerIds[fingerId]) {
+      //       delete fingers[fingerId]
+      //     }
+      //   }
+      //   //Detect Hand(s)
+      //   if(frame.hands.length > 0) {
+      //       console.log('Hand detected');
+      //       var pointer = null;
+      //       if(frame.fingers.length > 0) {
+      //           pointer = frame.fingers[0];
+      //       }
+
+      //       if(pointer != null) {
+      //           console.log('Finger detected');
+      //           //Get screen intersection point
+      //           var tip = pointer.tipPosition;
+      //           //Normalize the coordinates
+      //           var value = tip[0];
+      //           var oldMin = leapMinX;
+      //           var oldMax = leapMaxX;
+      //           var newMin = -100;
+      //           var newMax = window.innerWidth;
+      //           var normX = (((newMax - newMin) * (value - oldMin)) / (oldMax - oldMin)) + newMin;
+      //           vvalue = tip[1];
+      //           oldMin = leapMinY;
+      //           oldMax = leapMaxY;
+      //           newMin = window.innerHeight;
+      //           newMax = -100;
+      //           var normY = (((newMax - newMin) * (value - oldMin)) / (oldMax - oldMin)) + newMin;
+
+      //           console.log('X: ' + normX + ', Y: ' + normY);
+
+      //       }
+      //   }
+
+      // });
+
+</script>
     </head>
+
+
     <body>
         <h1>
             Gesture-Initiated Image Stitcher
@@ -32,8 +112,11 @@
             <li><a href="#">Features</a></li>
             <li><a href="#">Delete</a></li>
         </ul>
-	<table id='statistics'>
-		<th><td>Point 1.x</td><td>Point 1.y</td><td>Point 2.x</td><td>Point 1.y</td><td>SSE</td></th>
-	</tabne>
+    <table id='statistics'>
+        <th><td>Point 1.x</td><td>Point 1.y</td><td>Point 2.x</td><td>Point 1.y</td><td>SSE</td></th>
+    </tabne>
+    <div id="debug">WebSocket not connected</div>
+  <canvas id="canvas"></canvas>
     </body>
+
 </html>
