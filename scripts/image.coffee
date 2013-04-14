@@ -242,12 +242,16 @@ class gs.Image
         ]
 
     place: (x, y) ->
-        # Place the image on the desktop.
+        # Place the image on the desktop or tells you where it is.
         # y++ lowers, y-- raises
-        @wrapper.css(
-            position: "absolute"
-            left:  x
-            top: y)
+        if x?
+            @wrapper.css(
+                position: "absolute"
+                left:  x
+                top: y)
+        else
+            p = @wrapper.position()
+            {x: p.left, y:p.top}
 
     spin: (degrees)->
         # Shortcut to set all the different rotation properties quickly
