@@ -90,7 +90,7 @@ class gs.Image
             @image_data = @context.getImageData(0, 0, @width, @height)
             @pixels = new gs.Pixels(imdata: @image_data)
         # Callback from elsewhere
-        this.onload()
+        this.onload(this)
 
     unlink: ->
         # Remove the wrapper
