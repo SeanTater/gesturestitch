@@ -25,6 +25,7 @@ class gs.Image
         # you can use "this" from ImageDisplay before its fully defined
         # but you can't for gs.ImageDisplay
         @parent = args.parent
+        @onload = args.onload ? ->
         
         # Create the picture frame and put the image in it
         @wrapper = $("<div class='Image_wrapper' />").draggable().click(this.toggleSelect.bind(this))
@@ -88,6 +89,8 @@ class gs.Image
             # Make pixel access more convenient
             @image_data = @context.getImageData(0, 0, @width, @height)
             @pixels = new gs.Pixels(imdata: @image_data)
+        # Callback from elsewhere
+        this.onload()
 
     unlink: ->
         # Remove the wrapper
