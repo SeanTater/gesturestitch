@@ -32,6 +32,9 @@ class ImageDisplay_class
         @image_list = []
         for url in imlist
             image = new gs.Image(url: url, parent: this)
+   
+    load:(url)->
+        new gs.Image(url: url, parent: this)
     
     exampleCanvas: ->
         # Do some sample stuff to the canvas to see that it works
