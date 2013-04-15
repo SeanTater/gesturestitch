@@ -1,7 +1,7 @@
 body {
     background: #000;
     color: white;
-    font-family: sans-serif;
+    font-family: "Georgia" sans-serif;
     margin: auto;
     width: 80%;
 }
@@ -27,6 +27,14 @@ h1 {
     box-shadow: inset 0 0 10px;
     position: relative;
     height: 100%;}
+    #desktop #image_list {
+        list-style: none;
+        padding: 2em;
+    }
+        #desktop #image_list a {
+            color: white;
+            text-decoration: none;
+        }
     #desktop .Image_wrapper {
         background: white;
         border: 1px solid gray;
