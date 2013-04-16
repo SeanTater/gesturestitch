@@ -59,8 +59,8 @@ class ImageDisplay_class
         # This is a really /really terrible/ software pattern
         # but I don't want to break this up into functions for every step
         # it makes no sense that way.
-        switch state
-            when undefined
+        switch state? and state.n or 0
+            when 0
                 state= {n: 0, me: this.match, first: @selected_images[0], second: @selected_images[1]}
                 if @selected_images.length != 2
                     $("#status").text("Need two images to match.")
@@ -79,7 +79,7 @@ class ImageDisplay_class
                 @selected_images[1].overlay(@selected_images[0], new gs.Transform().translate(state.translation))
                 $("#status").text("#{state.matches.length} matches found, centered on #{state.translation}")
         state.n++
-        setTimeout(me, 0, state)
+        setTimeout(state.me, 0, state)
 
 
 
