@@ -31,7 +31,7 @@ class ImageDisplay_class
     processImageList: (imlist)->
         # Load each of the images (by url) from a list
         for url in imlist
-            $("#imagelist").append($("<li>").text(url).click(-> new gs.Image(url: url, parent: this)))
+            $("#image_list").append($("<li>").text(url).click(-> new gs.Image(url: url, parent: this)))
    
     load:(url)->
         new gs.Image(url: url, parent: this)
