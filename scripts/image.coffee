@@ -208,6 +208,10 @@ class gs.Image
                 movement: new jsfeat.point2d_t(their_features[index].x - our_features[index].x, their_features[index].y - our_features[index].y)
                 score: 0 # This is used in cull
             }
+    
+    refine: (other, transform)->
+        # stub
+        return transform
 
     estimateTranslation: (matches)->
         # This is still limited by the fact that it can only handle translation

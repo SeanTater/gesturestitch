@@ -57,15 +57,21 @@ class ImageDisplay_class
 
     match: ->
         if @selected_images.length != 2
-            $("#status").text("Need two images to match.").dialog()
+            $("#status").text("Need two images to match.")
             return
-
+        $("#status").text("Matching image features (be patient)...")
         matches = @selected_images[0].match(@selected_images[1])
+
+        $("#status").text("Estimating image translation...")
         translation = @selected_images[0].estimateTranslation(matches)
-        # Debugging info
-        $("#status").text("#{matches.length} matches found, centered on #{translation}")
-        # Now pretend to overlay
+
+        $("#status").text("Refining image transformation...")
+        translation = @selected_images[0].refine(@selected_images[1], matches)
+        
+        $("#status").text("Overlaying image..")
         @selected_images[1].overlay(@selected_images[0], new gs.Transform().translate(translation))
+
+        $("#status").text("#{matches.length} matches found, centered on #{translation}")
 
 
 
