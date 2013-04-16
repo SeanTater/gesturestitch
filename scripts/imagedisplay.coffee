@@ -66,7 +66,7 @@ class ImageDisplay_class
         translation = @selected_images[0].estimateTranslation(matches)
 
         $("#status").text("Refining image transformation...")
-        translation = @selected_images[0].refine(@selected_images[1], matches)
+        translation = @selected_images[0].refine(@selected_images[1], translation)
         
         $("#status").text("Overlaying image..")
         @selected_images[1].overlay(@selected_images[0], new gs.Transform().translate(translation))
