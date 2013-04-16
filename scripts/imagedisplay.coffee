@@ -67,7 +67,7 @@ class ImageDisplay_class
                     return
                 $("#status").text("Matching image features (be patient)...")
             when 1
-                state.matches = first.match(state.second)
+                state.matches = state.first.match(state.second)
                 $("#status").text("Estimating image translation...")
             when 2
                 state.translation = state.first.estimateTranslation(state.matches)
