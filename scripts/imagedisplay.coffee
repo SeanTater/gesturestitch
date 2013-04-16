@@ -15,14 +15,14 @@ class ImageDisplay_class
         # Normally this would be by XHR but local can't use XHR
         # $.getJSON("images/list", {}, this.processImageList)
         this.processImageList([
-            'images/jumping.jpg',
-            'images/jumping_dad.jpg',
+#            'images/jumping.jpg',
+#            'images/jumping_dad.jpg',
             'images/jumping_kid.jpg',
-            'images/tigers.jpg',
+#            'images/tigers.jpg',
             'images/yard-left.jpg',
-            'images/yard-right.jpg',
+#            'images/yard-right.jpg',
             'images/building_vertical.jpg',
-            'images/building_horizontal.jpg'
+#            'images/building_horizontal.jpg'
             ])
         
         $("#button-match").click(this.match.bind(this))
@@ -30,10 +30,9 @@ class ImageDisplay_class
     
     processImageList: (imlist)->
         # Load each of the images (by url) from a list
+        @image_list = []
         for url in imlist
-            $("#imagelist").append($("<li>").onclick(->
-                new gs.Image(url: url, parent: this)
-            )
+            image = new gs.Image(url: url, parent: this)
    
     load:(url)->
         new gs.Image(url: url, parent: this)
