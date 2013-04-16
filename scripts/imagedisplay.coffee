@@ -55,33 +55,32 @@ class ImageDisplay_class
         # we made up remove()
         @selected_images.remove(image)
 
-    match: (state, display)->
+    match: (state)->
         # This is a really /really terrible/ software pattern
         # but I don't want to break this up into functions for every step
         # it makes no sense that way.
-        first, second = display.selected_images
+        first, second = state.display.selected_images
         switch state
             when undefined
-                display = this
-                state = 0
-                if display.selected_images.length != 2
+                state= {n: 0, first: @selected_images[0], second: @selected_images[1]}
+                if @selected_images.length != 2
                     $("#status").text("Need two images to match.")
                     return
                 $("#status").text("Matching image features (be patient)...")
             when 1
-                matches = first.match(second)
+                state.matches = first.match(state.second)
                 $("#status").text("Estimating image translation...")
             when 2
-                translation = first.estimateTranslation(matches)
+                state.translation = state.first.estimateTranslation(state.matches)
                 $("#status").text("Refining image transformation...")
             when 3
-                translation = first.refine(second, translation)
+                state.translation = state.first.refine(state.second, state.translation)
                 $("#status").text("Overlaying image..")
             when 4
-                @selected_images[1].overlay(@selected_images[0], new gs.Transform().translate(translation))
-                $("#status").text("#{matches.length} matches found, centered on #{translation}")
-        state++
-        setTimeout(display.match, 0, state+1, display)
+                @selected_images[1].overlay(@selected_images[0], new gs.Transform().translate(state.translation))
+                $("#status").text("#{state.matches.length} matches found, centered on #{state.translation}")
+        state.n++
+        setTimeout(display.match, 0, state, display)
 
 
 
