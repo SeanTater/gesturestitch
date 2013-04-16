@@ -76,10 +76,11 @@ class ImageDisplay_class
                 state.translation = state.first.refine(state.second, state.translation)
                 $("#status").text("Overlaying image..")
             when 4
-                @selected_images[1].overlay(@selected_images[0], new gs.Transform().translate(state.translation))
+                state.second.overlay(state.first, new gs.Transform().translate(state.translation))
                 $("#status").text("#{state.matches.length} matches found, centered on #{state.translation}")
         state.n++
-        setTimeout(state.me, 0, state)
+        # Use 10ms because occasionally 0 will not refresh in time
+        setTimeout(state.me, 10, state)
 
 
 
