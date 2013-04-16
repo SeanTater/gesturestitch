@@ -55,23 +55,33 @@ class ImageDisplay_class
         # we made up remove()
         @selected_images.remove(image)
 
-    match: ->
-        if @selected_images.length != 2
-            $("#status").text("Need two images to match.")
-            return
-        $("#status").text("Matching image features (be patient)...")
-        matches = @selected_images[0].match(@selected_images[1])
-
-        $("#status").text("Estimating image translation...")
-        translation = @selected_images[0].estimateTranslation(matches)
-
-        $("#status").text("Refining image transformation...")
-        translation = @selected_images[0].refine(@selected_images[1], translation)
-        
-        $("#status").text("Overlaying image..")
-        @selected_images[1].overlay(@selected_images[0], new gs.Transform().translate(translation))
-
-        $("#status").text("#{matches.length} matches found, centered on #{translation}")
+    match: (state, display)->
+        # This is a really /really terrible/ software pattern
+        # but I don't want to break this up into functions for every step
+        # it makes no sense that way.
+        first, second = display.selected_images
+        switch state
+            when undefined
+                display = this
+                state = 0
+                if display.selected_images.length != 2
+                    $("#status").text("Need two images to match.")
+                    return
+                $("#status").text("Matching image features (be patient)...")
+            when 1
+                matches = first.match(second)
+                $("#status").text("Estimating image translation...")
+            when 2
+                translation = first.estimateTranslation(matches)
+                $("#status").text("Refining image transformation...")
+            when 3
+                translation = first.refine(second, translation)
+                $("#status").text("Overlaying image..")
+            when 4
+                @selected_images[1].overlay(@selected_images[0], new gs.Transform().translate(translation))
+                $("#status").text("#{matches.length} matches found, centered on #{translation}")
+        state++
+        setTimeout(display.match, 0, state+1, display)
 
 
 
