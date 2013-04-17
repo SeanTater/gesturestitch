@@ -27,11 +27,11 @@ class gs.Transform
                 sum
             )
     
-    coord: (x, y)->
+    coord: (point)->
         # This should be pretty efficient. It will be run a lot of times.
         { # The odd indentation is to avoid auto-poetry
-            x: (@matrix[0][0] * x + @matrix[0][1] * y + @matrix[0][2]),
-            y: (@matrix[1][0] * x + @matrix[1][1] * y + @matrix[1][2])
+            x: (@matrix[0][0] * point.x + @matrix[0][1] * point.y + @matrix[0][2]),
+            y: (@matrix[1][0] * point.x + @matrix[1][1] * point.y + @matrix[1][2])
         }
 
     getTranslation: -> {x: -@matrix[0][2], y: -@matrix[1][2]}
@@ -47,9 +47,9 @@ class gs.Transform
                       [-Math.sin(radians), Math.cos(radians), 0],
                       [0, 0, 1]).multiply(this)
     
-    scale: (factor)->
-        new gs.Transform([[factor, 0, 0],
-                       [0, factor, 0],
+    scale: (factors)->
+        new gs.Transform([[factor.x, 0, 0],
+                       [0, factor.y, 0],
                        [0, 0, 1]]).multiply(this)
          
 
@@ -161,14 +161,14 @@ class gs.Pixels
 
         return this.box(x-left_top_margin, y-left_top_margin, x+right_bottom_margin, y+right_bottom_margin)
     
-    venn: (other, trans)->
+    venn: (other, ov_to_or_trans)->
         # Show the intersection and bounding boxes of two overlaid images
         # TODO: Also calculate outer
     
-        toplefts = [{x:0,y:0}, trans.coord(0, 0)]
-        toprights = [{x:@width, y:0}, trans.coord(other.width, 0)]
-        bottomrights = [{x:@width, y:@height}, trans.coord(other.width, other.height)]
-        bottomlefts = [{x:0, y:@height}, trans.coord(0, other.height)]
+        toplefts = [{x:0,y:0}, ov_to_or_trans.coord({x:0, y:0})]
+        toprights = [{x:@width, y:0}, ov_to_or_trans.coord({x:other.width, y:0})]
+        bottomrights = [{x:@width, y:@height}, ov_to_or_trans.coord({x:other.width, y:other.height})]
+        bottomlefts = [{x:0, y:@height}, ov_to_or_trans.coord({x:0, y:other.height})]
         
         # Find the intersection box in the original image's coordinate system
         inner = {
@@ -185,24 +185,68 @@ class gs.Pixels
                 x: Math.min(bottomright[0].x, bottomright[1].x)
                 y: Math.min(bottomright[0].y, bottomright[1].y) }
         }
+        inner.height = inner.bottomleft.y - inner.topleft.y
+        inner.width = inner.topright.x - inner.topleft.x
         
         # - Coordinate transformation matrices for intersection box -> an image
-        # - to_original is easy because we are already in the original image's coordinate system
         # - All the transformations are meant to act as though you are moving the intersection box
         #    around until it is in the right place for that system
         # TODO: rotation
+
+        # Find the intersection box in the original image's coords
         inner.to_original = new Transform().translate(inner.topleft)
-        inner.to_overlay = new Transform().translate({
-            x: inner.topleft.x - toplefts[1].x
-            y: inner.topleft.y - toplefts[1].y
-        }).scale({
-            x: (toprights[1].x - toplefts[1].x) / @width
-            y: (bottomlefts[1].y - toplefts[1].y) / @height
-        })
+
+        # Find the intersection box in the overlay image's coords
+        # This backward notation is a matter of mathmatical convention
+        inner.to_overlay = ov_to_or_trans.multiply(inner.to_original)
         
         return {inner: inner}
 
+    refine: (other, start_ov_to_or)->
+        # Find the best overall location for the image using a global maximum search
+        # The first implementation: a hill climber
+    
+        # Make a copy of the transform that we can edit
+        ov_to_or = new Transform().multiply(original_trans)
+
+        actions = [
+            # The move/change the overlay
+            (t)->t.translate({x:1,  y:0}),
+            (t)->t.translate({x:-1, y:0}),
+            (t)->t.translate({x:0,  y:1}),
+            (t)->t.translate({x:0,  y:-1}),
+            (t)->t.scale({x:1.02, y:0}),
+            (t)->t.scale({x:0.98, y:0}),
+            (t)->t.scale({x:0, y:1.02}),
+            (t)->t.scale({x:0, y:0.98})
+        ]
+        sse = (test_ov_to_or)->
+            # Calculate the SSE of a fixed-size view of the intersection
+            inner = this.venn(other, test_ov_to_or)
+            scaler = new Transform().scale(x:16/inner.width, y:16/inner.height)
+            original_scaler = scaler.multiply(inner.to_original)
+            overlay_scaler = scaler.multiply(inner.to_overlay)
+            point = {x:0, y:0}
+            sum = 0
+            for point.x in [0...16] by 1
+                for point.y in [0...16] by 1
+                    original_pixel = original.pixel(original_scaler.coord(point))
+                    overlay_pixel = overlay.pixel(original_scaler.coord(point))
+                    for i in [0...4] by 1
+                        sum += Math.pow(original_pixel[i]-overlay_pixel[i], 2)
         
+        last_move = {mat: ov_to_or, sse: sse(ov_to_or)}
+        do
+            for action in actions
+                mat = action(ov_to_or)
+                sse = sse(mat)
+                if sse < best_move.sse
+                    best_move.mat = move
+                    best_move.sse = sse
+        while best_move.sse < last_move.sse
+        
+        return ov_to_or
+            
     
     merge: (other, trans)->
         # Merge two images given a specific transformation matrix
@@ -233,7 +277,7 @@ class gs.Pixels
         #      but this is not really a sane assumption (usually <25% actually overlaps)
         for x in [0...new_width]
             for y in [0...new_height]
-                im2_coord = trans.coord(x, y)
+                im2_coord = trans.coord({x:x, y:y})
                 # TODO: use interpolation
                 try
                     pvalue = other.pixel(im2_coord.x|0, im2_coord.y|0)
@@ -261,12 +305,12 @@ class gs.Pixels
                            0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0]
         
         # FYI |0 means force coersion to int
-        for x in [0...@width]
-            for y in [0...@height]
+        for x in [0...@width] by 1
+            for y in [0...@height] by 1
                 my_histogram[this.pixel(x, y)[0]/16|0]++
                 other_histogram[other.pixel(x, y)[0]/16|0]++
         error = 0
-        for i in [0...16]
+        for i in [0...16] by 1
             difference = (my_histogram[i] - other_histogram[i])
             difference *= difference
             error += difference
