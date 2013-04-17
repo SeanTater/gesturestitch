@@ -245,7 +245,7 @@ class gs.Pixels
                     best_move.sse = sse
             break unless best_move.sse < last_move.sse
         
-        return ov_to_or
+        return best_move.mat
             
     
     merge: (other, trans)->
