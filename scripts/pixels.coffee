@@ -163,21 +163,44 @@ class gs.Pixels
     
     venn: (other, trans)->
         # Show the intersection and bounding boxes of two overlaid images
-        shift = trans.getTranslation()
-
-        # Find image extrema
-        greatest_x = Math.max(shift.x + other.width, @width)
-        least_x = Math.min(shift.x, 0)
-        greatest_y = Math.max(shift.y + other.height, @height)
-        least_y = Math.min(shift.y, 0)
-         
-        # Calculate new image dimensions
-        bound = {width: greatest_x - least_x, height: greatest_y - least_y}
-
-
-        # How much to move both of the images so that 0,0 is the minimum x,y
-        shift_x = -least_x
-        shift_y = -least_y
+        # TODO: Also calculate outer
+    
+        toplefts = [{x:0,y:0}, trans.coord(0, 0)]
+        toprights = [{x:@width, y:0}, trans.coord(other.width, 0)]
+        bottomrights = [{x:@width, y:@height}, trans.coord(other.width, other.height)]
+        bottomlefts = [{x:0, y:@height}, trans.coord(0, other.height)]
+        
+        # Find the intersection box in the original image's coordinate system
+        inner = {
+            topleft: {
+                x: Math.max(topleft[0].x, topleft[1].x)
+                y: Math.max(topleft[0].y, topleft[1].y) }
+            topright: {
+                x: Math.min(topright[0].x, topright[1].x)
+                y: Math.max(topright[0].y, topright[1].y) }
+            bottomleft: {
+                x: Math.max(bottomleft[0].x, bottomleft[1].x)
+                y: Math.min(bottomleft[0].y, bottomleft[1].y) }
+            bottomright: {
+                x: Math.min(bottomright[0].x, bottomright[1].x)
+                y: Math.min(bottomright[0].y, bottomright[1].y) }
+        }
+        
+        # - Coordinate transformation matrices for intersection box -> an image
+        # - to_original is easy because we are already in the original image's coordinate system
+        # - All the transformations are meant to act as though you are moving the intersection box
+        #    around until it is in the right place for that system
+        # TODO: rotation
+        inner.to_original = new Transform().translate(inner.topleft)
+        inner.to_overlay = new Transform().translate({
+            x: inner.topleft.x - toplefts[1].x
+            y: inner.topleft.y - toplefts[1].y
+        }).scale({
+            x: (toprights[1].x - toplefts[1].x) / @width
+            y: (bottomlefts[1].y - toplefts[1].y) / @height
+        })
+        
+        return {inner: inner}
 
         
     
