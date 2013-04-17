@@ -161,6 +161,26 @@ class gs.Pixels
 
         return this.box(x-left_top_margin, y-left_top_margin, x+right_bottom_margin, y+right_bottom_margin)
     
+    venn: (other, trans)->
+        # Show the intersection and bounding boxes of two overlaid images
+        shift = trans.getTranslation()
+
+        # Find image extrema
+        greatest_x = Math.max(shift.x + other.width, @width)
+        least_x = Math.min(shift.x, 0)
+        greatest_y = Math.max(shift.y + other.height, @height)
+        least_y = Math.min(shift.y, 0)
+         
+        # Calculate new image dimensions
+        bound = {width: greatest_x - least_x, height: greatest_y - least_y}
+
+
+        # How much to move both of the images so that 0,0 is the minimum x,y
+        shift_x = -least_x
+        shift_y = -least_y
+
+        
+    
     merge: (other, trans)->
         # Merge two images given a specific transformation matrix
         shift = trans.getTranslation()
