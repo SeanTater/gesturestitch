@@ -226,24 +226,23 @@ class gs.Pixels
             scaler = new Transform().scale(x:16/inner.width, y:16/inner.height)
             original_scaler = scaler.multiply(inner.to_original)
             overlay_scaler = scaler.multiply(inner.to_overlay)
-            point = {x:0, y:0}
             sum = 0
-            for point.x in [0...16] by 1
-                for point.y in [0...16] by 1
-                    original_pixel = original.pixel(original_scaler.coord(point))
-                    overlay_pixel = overlay.pixel(original_scaler.coord(point))
+            for x in [0...16] by 1
+                for y in [0...16] by 1
+                    original_pixel = original.pixel(original_scaler.coord({x:x, y:y}))
+                    overlay_pixel = overlay.pixel(original_scaler.coord({x:x, y:y}))
                     for i in [0...4] by 1
                         sum += Math.pow(original_pixel[i]-overlay_pixel[i], 2)
         
         last_move = {mat: ov_to_or, sse: sse(ov_to_or)}
-        do
+        loop
             for action in actions
                 mat = action(ov_to_or)
                 sse = sse(mat)
                 if sse < best_move.sse
                     best_move.mat = move
                     best_move.sse = sse
-        while best_move.sse < last_move.sse
+            break unless best_move.sse < last_move.sse
         
         return ov_to_or
             
