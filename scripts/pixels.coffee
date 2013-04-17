@@ -238,14 +238,16 @@ class gs.Pixels
         last_move = {mat: ov_to_or, sse: sse(ov_to_or)}
         loop
             for action in actions
-                mat = action(ov_to_or)
+                mat = action(last_move)
                 sse = sse(mat)
                 if sse < best_move.sse
                     best_move.mat = move
                     best_move.sse = sse
-            break unless best_move.sse < last_move.sse
-        
-        return best_move.mat
+            if best_move.sse < last_move.sse
+                last_move = best_move
+            else
+                break
+        return last_move.mat
             
     
     merge: (other, trans)->
