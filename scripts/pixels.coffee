@@ -173,17 +173,17 @@ class gs.Pixels
         # Find the intersection box in the original image's coordinate system
         inner = {
             topleft: {
-                x: Math.max(topleft[0].x, topleft[1].x)
-                y: Math.max(topleft[0].y, topleft[1].y) }
+                x: Math.max(toplefts[0].x, toplefts[1].x)
+                y: Math.max(toplefts[0].y, toplefts[1].y) }
             topright: {
-                x: Math.min(topright[0].x, topright[1].x)
-                y: Math.max(topright[0].y, topright[1].y) }
+                x: Math.min(toprights[0].x, toprights[1].x)
+                y: Math.max(toprights[0].y, toprights[1].y) }
             bottomleft: {
-                x: Math.max(bottomleft[0].x, bottomleft[1].x)
-                y: Math.min(bottomleft[0].y, bottomleft[1].y) }
+                x: Math.max(bottomlefts[0].x, bottomlefts[1].x)
+                y: Math.min(bottomlefts[0].y, bottomlefts[1].y) }
             bottomright: {
-                x: Math.min(bottomright[0].x, bottomright[1].x)
-                y: Math.min(bottomright[0].y, bottomright[1].y) }
+                x: Math.min(bottomrights[0].x, bottomrights[1].x)
+                y: Math.min(bottomrights[0].y, bottomrights[1].y) }
         }
         inner.height = inner.bottomleft.y - inner.topleft.y
         inner.width = inner.topright.x - inner.topleft.x
