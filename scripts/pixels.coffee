@@ -207,7 +207,7 @@ class gs.Pixels
         # The first implementation: a hill climber
     
         # Make a copy of the transform that we can edit
-        ov_to_or = new Transform().multiply(original_trans)
+        ov_to_or = new gs.Transform().multiply(original_trans)
 
         actions = [
             # The move/change the overlay
