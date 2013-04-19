@@ -235,7 +235,7 @@ class gs.Pixels
         last_move = {mat: ov_to_or, sse: sse(this, overlay, this.venn(overlay, ov_to_or).inner)}
         loop
             for action in actions
-                mat = action(last_move)
+                mat = action(last_move.mat)
                 inner = this.venn(overlay, mat).inner
                 sse = sse(this, overlay, inner)
                 if sse < best_move.sse
