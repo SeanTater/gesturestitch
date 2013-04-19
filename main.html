@@ -12,8 +12,15 @@
         <script src='scripts/imagedisplay.js'></script>
 	<script src='scripts/pixels.js'></script>
         <script src='scripts/image.js'></script>
-    </head>
-    <body>
+        <script src="scripts/leap.min.js"></script>
+        <script src="scripts/leapcanvas.js"></script>
+        <script>
+              $(document).ready(function() {
+                LeapEx.init('#canvas', '#debug');
+              });
+      </script>
+  </head>
+  <body>
         <h1>
             Gesture-Initiated Image Stitcher
         </h1>
