@@ -220,9 +220,8 @@ class gs.Pixels
             (t)->t.scale({x:0, y:1.02}),
             (t)->t.scale({x:0, y:0.98})
         ]
-        sse = (test_ov_to_or)->
+        sse = (inner)->
             # Calculate the SSE of a fixed-size view of the intersection
-            inner = this.venn(other, test_ov_to_or)
             scaler = new Transform().scale(x:16/inner.width, y:16/inner.height)
             original_scaler = scaler.multiply(inner.to_original)
             overlay_scaler = scaler.multiply(inner.to_overlay)
@@ -239,6 +238,7 @@ class gs.Pixels
         loop
             for action in actions
                 mat = action(last_move)
+                inner = this.venn(other, mat)
                 sse = sse(mat)
                 if sse < best_move.sse
                     best_move.mat = move
