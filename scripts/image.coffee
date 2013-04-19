@@ -210,7 +210,7 @@ class gs.Image
             }
     
     refine: (other, transform)->
-        pixels.refine(other.pixels, transform)
+        @pixels.refine(other.pixels, transform)
 
     estimateTranslation: (matches)->
         # This is still limited by the fact that it can only handle translation
