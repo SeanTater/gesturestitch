@@ -234,11 +234,11 @@ class gs.Pixels
                         sum += Math.pow(original_pixel[i]-overlay_pixel[i], 2)
             return sum
         
-        last_move = {mat: ov_to_or, sse: sse(this.venn(other, ov_to_or))}
+        last_move = {mat: ov_to_or, sse: sse(this.venn(other, ov_to_or).inner)}
         loop
             for action in actions
                 mat = action(last_move)
-                inner = this.venn(other, mat)
+                inner = this.venn(other, mat).inner
                 sse = sse(inner)
                 if sse < best_move.sse
                     best_move.mat = move
