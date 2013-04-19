@@ -48,8 +48,8 @@ class gs.Transform
                       [0, 0, 1]).multiply(this)
     
     scale: (factors)->
-        new gs.Transform([[factor.x, 0, 0],
-                       [0, factor.y, 0],
+        new gs.Transform([[factors.x, 0, 0],
+                       [0, factors.y, 0],
                        [0, 0, 1]]).multiply(this)
          
 
