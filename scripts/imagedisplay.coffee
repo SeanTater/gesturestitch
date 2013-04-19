@@ -77,7 +77,7 @@ class ImageDisplay_class
                 $("#status").text("Overlaying image..")
             when 4
                 state.second.overlay(state.first, state.transform)
-                $("#status").text("#{state.matches.length} matches found, centered on #{state.transform}")
+                $("#status").text("#{state.matches.length} matches found, centered on #{state.transform.x}, #{state.transform.y}")
         state.n++
         # Use 10ms because occasionally 0 will not refresh in time
         setTimeout(state.me, 10, state)
