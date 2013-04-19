@@ -73,7 +73,7 @@ class ImageDisplay_class
                 state.transform = state.first.estimateTranslation(state.matches)
                 $("#status").text("Refining image transformation...")
             when 3
-                state.transform = state.first.refine(state.second, state.translation)
+                state.transform = state.first.refine(state.second, state.transform)
                 $("#status").text("Overlaying image..")
             when 4
                 state.second.overlay(state.first, new gs.Transform().translate(state.translation))
