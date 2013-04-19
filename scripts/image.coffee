@@ -115,12 +115,8 @@ class gs.Image
     brighten: ->
         # Simple effect to demonstrate pixel manipulation
         this.setupCanvas()
-        @pixels.filter(
-            (x, y, pbright)->
-                for vi in [0...4]
-                    pbright[vi] = pbright[vi] * 2
-                return pbright
-            )
+        for pi in [0...@pixels.data.length] by 4
+            @pixels.data[pi] *= 2
         # This could be unnecessary but it makes it easier to use
         this.save()
 

@@ -76,19 +76,18 @@ class gs.Pixels
             @height = args.height
             @data = new Uint8ClampedArray(@width * @height * @channel)
 
-    location: (x, y)->
+    location: (point)->
         # Locate..
-        index = (y+@offsety) * @width
-        index += (x+@offsetx)
-        index *= @channel
-        index
+        index = (point.y+@offsety) * @width
+        index += (point.x+@offsetx)
+        return index * @channel
 
-    pixel: (x, y, value)->
+    pixel: (point, value)->
         # Safeguard
         throw "Missing data" unless @data?
-        throw new gs.BoundsError("X #{x} out of bounds") unless 0 <= x < @width
-        throw new gs.BoundsError("Y #{y} out of bounds") unless 0 <= y < @height
-        index = this.location(x, y)
+        throw new gs.BoundsError("X #{point.x} out of bounds") unless 0 <= point.x < @width
+        throw new gs.BoundsError("Y #{point.y} out of bounds") unless 0 <= point.y < @height
+        index = this.location(point)
         this._pixel(index, value)
 
     _pixel: (index, value)->
@@ -149,7 +148,7 @@ class gs.Pixels
             box = new gs.Pixels(width:cols, height:rows)
             for x in [x1...x2]
                 for y in [y1...y2]
-                    box.pixel(x-x1, y-y1, this.pixel(x, y))
+                    box.pixel({x:x-x1, y:y-y1}, this.pixel({x:x, y:y}))
             return box
     
     region: (x, y, diameter)->
@@ -272,7 +271,7 @@ class gs.Pixels
         # Do the simple part first: copy the first image
         for x in [0...@width]
             for y in [0...@height]
-                new_image.pixel(x+shift_x, y+shift_y, this.pixel(x, y))
+                new_image.pixel({x:x+shift_x, y:y+shift_y}, this.pixel({x:x, y:y}))
         # Now copy the second image using the transform
         #TODO: Improve performance
         #NOTE: This raytracing-like approach assumes every pixel in the output is a function of the second
@@ -282,10 +281,10 @@ class gs.Pixels
                 im2_coord = trans.coord({x:x, y:y})
                 # TODO: use interpolation
                 try
-                    pvalue = other.pixel(im2_coord.x|0, im2_coord.y|0)
+                    pvalue = other.pixel({x:im2_coord.x|0, y:im2_coord.y|0})
                 catch err
                     continue
-                new_image.pixel(x, y, pvalue)
+                new_image.pixel({x:x, y:y}, pvalue)
         return new_image
     
     sse: (other)->
@@ -293,8 +292,8 @@ class gs.Pixels
         sum = 0
         for x in [0...@width]
             for y in [0...@height]
-                this_pixel = this.pixel(x, y)
-                other_pixel = other.pixel(x, y)
+                this_pixel = this.pixel({x:x, y:y})
+                other_pixel = other.pixel({x:x, y:y})
                 for i in [0...4]
                     err = this_pixel[i] - other_pixel[i]
                     sum += err*err
@@ -309,8 +308,8 @@ class gs.Pixels
         # FYI |0 means force coersion to int
         for x in [0...@width] by 1
             for y in [0...@height] by 1
-                my_histogram[this.pixel(x, y)[0]/16|0]++
-                other_histogram[other.pixel(x, y)[0]/16|0]++
+                my_histogram[this.pixel({x:x, y:y})[0]/16|0]++
+                other_histogram[other.pixel({x:x, y:y})[0]/16|0]++
         error = 0
         for i in [0...16] by 1
             difference = (my_histogram[i] - other_histogram[i])
