@@ -203,8 +203,7 @@ class gs.Pixels
 
     refine: (overlay, start_ov_to_or)->
         # Find the best overall location for the image using a global maximum search
-        # The first implementation: a hill climber
-        return start_ov_to_or 
+        # The first implementation: a hill climber 
         # Make a copy of the transform that we can edit
         ov_to_or = new gs.Transform().multiply(start_ov_to_or)
 
