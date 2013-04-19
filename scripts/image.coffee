@@ -223,7 +223,7 @@ class gs.Image
                 m1.score += 1/squared_distance
             if m1.score > max_match.score
                 max_match = m1
-        return max_match.movement
+        return new gs.Transform().translate(max_match.movement)
 
     overlay: (other, trans)->
         # TODO: stub: needs to actually take matched points into account
