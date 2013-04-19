@@ -202,10 +202,10 @@ class gs.Pixels
         
         return {inner: inner}
 
-    refine: (other, start_ov_to_or)->
+    refine: (overlay, start_ov_to_or)->
         # Find the best overall location for the image using a global maximum search
         # The first implementation: a hill climber
-    
+        
         # Make a copy of the transform that we can edit
         ov_to_or = new gs.Transform().multiply(start_ov_to_or)
 
@@ -220,7 +220,7 @@ class gs.Pixels
             (t)->t.scale({x:0, y:1.02}),
             (t)->t.scale({x:0, y:0.98})
         ]
-        sse = (inner)->
+        sse = (original, overlay, inner)->
             # Calculate the SSE of a fixed-size view of the intersection
             scaler = new gs.Transform().scale(x:16/inner.width, y:16/inner.height)
             original_scaler = scaler.multiply(inner.to_original)
@@ -234,12 +234,12 @@ class gs.Pixels
                         sum += Math.pow(original_pixel[i]-overlay_pixel[i], 2)
             return sum
         
-        last_move = {mat: ov_to_or, sse: sse(this.venn(other, ov_to_or).inner)}
+        last_move = {mat: ov_to_or, sse: sse(this, overlay, this.venn(other, ov_to_or).inner)}
         loop
             for action in actions
                 mat = action(last_move)
-                inner = this.venn(other, mat).inner
-                sse = sse(inner)
+                inner = this.venn(overlay, mat).inner
+                sse = sse(this, overlay, inner)
                 if sse < best_move.sse
                     best_move.mat = move
                     best_move.sse = sse
