@@ -239,7 +239,7 @@ class gs.Pixels
             for action in actions
                 mat = action(last_move)
                 inner = this.venn(other, mat)
-                sse = sse(mat)
+                sse = sse(inner)
                 if sse < best_move.sse
                     best_move.mat = move
                     best_move.sse = sse
