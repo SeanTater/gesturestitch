@@ -218,7 +218,7 @@ class gs.Pixels
             (t)->t.scale({x:0, y:1.02}),
             (t)->t.scale({x:0, y:0.98})
         ]
-        sse = (original, overlay, inner)->
+        getSse = (original, overlay, inner)->
             # Calculate the SSE of a fixed-size view of the intersection
             scaler = new gs.Transform().scale(x:16/inner.width, y:16/inner.height)
             original_scaler = scaler.multiply(inner.to_original)
@@ -232,12 +232,12 @@ class gs.Pixels
                         sum += Math.pow(original_pixel[i]-overlay_pixel[i], 2)
             return sum
         
-        best_move = last_move = {mat: ov_to_or, sse: sse(this, overlay, this.venn(overlay, ov_to_or).inner)}
+        best_move = last_move = {mat: ov_to_or, sse: getSse(this, overlay, this.venn(overlay, ov_to_or).inner)}
         loop
             for action in actions
                 mat = action(last_move.mat)
                 inner = this.venn(overlay, mat).inner
-                sse = sse(this, overlay, inner)
+                sse = getSse(this, overlay, inner)
                 if sse < best_move.sse
                     best_move.mat = move
                     best_move.sse = sse
