@@ -234,7 +234,7 @@ class gs.Pixels
                         sum += Math.pow(original_pixel[i]-overlay_pixel[i], 2)
             return sum
         
-        last_move = {mat: ov_to_or, sse: sse(this, overlay, this.venn(other, ov_to_or).inner)}
+        last_move = {mat: ov_to_or, sse: sse(this, overlay, this.venn(overlay, ov_to_or).inner)}
         loop
             for action in actions
                 mat = action(last_move)
