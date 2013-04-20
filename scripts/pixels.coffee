@@ -213,10 +213,10 @@ class gs.Pixels
             (t)->t.translate({x:-1, y:0}),
             (t)->t.translate({x:0,  y:1}),
             (t)->t.translate({x:0,  y:-1}),
-            (t)->t.scale({x:1.02, y:0}),
-            (t)->t.scale({x:0.98, y:0}),
-            (t)->t.scale({x:0, y:1.02}),
-            (t)->t.scale({x:0, y:0.98})
+            (t)->t.scale({x:1.02, y:1}),
+            (t)->t.scale({x:0.98, y:1}),
+            (t)->t.scale({x:1, y:1.02}),
+            (t)->t.scale({x:1, y:0.98})
         ]
         getSse = (original, overlay, inner)->
             # Calculate the SSE of a fixed-size view of the intersection
