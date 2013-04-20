@@ -190,23 +190,51 @@ class gs.Pixels
         # - Coordinate transformation matrices for intersection box -> an image
         # - All the transformations are meant to act as though you are moving the intersection box
         #    around until it is in the right place for that system
-        # TODO: rotation
-
+        
         # Find the intersection box in the original image's coords
         inner.to_original = new gs.Transform().translate(inner.topleft)
 
         # Find the intersection box in the overlay image's coords
         # This backward notation is a matter of mathmatical convention
         inner.to_overlay = ov_to_or_trans.multiply(inner.to_original)
+
+	# Find the bounding box in the original image's coordinate system
+        outer = {
+            topleft: {
+                x: Math.min(toplefts[0].x, toplefts[1].x)
+                y: Math.min(toplefts[0].y, toplefts[1].y) }
+            topright: {
+                x: Math.max(toprights[0].x, toprights[1].x)
+                y: Math.min(toprights[0].y, toprights[1].y) }
+            bottomleft: {
+                x: Math.min(bottomlefts[0].x, bottomlefts[1].x)
+                y: Math.max(bottomlefts[0].y, bottomlefts[1].y) }
+            bottomright: {
+                x: Math.max(bottomrights[0].x, bottomrights[1].x)
+                y: Math.max(bottomrights[0].y, bottomrights[1].y) }
+        }
+        outer.height = outer.bottomleft.y - outer.topleft.y
+        outer.width = outer.topright.x - outer.topleft.x
         
-        return {inner: inner}
+        # - Coordinate transformation matrices for intersection box -> an image
+        # - All the transformations are meant to act as though you are moving the intersection box
+        #    around until it is in the right place for that system
+
+        # Find the intersection box in the original image's coords
+        outer.to_original = new gs.Transform().translate(outer.topleft)
+
+        # Find the intersection box in the overlay image's coords
+        # This backward notation is a matter of mathmatical convention
+        outer.to_overlay = ov_to_or_trans.multiply(outer.to_original)
+        
+        return {inner:inner, outer: outer}
 
     refine: (overlay, start_ov_to_or)->
         # Find the best overall location for the image using a global maximum search
         # The first implementation: a hill climber 
         # Make a copy of the transform that we can edit
         ov_to_or = new gs.Transform().multiply(start_ov_to_or)
-
+        return ov_to_or
         actions = [
             # The move/change the overlay
             (t)->t.translate({x:1,  y:0}),
@@ -248,41 +276,28 @@ class gs.Pixels
         return last_move.mat
             
     
-    merge: (other, trans)->
-        # Merge two images given a specific transformation matrix
-        shift = trans.getTranslation()
+    merge: (overlay, transform)->
+        # Merge two images given a specific transformation matrix	
+        outer = this.venn(overlay, transform).outer
 
-        # Find image extrema
-        greatest_x = Math.max(shift.x + other.width, @width)
-        least_x = Math.min(shift.x, 0)
-        greatest_y = Math.max(shift.y + other.height, @height)
-        least_y = Math.min(shift.y, 0)
-         
-        # Calculate new image dimensions
-        new_width = greatest_x - least_x
-        new_height = greatest_y - least_y
-        
-        # How much to move both of the images so that 0,0 is the minimum x,y
-        shift_x = -least_x
-        shift_y = -least_y
-        trans = trans.translate({x: shift_x, y: shift_y})
-        new_image = new gs.Pixels(width: new_width, height: new_height)
-        # Do the simple part first: copy the first image
-        for x in [0...@width]
-            for y in [0...@height]
-                new_image.pixel({x:x+shift_x, y:y+shift_y}, this.pixel({x:x, y:y}))
-        # Now copy the second image using the transform
+        new_image = new gs.Pixels(width: outer.width, height: outer.height)
         #TODO: Improve performance
         #NOTE: This raytracing-like approach assumes every pixel in the output is a function of the second
         #      but this is not really a sane assumption (usually <25% actually overlaps)
-        for x in [0...new_width]
-            for y in [0...new_height]
-                im2_coord = trans.coord({x:x, y:y})
+        for x in [0...outer.width]
+            for y in [0...outer.height]
+                original_coord = outer.to_original.coord(x:x, y:y)
+                overlay_coord = outer.to_overlay.coord(x:x, y:y)
                 # TODO: use interpolation
+                new_image.pixel({x:x, y:y}, pvalue)
+                # Try the overlay, then the original, then use clear
                 try
-                    pvalue = other.pixel({x:im2_coord.x|0, y:im2_coord.y|0})
-                catch err
-                    continue
+                    pvalue = overlay.pixel(x:overlay_coord.x|0, y:overlay_coord.y|0)
+                catch err1
+                    try
+                        pvalue = original.pixel(x:original_coord.x|0, y:original_coord.y|0)
+                    catch err2
+                        pvalue = new Uint8ClampedArray([0, 0, 0, 0]) # Clear
                 new_image.pixel({x:x, y:y}, pvalue)
         return new_image
     
