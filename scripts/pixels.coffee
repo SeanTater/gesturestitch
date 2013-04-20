@@ -239,7 +239,7 @@ class gs.Pixels
                 inner = this.venn(overlay, mat).inner
                 sse = getSse(this, overlay, inner)
                 if sse < best_move.sse
-                    best_move.mat = move
+                    best_move.mat = mat
                     best_move.sse = sse
             if best_move.sse < last_move.sse
                 last_move = best_move
