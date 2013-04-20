@@ -304,8 +304,8 @@ class gs.Pixels
     sse: (other)->
         # Calculate the sum of squared error with another Pixels
         sum = 0
-        for x in [0...@width]
-            for y in [0...@height]
+        for x in [0...@width] by 1
+            for y in [0...@height] by 1
                 this_pixel = this.pixel({x:x, y:y})
                 other_pixel = other.pixel({x:x, y:y})
                 for i in [0...4]
