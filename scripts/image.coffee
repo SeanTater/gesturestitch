@@ -135,10 +135,10 @@ class gs.Image
         this.setupCanvas()
 
         # Create output corner array
-        corners = []
+        corner_alloc = []
         i = @width*@height # This is the absolute upper limit (i/1000 is more typical)
         while --i >= 0
-            corners[i] = new jsfeat.point2d_t(0,0,0,0)
+            corner_alloc[i] = new jsfeat.point2d_t(0,0,0,0)
 
         # Convert image to grayscale  
         img_u8 = new jsfeat.matrix_t(@width, @height, jsfeat.U8_t | jsfeat.C1_t)
@@ -150,10 +150,25 @@ class gs.Image
 
         # Detect
         #count = jsfeat.yape06.detect(img_u8, corners)
+        declump = (corners, count)->
+            last_c = corners[0]
+            for c in corners[1...count]
+                if Math.abs(c.x - last_c.x) < 5
+                    last_c = c
+                    continue
+                last_c = c
+                c
+
         threshold = 20
-        while (count = jsfeat.fast_corners.detect(img_u8, corners)) > 100
+        count = jsfeat.fast_corners.detect(img_u8, corner_alloc)
+        corners = corner_alloc
+        ###while count > 500
             threshold += 5
             jsfeat.fast_corners.set_threshold(threshold)
+            count = jsfeat.fast_corners.detect(img_u8, corner_alloc)
+            corners = corner_alloc
+            #corners = declump(corner_alloc, count)
+            #count = corners.length###
 
         console.log("#{count} features before filtering")
 
@@ -222,7 +237,7 @@ class gs.Image
                 m1.score += 1/squared_distance
             if m1.score > max_match.score
                 max_match = m1
-        return new gs.Transform().translate(max_match.movement)
+        return new gs.Transform().translate({x:-max_match.movement.x, y:-max_match.movement.y})
 
     overlay: (other, trans)->
         # TODO: stub: needs to actually take matched points into account
