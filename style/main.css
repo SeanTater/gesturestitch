@@ -40,8 +40,7 @@ h1 {
         border: 1px solid gray;
         border-radius: 4px;
         display: inline-block;
-        margin: 1em;
-        max-width: 25%;}
+        margin: 1em;}
     #desktop .ui-selected {
         border: 3px solid white;}
 

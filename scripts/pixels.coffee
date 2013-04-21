@@ -221,7 +221,7 @@ class gs.Pixels
         #    around until it is in the right place for that system
 
         # Find the intersection box in the original image's coords
-        outer.to_original = new gs.Transform().translate(outer.topleft)
+        outer.to_original = new gs.Transform()#.translate(x:outer.topleft.x, y:outer.topleft.y)
 
         # Find the intersection box in the overlay image's coords
         # This backward notation is a matter of mathmatical convention
@@ -251,7 +251,6 @@ class gs.Pixels
             scaler = new gs.Transform().scale(x:16/inner.width, y:16/inner.height)
             original_scaler = scaler.multiply(inner.to_original)
             overlay_scaler = scaler.multiply(inner.to_overlay)
-            sum = 0
             for x in [0...16] by 1
                 for y in [0...16] by 1
                     original_pixel = original.pixel(original_scaler.coord({x:x, y:y}))
@@ -284,18 +283,17 @@ class gs.Pixels
         #TODO: Improve performance
         #NOTE: This raytracing-like approach assumes every pixel in the output is a function of the second
         #      but this is not really a sane assumption (usually <25% actually overlaps)
-        for x in [0...outer.width]
-            for y in [0...outer.height]
+        for x in [0...outer.width] by 1
+            for y in [0...outer.height] by 1
                 original_coord = outer.to_original.coord(x:x, y:y)
                 overlay_coord = outer.to_overlay.coord(x:x, y:y)
                 # TODO: use interpolation
-                new_image.pixel({x:x, y:y}, pvalue)
                 # Try the overlay, then the original, then use clear
                 try
                     pvalue = overlay.pixel(x:overlay_coord.x|0, y:overlay_coord.y|0)
                 catch err1
                     try
-                        pvalue = original.pixel(x:original_coord.x|0, y:original_coord.y|0)
+                        pvalue = this.pixel(x:original_coord.x|0, y:original_coord.y|0)
                     catch err2
                         pvalue = new Uint8ClampedArray([0, 0, 0, 0]) # Clear
                 new_image.pixel({x:x, y:y}, pvalue)
