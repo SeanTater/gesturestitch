@@ -266,7 +266,7 @@ class gs.Pixels
                     overlay_pixel = overlay.pixel(original_scaler.coord({x:x, y:y}))
                     for i in [0...4] by 1
                         sum += Math.pow(original_pixel[i]-overlay_pixel[i], 2)
-            return sum
+            return sum/(inner.width*inner.height)
         
         last_move = {mat: ov_to_or, sse: getSse(this, overlay, this.venn(overlay, ov_to_or).inner)}
         best_move = jQuery.extend({}, last_move)
