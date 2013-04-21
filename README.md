@@ -12,7 +12,11 @@ Overview
 
 Setup
 -----
-Just take a look at the [development preview](http://seantater.is-a-linux-user.org/gesturestitch)
+Just take a look at the development preview
+- [Master - Usually best tested](http://seantater.is-a-linux-user.org/gsdev/master)
+- [Gestures - Includes Leap functionality by default](http://seantater.is-a-linux-user.org/gsdev/gestures)
+- [AI Refine - AI-based post-geometrical-estimation image alignment refinement](http://seantater.is-a-linux-user.org/gsdev/ai-refine)
+- [Edge Copy - whatever is currently being developed](http://seantater.is-a-linux-user.org/gesturestitch)
 
 Design Presentation
 -------------------
@@ -36,7 +40,9 @@ Code Overview
  - Creates Pixels
  - Searches for 2D corners using features()
  - Matches features using match()
-- Canvas
- - Creates a 2d canvas for pixel manipulation
- - Provides convenient access to pixel data
+- Pixels
+ - Handles most pixel manipulation
+ - Merges, overlays images
+ - Calculates overlapping regions, bounding boxes
+ - Is a temporary holding area for calculating SSE's, histogram comparisons, etc.
 
