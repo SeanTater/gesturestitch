@@ -125,10 +125,10 @@ class gs.Image
         for i in [0...corners.length]
             x = corners[i].x
             y = corners[i].y
-            @pixels.pixel(x+1, y, pixel)
-            @pixels.pixel(x-1, y, pixel)
-            @pixels.pixel(x, y+1, pixel)
-            @pixels.pixel(x, y-1, pixel)
+            @pixels.pixel({x:x+1, y:y}, pixel)
+            @pixels.pixel({x:x-1, y:y}, pixel)
+            @pixels.pixel({x:x, y:y+1}, pixel)
+            @pixels.pixel({x:x, y:y-1}, pixel)
         this.save()
     
     features: ->
