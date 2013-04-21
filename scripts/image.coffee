@@ -150,25 +150,8 @@ class gs.Image
 
         # Detect
         #count = jsfeat.yape06.detect(img_u8, corners)
-        declump = (corners, count)->
-            last_c = corners[0]
-            for c in corners[1...count]
-                if Math.abs(c.x - last_c.x) < 5
-                    last_c = c
-                    continue
-                last_c = c
-                c
-
-        threshold = 20
         count = jsfeat.fast_corners.detect(img_u8, corner_alloc)
         corners = corner_alloc
-        ###while count > 500
-            threshold += 5
-            jsfeat.fast_corners.set_threshold(threshold)
-            count = jsfeat.fast_corners.detect(img_u8, corner_alloc)
-            corners = corner_alloc
-            #corners = declump(corner_alloc, count)
-            #count = corners.length###
 
         console.log("#{count} features before filtering")
 
