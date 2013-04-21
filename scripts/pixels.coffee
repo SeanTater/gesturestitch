@@ -51,7 +51,16 @@ class gs.Transform
         new gs.Transform([[factors.x, 0, 0],
                        [0, factors.y, 0],
                        [0, 0, 1]]).multiply(this)
-         
+
+    det: ()->
+        (@matrix[0][0] * @matrix[1][1]) + (@matrix[0][1] * @matrix[1][0])
+
+    inverse: ()->
+        # Invert the 2x2 then flip sign of the extra 2
+        det = this.det()
+        new gs.Transform([[@matrix[1][1]/det, -@matrix[0][1]/det, -@matrix[0][2]],
+                          [-@matrix[0][1]/det, @matrix[0][0]/det, -@matrix[1][2]],
+                          [0, 0, 1]])
 
 class gs.Pixels
     constructor: (args)->
@@ -225,9 +234,7 @@ class gs.Pixels
 
         # Find the intersection box in the overlay image's coords
         # This backward notation is a matter of mathmatical convention
-        ov_to_or_trans.matrix[0][2] = -ov_to_or_trans.matrix[0][2]
-        ov_to_or_trans.matrix[1][2] = -ov_to_or_trans.matrix[1][2]
-        outer.to_overlay = ov_to_or_trans.multiply(outer.to_original)
+        outer.to_overlay = ov_to_or_trans.inverse().multiply(outer.to_original)
         
         return {inner:inner, outer: outer}
 
