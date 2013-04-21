@@ -278,7 +278,7 @@ class gs.Pixels
                 if sse < best_move.sse
                     best_move.mat = mat
                     best_move.sse = sse
-            if best_move.sse < (last_move.sse * 0.95)
+            if best_move.sse < last_move.sse
                 last_move = jQuery.extend({}, best_move)
             else
                 break
