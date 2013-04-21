@@ -257,8 +257,8 @@ class gs.Pixels
         getSse = (original, overlay, inner)->
             # Calculate the SSE of a fixed-size view of the intersection
             scaler = new gs.Transform().scale(x:32/inner.width, y:32/inner.height)
-            original_scaler = scaler.multiply(inner.to_original)
-            overlay_scaler = scaler.multiply(inner.to_overlay)
+            original_scaler = scaler.multiply(inner.to_original).scale(x:32/inner.width, y:32/inner.height)
+            overlay_scaler = scaler.multiply(inner.to_overlay).scale(x:32/inner.width, y:32/inner.height)
             sum = 0
             for x in [0...32] by 1
                 for y in [0...32] by 1
