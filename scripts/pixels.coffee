@@ -81,14 +81,14 @@ class gs.Pixels
             throw new gs.BoundsError("Pixels() height #{@height} out of bounds") unless 0 <= (@offsety + @height) <= @imageData.height
         else
             throw new gs.BoundsError("Must include width and height for bounds") unless args.width? and args.height?
-            @width = args.width
-            @height = args.height
+            @width = Math.ceil(args.width)|0
+            @height = Math.ceil(args.height)|0
             @data = new Uint8ClampedArray(@width * @height * @channel)
 
     location: (point)->
         # Locate..
-        index = (point.y+@offsety) * @width
-        index += (point.x+@offsetx)
+        index = ((point.y|0)+@offsety) * @width
+        index += (point.x|0)+@offsetx
         return index * @channel
 
     pixel: (point, value)->
@@ -205,7 +205,7 @@ class gs.Pixels
 
         # Find the intersection box in the overlay image's coords
         # This backward notation is a matter of mathmatical convention
-        inner.to_overlay = ov_to_or_trans.multiply(inner.to_original)
+        inner.to_overlay = ov_to_or_trans.inverse().multiply(inner.to_original)
 
 	# Find the bounding box in the original image's coordinate system
         outer = {
@@ -230,7 +230,7 @@ class gs.Pixels
         #    around until it is in the right place for that system
 
         # Find the intersection box in the original image's coords
-        outer.to_original = new gs.Transform().translate(x:outer.topleft.x, y:outer.topleft.y)
+        outer.to_original = new gs.Transform().translate(outer.topleft)
 
         # Find the intersection box in the overlay image's coords
         # This backward notation is a matter of mathmatical convention
@@ -243,32 +243,33 @@ class gs.Pixels
         # The first implementation: a hill climber 
         # Make a copy of the transform that we can edit
         ov_to_or = new gs.Transform().multiply(start_ov_to_or)
-        return ov_to_or
         actions = [
             # The move/change the overlay
             (t)->t.translate({x:1,  y:0}),
             (t)->t.translate({x:-1, y:0}),
             (t)->t.translate({x:0,  y:1}),
             (t)->t.translate({x:0,  y:-1}),
-            #(t)->t.scale({x:1.02, y:1}),
-            #(t)->t.scale({x:0.98, y:1}),
-            #(t)->t.scale({x:1, y:1.02}),
-            #(t)->t.scale({x:1, y:0.98})
+            (t)->t.scale({x:1.001, y:1}),
+            (t)->t.scale({x:0.999, y:1}),
+            (t)->t.scale({x:1, y:1.001}),
+            (t)->t.scale({x:1, y:0.999})
         ]
         getSse = (original, overlay, inner)->
             # Calculate the SSE of a fixed-size view of the intersection
-            scaler = new gs.Transform().scale(x:16/inner.width, y:16/inner.height)
+            scaler = new gs.Transform().scale(x:32/inner.width, y:32/inner.height)
             original_scaler = scaler.multiply(inner.to_original)
             overlay_scaler = scaler.multiply(inner.to_overlay)
-            for x in [0...16] by 1
-                for y in [0...16] by 1
+            sum = 0
+            for x in [0...32] by 1
+                for y in [0...32] by 1
                     original_pixel = original.pixel(original_scaler.coord({x:x, y:y}))
                     overlay_pixel = overlay.pixel(original_scaler.coord({x:x, y:y}))
                     for i in [0...4] by 1
                         sum += Math.pow(original_pixel[i]-overlay_pixel[i], 2)
             return sum
         
-        best_move = last_move = {mat: ov_to_or, sse: getSse(this, overlay, this.venn(overlay, ov_to_or).inner)}
+        last_move = {mat: ov_to_or, sse: getSse(this, overlay, this.venn(overlay, ov_to_or).inner)}
+        best_move = jQuery.extend({}, last_move)
         loop
             for action in actions
                 mat = action(last_move.mat)
@@ -277,8 +278,8 @@ class gs.Pixels
                 if sse < best_move.sse
                     best_move.mat = mat
                     best_move.sse = sse
-            if best_move.sse < last_move.sse
-                last_move = best_move
+            if best_move.sse < (last_move.sse * 0.95)
+                last_move = jQuery.extend({}, best_move)
             else
                 break
         return last_move.mat
