@@ -150,7 +150,10 @@ class gs.Image
 
         # Detect
         #count = jsfeat.yape06.detect(img_u8, corners)
-        count = jsfeat.fast_corners.detect(img_u8, corners)
+        threshold = 20
+        while (count = jsfeat.fast_corners.detect(img_u8, corners)) > 100
+            threshold += 5
+            jsfeat.fast_corners.set_threshold(threshold)
 
         console.log("#{count} features before filtering")
 

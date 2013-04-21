@@ -221,7 +221,7 @@ class gs.Pixels
         #    around until it is in the right place for that system
 
         # Find the intersection box in the original image's coords
-        outer.to_original = new gs.Transform()#.translate(x:outer.topleft.x, y:outer.topleft.y)
+        outer.to_original = new gs.Transform().translate(x:outer.topleft.x, y:outer.topleft.y)
 
         # Find the intersection box in the overlay image's coords
         # This backward notation is a matter of mathmatical convention
